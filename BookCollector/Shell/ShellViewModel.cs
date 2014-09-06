@@ -1,24 +1,28 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
+using BookCollector.Main;
+using BookCollector.Manager;
 using Caliburn.Micro;
 using Framework.Core;
 using Framework.Docking;
 using Framework.MainMenu.ViewModels;
 using Framework.Module;
 using Framework.Shell;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace BookCollector.Shell
 {
     [Export(typeof (IShell))]
     public class ShellViewModel : DockingShell, IHandle<ShellMessage>
     {
+        private readonly ContentManager content_manager;
         private readonly List<IModule> modules;
 
         [ImportingConstructor]
-        public ShellViewModel([ImportMany] IEnumerable<Lazy<IModule, IOrderMetadata>> modules, IMenu menu, IEventAggregator event_aggregator)
+        public ShellViewModel([ImportMany] IEnumerable<Lazy<IModule, IOrderMetadata>> modules, IMenu menu, IEventAggregator event_aggregator, ContentManager content_manager)
         {
+            this.content_manager = content_manager;
             this.modules = modules.OrderBy(obj => obj.Metadata.Order).Select(obj => obj.Value).ToList();
 
             Menu = menu;
@@ -48,6 +52,14 @@ namespace BookCollector.Shell
             }
 
             base.ActivateItem(item);
+        }
+
+        public override void DeactivateItem(ILayoutItem item, bool close)
+        {
+            base.DeactivateItem(item, close);
+
+            if (item is IContent)
+                content_manager.Remove(item as IContent);
         }
 
         public void Handle(ShellMessage message)

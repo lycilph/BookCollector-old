@@ -12,9 +12,11 @@
                    GlowBrush="{DynamicResource AccentColorBrush}"
                    WindowStartupLocation="CenterScreen"
                    WindowTransitionsEnabled="False"
+                   RightWindowCommandsOverlayBehavior="HiddenTitleBar"
                    Height="600"
                    Width="800"
-                   RightWindowCommandsOverlayBehavior="HiddenTitleBar">
+                   MinWidth="600"
+                   MinHeight="300">
     <Window.Resources>
         <avalon:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>

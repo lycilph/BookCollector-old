@@ -15,7 +15,7 @@ namespace BookCollector.Shell
             Item = item;
         }
 
-        public static ShellMessage ShowMessage(ILayoutItem item)
+        public static ShellMessage Show(ILayoutItem item)
         {
             return new ShellMessage(MessageKind.Show, item);
         }
