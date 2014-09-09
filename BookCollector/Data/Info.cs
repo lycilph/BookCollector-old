@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 using ReactiveUI;
 
@@ -44,6 +45,16 @@ namespace BookCollector.Data
         {
             get { return _Text; }
             set { this.RaiseAndSetIfChanged(ref _Text, value); }
+        }
+
+        public bool HasValidCollection()
+        {
+            return File.Exists(Filename);
+        }
+
+        public void CreateCollection()
+        {
+            Save(new BookCollection());
         }
 
         public BookCollection Load()

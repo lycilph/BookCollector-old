@@ -29,7 +29,7 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _KeepStartOpen, value); }
         }
 
-        public string GetFilename(string filename)
+        public string GetFullPath(string filename)
         {
             var dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(dir, DataFolder, filename);
@@ -37,7 +37,7 @@ namespace BookCollector.Data
 
         public void Load()
         {
-            var path = GetFilename(Filename);
+            var path = GetFullPath(Filename);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
 
             if (!File.Exists(path))
@@ -51,7 +51,7 @@ namespace BookCollector.Data
 
         public void Save()
         {
-            var path = GetFilename(Filename);
+            var path = GetFullPath(Filename);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
 
             var json = JsonConvert.SerializeObject(this, Formatting.Indented);

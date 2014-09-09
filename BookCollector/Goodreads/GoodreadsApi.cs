@@ -72,12 +72,20 @@ namespace BookCollector.Goodreads
                     {
                         foreach (var queue in queues)
                         {
+                            if (rwl.WaitingWriteCount > 0)
+                                break;
+
                             Book book;
                             if (!queue.TryDequeue(out book)) continue;
 
-                            logger.Trace("Processing [{0}]", book.Title);
-                            UpdateInformation(book);
-
+                            if (book.Status != BookStatus.Processed)
+                            {
+                                logger.Trace("Processing [{0}]", book.Title);
+                                UpdateInformation(book);
+                            }
+                            else
+                                logger.Trace("Skipping [{0}], already processed", book.Title);
+                        
                             if (token.IsCancellationRequested)
                                 goto break_point;
                         }
@@ -189,7 +197,7 @@ namespace BookCollector.Goodreads
 
             var extension = Path.GetExtension(book.ImageUrl);
             var filename = Path.GetInvalidFileNameChars().Aggregate(book.Title, (current, c) => current.Replace(c, '_'));
-            filename = application_settings.GetFilename(filename + extension);
+            filename = application_settings.GetFullPath(filename + extension);
 
             if (File.Exists(filename))
                 return filename;

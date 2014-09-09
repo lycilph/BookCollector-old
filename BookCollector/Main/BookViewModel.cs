@@ -1,4 +1,5 @@
 ﻿using BookCollector.Data;
+using Framework.Dialogs;
 using Framework.Mvvm;
 
 namespace BookCollector.Main
@@ -9,8 +10,12 @@ namespace BookCollector.Main
         public string Author { get { return AssociatedObject.Author; } }
         public string Image { get { return AssociatedObject.Image; } }
 
-        public BookViewModel(Book book) : base(book)
+        public BookViewModel(Book book) : base(book) { }
+
+        public async void TitleClick()
         {
+            var vm = new BookDetailsViewModel(AssociatedObject);
+            await DialogController.ShowAsync(vm, DialogButtonOptions.None);
         }
     }
 }

@@ -56,7 +56,8 @@
                  Margin="50,40"
                  HorizontalAlignment="Center"
                  HorizontalContentAlignment="Center"
-                 ItemContainerStyle="{StaticResource CustomSelectionListBoxItem}">
+                 ItemContainerStyle="{StaticResource CustomSelectionListBoxItem}"
+                 cal:Message.Attach="[MouseLeftButtonUp] = [ShowCollection]">
             <ListBox.Resources>
                 <SolidColorBrush x:Key="AccentSelectedColorBrush" Color="{DynamicResource BlackColor}"/>
             </ListBox.Resources>

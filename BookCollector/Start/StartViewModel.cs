@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System;
+using System.IO;
 using System.Reactive.Linq;
 using BookCollector.Data;
 using BookCollector.Manager;
@@ -8,6 +9,7 @@ using Caliburn.Micro;
 using Framework.Dialogs;
 using Framework.Docking;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 using ReactiveUI;
 
 namespace BookCollector.Start
@@ -45,9 +47,9 @@ namespace BookCollector.Start
             this.application_settings = application_settings;
             Items = repository.Items.CreateDerivedCollection(i => new InfoViewModel(i));
 
-            this.WhenAnyValue(x => x.CurrentItem)
-                .Where(i => i != null)
-                .Subscribe(i => ShowCollection(i.AssociatedObject));
+            //this.WhenAnyValue(x => x.CurrentItem)
+            //    .Where(i => i != null)
+            //    .Subscribe(i => ShowCollection(i.AssociatedObject));
         }
 
         protected override void OnInitialize()
@@ -62,13 +64,27 @@ namespace BookCollector.Start
             CurrentItem = null;
         }
 
-        private void ShowCollection(Info info)
+        private async void ShowCollection(Info info)
         {
+            if (!info.HasValidCollection())
+            {
+                var settings = new MetroDialogSettings {AffirmativeButtonText = "Yes", NegativeButtonText = "No"};
+                var result = await DialogController.ShowMessage("Collection now found", "Do you want to remove it?", MessageDialogStyle.AffirmativeAndNegative, settings);
+                if (result == MessageDialogResult.Affirmative)
+                    repository.Remove(info);
+                return;
+            }
+
             var main = content_manager.GetOrCreate(info);
             event_aggregator.PublishOnCurrentThread(ShellMessage.Show(main));
 
             if (!application_settings.KeepStartOpen)
                 OnClose();
+        }
+
+        public void ShowCollection()
+        {
+            ShowCollection(CurrentItem.AssociatedObject);
         }
 
         public async void NewCollection()
@@ -78,6 +94,7 @@ namespace BookCollector.Start
             var result = await DialogController.ShowAsync(vm);
             if (result == MessageDialogResult.Affirmative)
             {
+                info.CreateCollection();
                 repository.Add(info);
                 ShowCollection(info);
             }
@@ -85,7 +102,19 @@ namespace BookCollector.Start
 
         public void OpenCollection()
         {
-            
+            var dialog = new OpenFileDialog
+            {
+                DefaultExt = ".txt",
+                Filter = "text files (.txt)|*.txt"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var name = Path.GetFileNameWithoutExtension(dialog.FileName);
+                var info = repository.Create(name, dialog.FileName);
+                repository.Add(info);
+                ShowCollection(info);
+            }
         }
     }
 }

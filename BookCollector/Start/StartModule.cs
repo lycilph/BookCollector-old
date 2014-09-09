@@ -49,7 +49,7 @@ namespace BookCollector.Start
 
         private void OpenCollection()
         {
-            start.NewCollection();
+            start.OpenCollection();
         }
     }
 }

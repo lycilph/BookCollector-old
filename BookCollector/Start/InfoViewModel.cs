@@ -12,10 +12,10 @@ namespace BookCollector.Start
 
         public InfoViewModel(Info info) : base(info) { }
 
-        public void Show()
+        public void Remove()
         {
-            var event_aggregator = IoC.Get<IEventAggregator>();
-            //event_aggregator.PublishOnCurrentThread(new StartMessage(AssociatedObject));
+            var repository = IoC.Get<InfoRepository>();
+            repository.Remove(AssociatedObject);
         }
     }
 }

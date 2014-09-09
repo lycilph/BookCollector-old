@@ -14,7 +14,7 @@ namespace BookCollector.Data
         private readonly ApplicationSettings application_settings;
         private const string RepositoryFilename = "Info.txt";
         private const string DefaultName = "Default";
-        private const string DefaultFilename = "Default.txt";
+        private const string DefaultExtension = "txt";
 
         public ReactiveList<Info> Items { get; private set; }
 
@@ -37,11 +37,18 @@ namespace BookCollector.Data
 
         public Info Create()
         {
+            var filename = Path.ChangeExtension(DefaultName, DefaultExtension);
+            return Create(DefaultName, application_settings.GetFullPath(filename));
+        }
+
+        public Info Create(string name, string filename)
+        {
             var info = new Info
             {
-                DisplayName = DefaultName,
-                Filename = application_settings.GetFilename(DefaultFilename)
+                DisplayName = name,
+                Filename = filename
             };
+
             return info;
         }
 
@@ -57,7 +64,7 @@ namespace BookCollector.Data
 
         public void Load()
         {
-            var path = application_settings.GetFilename(RepositoryFilename);
+            var path = application_settings.GetFullPath(RepositoryFilename);
             if (!File.Exists(path))
                 return;
 
@@ -67,7 +74,7 @@ namespace BookCollector.Data
 
         public void Save()
         {
-            var path = application_settings.GetFilename(RepositoryFilename);
+            var path = application_settings.GetFullPath(RepositoryFilename);
             Directory.CreateDirectory(Path.GetDirectoryName(path));
 
             var json = JsonConvert.SerializeObject(Items, Formatting.Indented);
