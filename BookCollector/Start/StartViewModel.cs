@@ -2,7 +2,6 @@
 using System;
 using System.Reactive.Linq;
 using BookCollector.Data;
-using BookCollector.Main;
 using BookCollector.Manager;
 using BookCollector.Shell;
 using Caliburn.Micro;

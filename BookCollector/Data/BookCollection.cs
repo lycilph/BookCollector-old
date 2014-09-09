@@ -14,7 +14,7 @@ namespace BookCollector.Data
             get { return _Books; }
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
-
+         
         public static BookCollection Load(string filename)
         {
             var result = new BookCollection();

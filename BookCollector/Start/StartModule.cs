@@ -3,7 +3,6 @@ using System.Linq;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Framework.Core;
-using Framework.Docking;
 using Framework.MainMenu.ViewModels;
 using Framework.Module;
 
@@ -45,13 +44,11 @@ namespace BookCollector.Start
 
         private void NewCollection()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Show(start));
             start.NewCollection();
         }
 
         private void OpenCollection()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Show(start));
             start.NewCollection();
         }
     }

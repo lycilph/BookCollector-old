@@ -4,10 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <StackPanel>
-        <TextBlock x:Name="Title" Style="{StaticResource ContentTextBlockStyle}"/>
-        <TextBlock x:Name="Author" Style="{StaticResource ContentSmallTextBlockStyle}"/>
-        <Separator Background="{StaticResource GrayBrush8}" Margin="0,0,10,0"/>
-    </StackPanel>
+             d:DesignWidth="300">
+    <DockPanel LastChildFill="False">
+        <Separator DockPanel.Dock="Bottom" Background="{StaticResource GrayBrush8}" Margin="0,0,10,0"/>
+        <Image DockPanel.Dock="Left"
+               Height="100"
+               Width="65"
+               Margin="0,5"
+               Source="{Binding Image, TargetNullValue={x:Null}}"/>
+        <TextBlock DockPanel.Dock="Top" x:Name="Title" Margin="0,5,0,0" Style="{StaticResource ContentTextBlockStyle}"/>
+        <TextBlock DockPanel.Dock="Top" x:Name="Author" Style="{StaticResource ContentSmallTextBlockStyle}"/>
+    </DockPanel>
 </UserControl>

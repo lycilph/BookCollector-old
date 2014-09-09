@@ -27,7 +27,7 @@ namespace BookCollector.Goodreads
             var imported_books = csv.GetRecords<GoodreadImportedBook>().ToList();
 
             var books = imported_books.Select(gb => Mapper.MapPublicProperties(gb, new Book())).ToList();
-            books.Apply(b => b.Status = BookStatus.Imported);
+            books.Apply(b => b.Status = BookStatus.Ready);
 
             return books;
         }

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.Composition;
+using BookCollector.Data;
+using BookCollector.Goodreads;
 using Caliburn.Micro;
 using Framework.Core;
 
-namespace BookCollector.Data
+namespace BookCollector
 {
-    public class DataTasks
+    public class BootstrapperTasks
     {
         [Export(ApplicationBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
         public void Load()
@@ -14,6 +16,9 @@ namespace BookCollector.Data
 
             var repository = IoC.Get<InfoRepository>();
             repository.Load();
+
+            var api = IoC.Get<GoodreadsApi>();
+            api.Initialize();
         }
 
         [Export(ApplicationBootstrapper.SHUTDOWN_TASK_NAME, typeof(BootstrapperTask))]
@@ -24,6 +29,9 @@ namespace BookCollector.Data
 
             var repository = IoC.Get<InfoRepository>();
             repository.Save();
+
+            var api = IoC.Get<GoodreadsApi>();
+            api.Shutdown();
         }
     }
 }

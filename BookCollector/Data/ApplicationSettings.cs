@@ -38,6 +38,8 @@ namespace BookCollector.Data
         public void Load()
         {
             var path = GetFilename(Filename);
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
+
             if (!File.Exists(path))
                 return;
 

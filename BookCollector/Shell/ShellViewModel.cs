@@ -1,4 +1,3 @@
-using BookCollector.Main;
 using BookCollector.Manager;
 using Caliburn.Micro;
 using Framework.Core;

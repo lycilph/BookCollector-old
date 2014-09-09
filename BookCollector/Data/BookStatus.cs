@@ -3,9 +3,7 @@
     public enum BookStatus
     {
         Invalid,
-        Created, 
-        Imported, 
-        Queued, 
+        Ready,
         Processed
     }
 }

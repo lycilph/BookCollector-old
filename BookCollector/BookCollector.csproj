@@ -51,6 +51,9 @@
     <Reference Include="CsvHelper">
       <HintPath>..\packages\CsvHelper.2.7.1\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.8\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro">
       <HintPath>..\packages\MahApps.Metro.0.15.0-ALPHA9\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -63,6 +66,9 @@
     </Reference>
     <Reference Include="ReactiveUI">
       <HintPath>..\packages\reactiveui-core.6.0.6\lib\Net45\ReactiveUI.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.4.0\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Splat">
       <HintPath>..\packages\Splat.1.4.2.1\lib\Net45\Splat.dll</HintPath>
@@ -141,11 +147,14 @@
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\BookCollection.cs" />
     <Compile Include="Data\BookStatus.cs" />
-    <Compile Include="Data\DataTasks.cs" />
+    <Compile Include="BootstrapperTasks.cs" />
     <Compile Include="Data\Info.cs" />
     <Compile Include="Data\InfoRepository.cs" />
     <Compile Include="Goodreads\GoodreadImportedBook.cs" />
+    <Compile Include="Goodreads\GoodreadsApi.cs" />
+    <Compile Include="Goodreads\GoodreadsBook.cs" />
     <Compile Include="Goodreads\GoodreadsImporter.cs" />
+    <Compile Include="Goodreads\GoodreadsResponse.cs" />
     <Compile Include="Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Main\BookView.xaml.cs">
       <DependentUpon>BookView.xaml</DependentUpon>
@@ -202,6 +211,15 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="packages.config" />
+    <None Include="Goodreads.apikey">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

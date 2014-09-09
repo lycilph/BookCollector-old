@@ -1,12 +1,14 @@
 ﻿using System.IO;
 using System;
+using System.Reactive.Linq;
 using BookCollector.Data;
+using Framework.Dialogs;
 using Framework.Mvvm;
 using ReactiveUI;
 
 namespace BookCollector.Start
 {
-    public class NewCollectionViewModel : ItemViewModelBase<Info>
+    public class NewCollectionViewModel : ItemViewModelBase<Info>, ICanOk
     {
         private readonly string dir;
         private bool update_name = true;
@@ -22,6 +24,12 @@ namespace BookCollector.Start
         {
             get { return Path.GetFileName(AssociatedObject.Filename); }
             set { AssociatedObject.Filename = Path.Combine(dir, value); }
+        }
+
+        private readonly ObservableAsPropertyHelper<bool> _CanOk;
+        public bool CanOk
+        {
+            get { return _CanOk.Value; }
         }
 
         public NewCollectionViewModel(Info info) : base(info)
@@ -45,6 +53,10 @@ namespace BookCollector.Start
 
                     update_name = (DisplayName == Path.GetFileNameWithoutExtension(Filename));
                 });
+
+            _CanOk = this.WhenAnyValue(x => x.AssociatedObject.Filename)
+                         .Select(x =>!File.Exists(x))
+                         .ToProperty(this, x => x.CanOk);
         }
     }
 }

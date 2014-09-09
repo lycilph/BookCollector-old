@@ -5,7 +5,7 @@ namespace BookCollector.Data
 {
     public class Book : ReactiveObject
     {
-        private BookStatus _Status = BookStatus.Created;
+        private BookStatus _Status = BookStatus.Invalid;
         [JsonProperty]
         public BookStatus Status
         {
@@ -13,12 +13,12 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _Status, value); }
         }
 
-        private string _Id = string.Empty;
+        private string _GoodreadsId = string.Empty;
         [JsonProperty]
-        public string Id
+        public string GoodreadsId
         {
-            get { return _Id; }
-            set { this.RaiseAndSetIfChanged(ref _Id, value); }
+            get { return _GoodreadsId; }
+            set { this.RaiseAndSetIfChanged(ref _GoodreadsId, value); }
         }
 
         private string _Title = string.Empty;
