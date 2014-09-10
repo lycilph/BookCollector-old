@@ -8,6 +8,53 @@
              Loaded="BookDetailsView_OnLoaded"
              Unloaded="BookDetailsView_OnUnloaded">
     <Grid>
-        <TextBlock Text="Details"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   x:Name="Title"
+                   Style="{StaticResource HeaderTextBlockStyle}"
+                   TextWrapping="Wrap"/>
+
+        <Image Grid.Row="1"
+               Grid.Column="0"
+               Height="200"
+               Width="130"
+               Source="{Binding Image, TargetNullValue={x:Null}}"/>
+        
+        <DockPanel Grid.Row="1"
+                   Grid.Column="1"
+                   MaxHeight="200">
+            <TextBlock DockPanel.Dock="Top" x:Name="Author" Style="{StaticResource SubHeaderTextBlockStyle}" HorizontalAlignment="Right"/>
+            <ScrollViewer>
+                <TextBlock x:Name="Description" Style="{StaticResource ContentTextBlockStyle}" TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </DockPanel>
+
+        <StackPanel Grid.Row="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2">
+            <TextBlock Text="Similar books:"/>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Disabled">
+                <ItemsControl x:Name="SimilarBooks">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
     </Grid>
 </UserControl>

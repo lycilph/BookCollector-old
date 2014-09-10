@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
@@ -9,9 +8,12 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using BookCollector.Data;
+using BookCollector.Utils;
 using HtmlAgilityPack;
 using NLog;
 using RestSharp;
+using Caliburn.Micro;
+using LogManager = NLog.LogManager;
 
 namespace BookCollector.Goodreads
 {
@@ -24,16 +26,18 @@ namespace BookCollector.Goodreads
         private readonly RestClient client = new RestClient("https://www.goodreads.com");
         private string key;
         private DateTime last_execution_time_stamp;
+
         private CancellationTokenSource cts;
         private Task worker_task;
-
-        private readonly List<ConcurrentQueue<Book>> queues = new List<ConcurrentQueue<Book>>();  
-        private readonly ReaderWriterLockSlim rwl = new ReaderWriterLockSlim();
-
+        private TaskScheduler context;
+        private readonly ConcurrentDictionary<Info, ConcurrentQueue<Book>> queue_dictionary = new ConcurrentDictionary<Info, ConcurrentQueue<Book>>();
+        public ConcurrentQueue<Book> PriorityQueue { get; set; }
+            
         [ImportingConstructor]
         public GoodreadsApi(ApplicationSettings application_settings)
         {
             this.application_settings = application_settings;
+            PriorityQueue = new ConcurrentQueue<Book>();
         }
 
         public void Initialize()
@@ -52,6 +56,7 @@ namespace BookCollector.Goodreads
             if (string.IsNullOrWhiteSpace(key))
                 throw new InvalidDataException("Invalid Goodreads api key found");
 
+            context = TaskScheduler.FromCurrentSynchronizationContext();
             cts = new CancellationTokenSource();
             worker_task = Task.Factory.StartNew(() => ProcessQueues(cts.Token), cts.Token);
         }
@@ -60,54 +65,92 @@ namespace BookCollector.Goodreads
         {
             while (true)
             {
-                rwl.EnterReadLock();
-                try
-                {
-                    if (queues.Count == 0 || queues.All(q => q.IsEmpty))
-                    {
-                        Thread.Sleep(500);
-                        logger.Trace("Nothing to process, sleeping");
-                    }
-                    else
-                    {
-                        foreach (var queue in queues)
-                        {
-                            if (rwl.WaitingWriteCount > 0)
-                                break;
-
-                            Book book;
-                            if (!queue.TryDequeue(out book)) continue;
-
-                            if (book.Status != BookStatus.Processed)
-                            {
-                                logger.Trace("Processing [{0}]", book.Title);
-                                UpdateInformation(book);
-                            }
-                            else
-                                logger.Trace("Skipping [{0}], already processed", book.Title);
-                        
-                            if (token.IsCancellationRequested)
-                                goto break_point;
-                        }
-                    }
-                }
-                finally
-                {
-                    rwl.ExitReadLock();
-                }
-
-                break_point:
                 if (token.IsCancellationRequested)
-                    break;
+                    return;
+
+                ProcessPriorityQueue(token);
+
+                if (token.IsCancellationRequested)
+                    return;
+
+                if (queue_dictionary.Count == 0 || queue_dictionary.Values.All(q => q.IsEmpty))
+                {
+                    logger.Trace("Nothing to process, sleeping");
+                    Thread.Sleep(500);
+                    continue;
+                }
+
+                foreach (var kvp in queue_dictionary)
+                {
+                    logger.Info("Processing queue for [{0}] {1} left", kvp.Key.DisplayName, kvp.Value.Count);
+
+                    Book book;
+                    if (kvp.Value.TryDequeue(out book))
+                        ProcessBook(book);
+
+                    if (token.IsCancellationRequested)
+                        return;
+
+                    ProcessPriorityQueue(token);
+
+                    if (token.IsCancellationRequested)
+                        return;
+                }
             }
         }
 
-        public void Shutdown()
+        private void ProcessPriorityQueue(CancellationToken token)
         {
-            logger.Trace("Shutdown");
+            Book book;
+            if (!PriorityQueue.TryDequeue(out book)) return;
+
+            logger.Info("Processing priority queue [{0}]", book.Title);
+
+            var response = (book.Status != BookStatus.Processed ? UpdateInformation(book) : GetInformation(book));
+            if (response.Book.SimilarBooks.Count == 0)
+            {
+                logger.Info("No similar books found");
+                return;
+            }
+
+            if (token.IsCancellationRequested)
+                return;
+
+            response.Book.SimilarBooks.Select(gb => Mapper.MapPublicProperties(gb, new Book()))
+                                      .Apply(b => PriorityQueue.Enqueue(b));
+
+            Book similar_book;
+            while (PriorityQueue.TryDequeue(out similar_book))
+            {
+                UpdateInformation(similar_book);
+
+                if (token.IsCancellationRequested)
+                    return;
+
+                var temp = similar_book;
+                Task.Factory.StartNew(() => book.SimilarBooks.Add(temp), CancellationToken.None, TaskCreationOptions.None, context);
+            }
+        }
+
+        private void ProcessBook(Book book)
+        {
+            if (book.Status != BookStatus.Processed)
+            {
+                logger.Trace("Processing [{0}]", book.Title);
+                UpdateInformation(book);
+            }
+            else
+                logger.Trace("Skipping [{0}], already processed", book.Title);
+        }
+
+        public async void Shutdown()
+        {
+            logger.Trace("Cancelling and waiting for shutdown");
 
             cts.Cancel();
-            worker_task.Wait();
+            await worker_task;
+
+            logger.Trace("Shutdown");
         }
 
         private string Execute(IRestRequest request)
@@ -200,7 +243,10 @@ namespace BookCollector.Goodreads
             filename = application_settings.GetFullPath(filename + extension);
 
             if (File.Exists(filename))
+            {
+                logger.Trace("Image already found");
                 return filename;
+            }
 
             var url = book.ImageUrl;
             if (url.ToLowerInvariant().Contains("nophoto"))
@@ -239,7 +285,7 @@ namespace BookCollector.Goodreads
         }
 
 
-        public void UpdateInformation(Book book)
+        public GoodreadsResponse UpdateInformation(Book book)
         {
             var response = GetInformation(book);
             if (response != null)
@@ -250,44 +296,39 @@ namespace BookCollector.Goodreads
                     book.ISBN = response.Book.ISBN;
                 if (string.IsNullOrWhiteSpace(book.ISBN13))
                     book.ISBN13 = response.Book.ISBN13;
+                if (string.IsNullOrWhiteSpace(book.Description))
+                    book.Description = response.Book.Description;
          
                 book.Image = GetImage(response.Book);
             }
 
             book.Status = BookStatus.Processed;
+            return response;
         }
 
-        public ConcurrentQueue<Book> RequestUpdateQueue()
+        public ConcurrentQueue<Book> RequestQueue(Info info)
         {
-            logger.Trace("RequestUpdateQueue");
+            logger.Trace("RequestQueue");
 
-            rwl.EnterWriteLock();
-            try
-            {
-                var queue = new ConcurrentQueue<Book>();
-                queues.Add(queue);
-                return queue;
-            }
-            finally
-            {
-                rwl.ExitWriteLock();
-            }
+            var queue = new ConcurrentQueue<Book>();
+            if (!queue_dictionary.TryAdd(info, queue))
+                throw new Exception("Couldn't add queue");
+
+            return queue;
         }
 
-        public void ShutdownUpdateQueue(ConcurrentQueue<Book> queue)
+        public void ShutdownQueue(Info info)
         {
-            logger.Trace("ShutdownUpdateQueue");
+            logger.Trace("ShutdownQueue");
 
-            rwl.EnterWriteLock();
-            try
-            {
-                if (!queues.Remove(queue))
-                    throw new InvalidDataException();
-            }
-            finally
-            {
-                rwl.ExitWriteLock();
-            }
+            ConcurrentQueue<Book> queue;
+            if (!queue_dictionary.TryRemove(info, out queue))
+                throw new Exception("Couldn't remove queue");
+        }
+
+        public void ClearPriorityQueue()
+        {
+            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace BookCollector.Data
@@ -53,12 +54,28 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _ISBN13, value); }
         }
 
-        private string _Image = string.Empty;
+        private string _Image;
         [JsonProperty]
         public string Image
         {
             get { return _Image; }
             set { this.RaiseAndSetIfChanged(ref _Image, value); }
+        }
+
+        private string _Description = string.Empty;
+        [JsonProperty]
+        public string Description
+        {
+            get { return _Description; }
+            set { this.RaiseAndSetIfChanged(ref _Description, value); }
+        }
+
+        // Temporary properties (not persisted)
+        private ReactiveList<Book> _SimilarBooks = new ReactiveList<Book>();
+        public ReactiveList<Book> SimilarBooks
+        {
+            get { return _SimilarBooks; }
+            set { this.RaiseAndSetIfChanged(ref _SimilarBooks, value); }
         }
     }
 }

@@ -44,7 +44,7 @@ namespace BookCollector.Main
             Books = collection.Books.CreateDerivedCollection(b => new BookViewModel(b));
 
             Task.Factory
-                .StartNew(() => api.RequestUpdateQueue())
+                .StartNew(() => api.RequestQueue(Info))
                 .ContinueWith(parent =>
                 {
                     queue = parent.Result;
@@ -65,7 +65,7 @@ namespace BookCollector.Main
             if (close)
             {
                 Info.Save(collection);
-                Task.Factory.StartNew(() => api.ShutdownUpdateQueue(queue));
+                Task.Factory.StartNew(() => api.ShutdownQueue(Info));
             }
         }
 
