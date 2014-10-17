@@ -16,6 +16,7 @@ namespace BookCollector.Utils
             var target_properties = target.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
             var properties = source_properties.Join(target_properties, p => p.Name, p => p.Name, (p1, p2) => new {p1, p2})
                                               .Where(a => a.p2.CanWrite);
+
             foreach (var property_pair in properties)
             {
                 //They have to have the same return type

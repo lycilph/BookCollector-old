@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace BookCollector.Goodreads
 {
@@ -11,6 +12,8 @@ namespace BookCollector.Goodreads
         public string ImageUrl { get; set; }
         public string Link { get; set; }
         public string Description { get; set; }
+        public string Author { get { return Authors.First().Name; } }
+        public List<GoodreadsAuthor> Authors { get; set; }
         public List<GoodreadsBook> SimilarBooks { get; set; }
     }
 }

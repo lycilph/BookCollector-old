@@ -152,9 +152,12 @@
     <Compile Include="Data\InfoRepository.cs" />
     <Compile Include="Goodreads\GoodreadImportedBook.cs" />
     <Compile Include="Goodreads\GoodreadsApi.cs" />
+    <Compile Include="Goodreads\GoodreadsAuthor.cs" />
     <Compile Include="Goodreads\GoodreadsBook.cs" />
     <Compile Include="Goodreads\GoodreadsImporter.cs" />
     <Compile Include="Goodreads\GoodreadsResponse.cs" />
+    <Compile Include="Goodreads\PriorityQueueItem.cs" />
+    <Compile Include="Goodreads\QueueAction.cs" />
     <Compile Include="Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Main\BookDetailsView.xaml.cs">
       <DependentUpon>BookDetailsView.xaml</DependentUpon>

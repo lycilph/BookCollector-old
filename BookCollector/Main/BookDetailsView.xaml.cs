@@ -35,9 +35,9 @@ namespace BookCollector.Main
             if (p.Y > 0 && p.Y < host.ActualHeight)
                 return;
 
-            var vm = DataContext as IHaveCloseAction;
+            var vm = DataContext as BookDetailsViewModel;
             if (vm == null) return;
-            vm.CloseCallback();
+            vm.Close();
         }
 
         private void BookDetailsView_OnUnloaded(object sender, RoutedEventArgs e)

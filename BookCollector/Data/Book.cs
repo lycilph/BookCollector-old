@@ -14,12 +14,12 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _Status, value); }
         }
 
-        private string _GoodreadsId = string.Empty;
+        private string _Id = string.Empty;
         [JsonProperty]
-        public string GoodreadsId
+        public string Id
         {
-            get { return _GoodreadsId; }
-            set { this.RaiseAndSetIfChanged(ref _GoodreadsId, value); }
+            get { return _Id; }
+            set { this.RaiseAndSetIfChanged(ref _Id, value); }
         }
 
         private string _Title = string.Empty;

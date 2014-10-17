@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="BookDetailsView_OnLoaded"
              Unloaded="BookDetailsView_OnUnloaded">
-    <Grid>
+    <Grid Margin="0,0,0,25">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>

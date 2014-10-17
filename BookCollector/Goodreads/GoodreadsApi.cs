@@ -9,10 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using BookCollector.Data;
 using BookCollector.Utils;
+using Caliburn.Micro;
 using HtmlAgilityPack;
 using NLog;
 using RestSharp;
-using Caliburn.Micro;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector.Goodreads
@@ -29,15 +29,16 @@ namespace BookCollector.Goodreads
 
         private CancellationTokenSource cts;
         private Task worker_task;
+        private Task priority_worker_task;
         private TaskScheduler context;
+        private readonly Mutex mutex = new Mutex();
         private readonly ConcurrentDictionary<Info, ConcurrentQueue<Book>> queue_dictionary = new ConcurrentDictionary<Info, ConcurrentQueue<Book>>();
-        public ConcurrentQueue<Book> PriorityQueue { get; set; }
+        private readonly ConcurrentQueue<PriorityQueueItem> priority_queue = new ConcurrentQueue<PriorityQueueItem>();
             
         [ImportingConstructor]
         public GoodreadsApi(ApplicationSettings application_settings)
         {
             this.application_settings = application_settings;
-            PriorityQueue = new ConcurrentQueue<Book>();
         }
 
         public void Initialize()
@@ -59,17 +60,13 @@ namespace BookCollector.Goodreads
             context = TaskScheduler.FromCurrentSynchronizationContext();
             cts = new CancellationTokenSource();
             worker_task = Task.Factory.StartNew(() => ProcessQueues(cts.Token), cts.Token);
+            priority_worker_task = Task.Factory.StartNew(() => ProcessPriorityQueue(cts.Token), cts.Token);
         }
 
         private void ProcessQueues(CancellationToken token)
         {
             while (true)
             {
-                if (token.IsCancellationRequested)
-                    return;
-
-                ProcessPriorityQueue(token);
-
                 if (token.IsCancellationRequested)
                     return;
 
@@ -80,67 +77,93 @@ namespace BookCollector.Goodreads
                     continue;
                 }
 
-                foreach (var kvp in queue_dictionary)
+                mutex.WaitOne();
+                try
                 {
-                    logger.Info("Processing queue for [{0}] {1} left", kvp.Key.DisplayName, kvp.Value.Count);
+                    foreach (var kvp in queue_dictionary)
+                    {
+                        logger.Info("Processing queue for [{0}] {1} left", kvp.Key.DisplayName, kvp.Value.Count);
 
-                    Book book;
-                    if (kvp.Value.TryDequeue(out book))
-                        ProcessBook(book);
+                        Book book;
+                        if (kvp.Value.TryDequeue(out book))
+                            UpdateInformation(book);
 
-                    if (token.IsCancellationRequested)
-                        return;
+                        if (token.IsCancellationRequested)
+                            return;
 
-                    ProcessPriorityQueue(token);
+                        if (!priority_queue.IsEmpty)
+                        {
+                            logger.Info("Found priority item");
+                            break;
+                        }
+                    }
 
-                    if (token.IsCancellationRequested)
-                        return;
+                }
+                finally
+                {
+                    mutex.ReleaseMutex();
                 }
             }
         }
 
         private void ProcessPriorityQueue(CancellationToken token)
         {
-            Book book;
-            if (!PriorityQueue.TryDequeue(out book)) return;
+            while (true)
+            {
+                if (token.IsCancellationRequested)
+                    return;
 
-            logger.Info("Processing priority queue [{0}]", book.Title);
+                if (priority_queue.IsEmpty)
+                {
+                    logger.Trace("[PriorityQueue] Nothing to process, sleeping");
+                    Thread.Sleep(500);
+                    continue;
+                }
 
-            var response = (book.Status != BookStatus.Processed ? UpdateInformation(book) : GetInformation(book));
+                mutex.WaitOne();
+                try
+                {
+                    PriorityQueueItem item;
+                    while (priority_queue.TryDequeue(out item))
+                    {
+                        if (token.IsCancellationRequested)
+                            return;
+
+                        switch (item.Action)
+                        {
+                            case QueueAction.UpdateAndFindSimilar:
+                                FindSimilar(item.Book);
+                                break;
+                            case QueueAction.UpdateOnly:
+                                UpdateInformation(item.Book);
+                                var temp = item; // Save item in new variable for the following closure
+                                Task.Factory.StartNew(() => temp.Parent.SimilarBooks.Add(temp.Book), CancellationToken.None, TaskCreationOptions.None, context);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+                }
+                finally
+                {
+                    mutex.ReleaseMutex();
+                }
+            }
+        }
+
+        private void FindSimilar(Book book)
+        {
+            var response = (book.Status == BookStatus.Processed ? GetInformation(book) : UpdateInformation(book));
             if (response.Book.SimilarBooks.Count == 0)
             {
                 logger.Info("No similar books found");
                 return;
             }
 
-            if (token.IsCancellationRequested)
-                return;
-
-            response.Book.SimilarBooks.Select(gb => Mapper.MapPublicProperties(gb, new Book()))
-                                      .Apply(b => PriorityQueue.Enqueue(b));
-
-            Book similar_book;
-            while (PriorityQueue.TryDequeue(out similar_book))
-            {
-                UpdateInformation(similar_book);
-
-                if (token.IsCancellationRequested)
-                    return;
-
-                var temp = similar_book;
-                Task.Factory.StartNew(() => book.SimilarBooks.Add(temp), CancellationToken.None, TaskCreationOptions.None, context);
-            }
-        }
-
-        private void ProcessBook(Book book)
-        {
-            if (book.Status != BookStatus.Processed)
-            {
-                logger.Trace("Processing [{0}]", book.Title);
-                UpdateInformation(book);
-            }
-            else
-                logger.Trace("Skipping [{0}], already processed", book.Title);
+            response.Book
+                    .SimilarBooks
+                    .Select(gb => Mapper.MapPublicProperties(gb, new Book()))
+                    .Apply(b => priority_queue.Enqueue(new PriorityQueueItem {Action = QueueAction.UpdateOnly, Book = b, Parent = book}));
         }
 
         public async void Shutdown()
@@ -148,7 +171,7 @@ namespace BookCollector.Goodreads
             logger.Trace("Cancelling and waiting for shutdown");
 
             cts.Cancel();
-            await worker_task;
+            await Task.WhenAll(worker_task, priority_worker_task);
 
             logger.Trace("Shutdown");
         }
@@ -287,17 +310,27 @@ namespace BookCollector.Goodreads
 
         public GoodreadsResponse UpdateInformation(Book book)
         {
+            if (book.Status == BookStatus.Processed)
+            {
+                logger.Trace("Skipping [{0}], already processed", book.Title);
+                return null;
+            }
+
+            logger.Trace("Updating information for [{0}]", book.Title);
+
             var response = GetInformation(book);
             if (response != null)
             {
-                if (string.IsNullOrWhiteSpace(book.GoodreadsId))
-                    book.GoodreadsId = response.Book.Id;
+                if (string.IsNullOrWhiteSpace(book.Id))
+                    book.Id = response.Book.Id;
                 if (string.IsNullOrWhiteSpace(book.ISBN))
                     book.ISBN = response.Book.ISBN;
                 if (string.IsNullOrWhiteSpace(book.ISBN13))
                     book.ISBN13 = response.Book.ISBN13;
                 if (string.IsNullOrWhiteSpace(book.Description))
                     book.Description = response.Book.Description;
+                if (string.IsNullOrWhiteSpace(book.Author))
+                    book.Author = response.Book.Author;
          
                 book.Image = GetImage(response.Book);
             }
@@ -326,9 +359,17 @@ namespace BookCollector.Goodreads
                 throw new Exception("Couldn't remove queue");
         }
 
+        public void FindSimilarBooks(Book book)
+        {
+            logger.Info("Finding similar books");
+            priority_queue.Enqueue(new PriorityQueueItem {Action = QueueAction.UpdateAndFindSimilar, Book = book});
+        }
+
         public void ClearPriorityQueue()
         {
-            
+            logger.Info("Clearing priority queue [{0} left]", priority_queue.Count);
+            PriorityQueueItem item;
+            while (priority_queue.TryDequeue(out item)) { }
         }
     }
 }
