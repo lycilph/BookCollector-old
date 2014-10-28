@@ -1,77 +1,52 @@
-using BookCollector.Manager;
+﻿using System.ComponentModel.Composition;
+using BookCollector.Main;
+using BookCollector.Services;
 using Caliburn.Micro;
 using Framework.Core;
-using Framework.Docking;
-using Framework.MainMenu.ViewModels;
-using Framework.Module;
-using Framework.Shell;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
+using NLog;
+using ReactiveUI;
+using LogManager = NLog.LogManager;
 
 namespace BookCollector.Shell
 {
-    [Export(typeof (IShell))]
-    public class ShellViewModel : DockingShell, IHandle<ShellMessage>
+    [Export(typeof(IShell))]
+    [Export(typeof(IShellContent))]
+    public class ShellViewModel : ShellBase, IShellContent
     {
-        private readonly ContentManager content_manager;
-        private readonly List<IModule> modules;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        [ImportingConstructor]
-        public ShellViewModel([ImportMany] IEnumerable<Lazy<IModule, IOrderMetadata>> modules, IMenu menu, IEventAggregator event_aggregator, ContentManager content_manager)
+        private IViewModel _ActiveItem;
+        public IViewModel ActiveItem
         {
-            this.content_manager = content_manager;
-            this.modules = modules.OrderBy(obj => obj.Metadata.Order).Select(obj => obj.Value).ToList();
-
-            Menu = menu;
-            Menu.Add(new MenuItem("_File")
-            {
-                new MenuItem("E_xit", () => TryClose())
-            });
-
-            event_aggregator.Subscribe(this);
-            this.modules.Apply(m => m.Create(this));
+            get { return _ActiveItem; }
+            set { this.RaiseAndSetIfChanged(ref _ActiveItem, value); }
         }
 
         protected override void OnInitialize()
         {
             base.OnInitialize();
             DisplayName = "Book Collector";
-            modules.Apply(m => m.Initialize());
+
+            ActiveItem = new MainViewModel();
+
+            var settings = IoC.Get<ApplicationSettings>();
+            settings.Load();
+
+            var book_repository = IoC.Get<BookRepository>();
+            book_repository.Load();
         }
 
-        public override void ActivateItem(ILayoutItem item)
+        protected override void OnDeactivate(bool close)
         {
-            if (item is ITool)
+            base.OnDeactivate(close);
+
+            if (close)
             {
-                var tool = item as ITool;
-                tool.IsVisible = true;
-                tool.IsSelected = true;
-            }
+                var settings = IoC.Get<ApplicationSettings>();
+                settings.Save();
 
-            base.ActivateItem(item);
-        }
-
-        public override void DeactivateItem(ILayoutItem item, bool close)
-        {
-            base.DeactivateItem(item, close);
-
-            if (item is IContent)
-                content_manager.Remove(item as IContent);
-        }
-
-        public void Handle(ShellMessage message)
-        {
-            switch (message.Kind)
-            {
-                case ShellMessage.MessageKind.Show:
-                {
-                    ActivateItem(message.Item);
-                }
-                break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var book_repository = IoC.Get<BookRepository>();
+                book_repository.Save();
             }
         }
     }

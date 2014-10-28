@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BookCollector.Main
+namespace BookCollector.Import
 {
     /// <summary>
-    /// Interaction logic for MainView.xaml
+    /// Interaction logic for ImportView.xaml
     /// </summary>
-    public partial class MainView : UserControl
+    public partial class ImportView : UserControl
     {
-        public MainView()
+        public ImportView()
         {
             InitializeComponent();
         }

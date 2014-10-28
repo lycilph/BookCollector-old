@@ -1,4 +1,4 @@
-namespace BookCollector.Shell
+﻿namespace BookCollector.Shell
 {
     public partial class ShellView
     {

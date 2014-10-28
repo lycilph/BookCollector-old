@@ -4,50 +4,27 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="600">
-    <Grid Margin="20">
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*" MinWidth="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*" MinWidth="100"/>
         </Grid.ColumnDefinitions>
         
-        <StackPanel Grid.Column="0">
-            <TextBlock Text="Shelfs" Style="{StaticResource SubHeaderTextBlockStyle}"/>
-            <TextBlock Text="All Books" Style="{StaticResource SubHeaderTextBlockStyle}" Margin="0,20,0,0"/>
-            <TextBlock Text="Shelf a" Style="{StaticResource SubHeaderTextBlockStyle}" Margin="0,10,0,0"/>
-            <TextBlock Text="Shelf b" Style="{StaticResource SubHeaderTextBlockStyle}" Margin="0,10,0,0"/>
-            <TextBlock Text="Shelf c" Style="{StaticResource SubHeaderTextBlockStyle}" Margin="0,10,0,0"/>
-            
-            <TextBlock Text="Tools" Style="{StaticResource SubHeaderTextBlockStyle}" Margin="0,50,0,0"/>
-            <TextBlock Text="Settings" Style="{StaticResource SubHeaderTextBlockStyle}" Margin="0,20,0,0"/>
-            <Button x:Name="Import"
-                    Content="Import"
-                    Margin="0,10,0,0"
-                    Style="{StaticResource SubHeaderButtonStyle}"/>
+        <StackPanel Grid.Column="0" Margin="20">
+            <TextBlock Text="Actions"/>
+            <Button x:Name="Import" Content="Import"/>
+            <Button Content="Search"/>
         </StackPanel>
         
-        <ItemsControl Grid.Column="1"
-                      x:Name="Books"
-                      VirtualizingStackPanel.IsVirtualizing="True"
-                      ScrollViewer.CanContentScroll="True">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.Template>
-                    <ControlTemplate>
-                        <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
-                                Padding="{TemplateBinding Control.Padding}"
-                                BorderBrush="{TemplateBinding Border.BorderBrush}"
-                                Background="{TemplateBinding Panel.Background}"
-                                SnapsToDevicePixels="True"> 
-                            <ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False"> 
-                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}"/>
-                            </ScrollViewer>
-                        </Border>
-                    </ControlTemplate>
-                </ItemsControl.Template>
-            </ItemsControl>
+        <ListBox Grid.Column="1" Margin="0,20,10,20"/>
+
+        <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
+        
+        <StackPanel Grid.Column="3" Margin="10,20,20,20" >
+            <TextBlock Text="Details"/>
+        </StackPanel>
     </Grid>
 </UserControl>
