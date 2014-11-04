@@ -2,6 +2,7 @@
 1. Update app.xaml
 2. Add a Shell (derived from IShell or ShellBase)
 
+
 --- App.xaml - example ---
 
 <Application x:Class="<project>.App"
@@ -25,7 +26,30 @@
     </Application.Resources>
 </Application>
 
+
 --- Shell ViewModel - example ---
+
+[Export(typeof(IShell))]
+public class ShellViewModel : ShellBase
+{
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+    protected override void OnInitialize()
+    {
+        logger.Trace("Shell initializing");
+
+        base.OnInitialize();
+        DisplayName = "<Shell Name>";
+    }
+
+    protected override void OnDeactivate(bool close)
+    {
+        logger.Trace(string.Format("Shell deactivating ({0})", close));
+
+        base.OnDeactivate(close);
+    }
+}
+
 
 --- Shell View - example ---
 

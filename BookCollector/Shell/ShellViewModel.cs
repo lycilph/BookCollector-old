@@ -1,52 +1,86 @@
-﻿using System.ComponentModel.Composition;
-using BookCollector.Main;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using BookCollector.Services;
 using Caliburn.Micro;
-using Framework.Core;
+using Framework.Core.Shell;
 using NLog;
-using ReactiveUI;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector.Shell
 {
     [Export(typeof(IShell))]
-    [Export(typeof(IShellContent))]
-    public class ShellViewModel : ShellBase, IShellContent
+    public class ShellViewModel : ConductorShell<IScreen>, IHandle<ShellMessage>
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private IViewModel _ActiveItem;
-        public IViewModel ActiveItem
+        private readonly Stack<IScreen> items = new Stack<IScreen>();
+        private readonly ApplicationSettings settings;
+        private readonly BookRepository book_repository;
+        private readonly IScreen main_view_model;
+
+        [ImportingConstructor]
+        public ShellViewModel(IEventAggregator event_aggregator, ApplicationSettings settings, BookRepository book_repository, [Import("Main")] IScreen main_view_model)
         {
-            get { return _ActiveItem; }
-            set { this.RaiseAndSetIfChanged(ref _ActiveItem, value); }
+            this.settings = settings;
+            this.book_repository = book_repository;
+            this.main_view_model = main_view_model;
+
+            event_aggregator.Subscribe(this);
         }
 
         protected override void OnInitialize()
         {
+            logger.Trace("Shell initializing");
+
             base.OnInitialize();
             DisplayName = "Book Collector";
 
-            ActiveItem = new MainViewModel();
-
-            var settings = IoC.Get<ApplicationSettings>();
             settings.Load();
-
-            var book_repository = IoC.Get<BookRepository>();
             book_repository.Load();
+            Show(main_view_model);
         }
 
         protected override void OnDeactivate(bool close)
         {
+            logger.Trace(string.Format("Shell deactivating ({0})", close));
+
             base.OnDeactivate(close);
 
             if (close)
             {
-                var settings = IoC.Get<ApplicationSettings>();
                 settings.Save();
-
-                var book_repository = IoC.Get<BookRepository>();
                 book_repository.Save();
+            }
+        }
+
+        protected void Back()
+        {
+            items.Pop();
+            ActivateItem(items.Peek());
+        }
+
+        protected void Show(IScreen view_model)
+        {
+            items.Push(view_model);
+            ActivateItem(view_model);
+        }
+
+        public void Handle(ShellMessage message)
+        {
+            switch (message.Kind)
+            {
+                case ShellMessage.MessageKind.Back:
+                    Back();
+                    break;
+                case ShellMessage.MessageKind.Show:
+                    Show(message.ViewModel);
+                    break;
+                case ShellMessage.MessageKind.Exit:
+                    TryClose();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

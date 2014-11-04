@@ -50,9 +50,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Framework.Core.1.0.0-alpha\lib\net45\Framework.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=0.14.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+    <Reference Include="MahApps.Metro, Version=0.15.0.92, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.0.15.0-ALPHA92\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -61,6 +65,9 @@
     <Reference Include="ReactiveUI, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\reactiveui-core.6.1.0\lib\Net45\ReactiveUI.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.5.0\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="Splat, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,7 +97,7 @@
       <HintPath>..\packages\Rx-Xaml.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.0.14.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.0.15.0-ALPHA92\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -109,6 +116,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Import\BookView.xaml.cs">
+      <DependentUpon>BookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Import\BookViewModel.cs" />
+    <Compile Include="Import\GoodreadsAuthenticateView.xaml.cs">
+      <DependentUpon>GoodreadsAuthenticateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Import\GoodreadsAuthenticateViewModel.cs" />
+    <Compile Include="Import\GoodreadsImportViewModel.cs" />
+    <Compile Include="Import\GoodreadsImportView.xaml.cs">
+      <DependentUpon>GoodreadsImportView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Import\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
@@ -120,8 +139,14 @@
     <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\BookRepository.cs" />
     <Compile Include="Services\Goodreads\GoodreadsApi.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsAuthorizationResponse.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsBook.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsReview.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsReviewCollection.cs" />
     <Compile Include="Services\Goodreads\GoodreadsSettings.cs" />
-    <Compile Include="Shell\IShellContent.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsUser.cs" />
+    <Compile Include="Services\IEncryptable.cs" />
+    <Compile Include="Shell\ShellMessage.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -130,6 +155,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Utilities\CustomDeserializer.cs" />
+    <Compile Include="Utilities\StringExtensions.cs" />
+    <Compile Include="Utilities\WebBrowserUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Book.cs" />
@@ -173,6 +201,18 @@
     <Folder Include="Services\GoogleBooks\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Import\BookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Import\GoodreadsAuthenticateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Import\GoodreadsImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Import\ImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
