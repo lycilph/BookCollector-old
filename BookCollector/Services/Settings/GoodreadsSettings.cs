@@ -1,7 +1,6 @@
 ﻿using BookCollector.Utilities;
-using Newtonsoft.Json;
 
-namespace BookCollector.Services.Goodreads
+namespace BookCollector.Services.Settings
 {
     public class GoodreadsSettings : IEncryptable<GoodreadsSettings>
     {
@@ -13,12 +12,6 @@ namespace BookCollector.Services.Goodreads
         // Static data
         public string ConsumerKey { get; set; }
         public string ConsumerSecret { get; set; }
-
-        [JsonIgnore]
-        public bool IsAuthenticated
-        {
-            get { return !string.IsNullOrWhiteSpace(OAuthToken); }
-        }
 
         public GoodreadsSettings()
         {

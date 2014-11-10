@@ -62,6 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="ReactiveUI, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\reactiveui-core.6.1.0\lib\Net45\ReactiveUI.dll</HintPath>
@@ -116,36 +119,65 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Import\BookView.xaml.cs">
-      <DependentUpon>BookView.xaml</DependentUpon>
+    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="ImportResultsViewModel.cs" />
+    <Compile Include="Services\Authentication\IAuthenticationHandler.cs" />
+    <Compile Include="Import\ImportAuthenticationStepView.xaml.cs">
+      <DependentUpon>ImportAuthenticationStepView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\BookViewModel.cs" />
-    <Compile Include="Import\GoodreadsAuthenticateView.xaml.cs">
-      <DependentUpon>GoodreadsAuthenticateView.xaml</DependentUpon>
+    <Compile Include="Import\ImportAuthenticationStepViewModel.cs" />
+    <Compile Include="Import\ImportedBookView.xaml.cs">
+      <DependentUpon>ImportedBookView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\GoodreadsAuthenticateViewModel.cs" />
-    <Compile Include="Import\GoodreadsImportViewModel.cs" />
-    <Compile Include="Import\GoodreadsImportView.xaml.cs">
-      <DependentUpon>GoodreadsImportView.xaml</DependentUpon>
+    <Compile Include="Import\ImportedBookViewModel.cs" />
+    <Compile Include="Import\ImportResultsStepView.xaml.cs">
+      <DependentUpon>ImportResultsStepView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Import\ImportResultsStepViewModel.cs" />
+    <Compile Include="Import\ImportSelectionStepView.xaml.cs">
+      <DependentUpon>ImportSelectionStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Import\ImportSelectionStepViewModel.cs" />
     <Compile Include="Import\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Import\ImportViewModel.cs" />
+    <Compile Include="Import\ImportStepView.xaml.cs">
+      <DependentUpon>ImportStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Import\ImportStepViewModel.cs" />
     <Compile Include="Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainViewModel.cs" />
-    <Compile Include="Services\ApplicationSettings.cs" />
+    <Compile Include="Services\ApiBase.cs" />
+    <Compile Include="Services\Audible\AudibleApi.cs" />
+    <Compile Include="Services\Authentication\AuthenticatorFactory.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsAccessResponse.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsAuthenticator.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsImportResponse.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksAuthenticator.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksAuthorizationResponse.cs" />
+    <Compile Include="Services\IApi.cs" />
+    <Compile Include="Services\Authentication\IAuthenticator.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksApi.cs" />
+    <Compile Include="Services\Import\ImportProgressStatus.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsImporter.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksImporter.cs" />
+    <Compile Include="Services\Import\IImporter.cs" />
+    <Compile Include="Services\Import\ImporterFactory.cs" />
+    <Compile Include="Services\Settings\ApplicationSettings.cs" />
     <Compile Include="Services\BookRepository.cs" />
     <Compile Include="Services\Goodreads\GoodreadsApi.cs" />
     <Compile Include="Services\Goodreads\GoodreadsAuthorizationResponse.cs" />
     <Compile Include="Services\Goodreads\GoodreadsBook.cs" />
     <Compile Include="Services\Goodreads\GoodreadsReview.cs" />
     <Compile Include="Services\Goodreads\GoodreadsReviewCollection.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsSettings.cs" />
+    <Compile Include="Services\Settings\AudibleSettings.cs" />
+    <Compile Include="Services\Settings\GoodreadsSettings.cs" />
     <Compile Include="Services\Goodreads\GoodreadsUser.cs" />
     <Compile Include="Services\IEncryptable.cs" />
+    <Compile Include="Services\Settings\GoogleBooksSettings.cs" />
     <Compile Include="Shell\ShellMessage.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
@@ -174,11 +206,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Resource Include="readme.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Images\appbar.chevron.right.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -196,24 +228,29 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Services\Audible\" />
-    <Folder Include="Services\GoogleBooks\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Import\BookView.xaml">
+    <Page Include="Import\ImportAuthenticationStepView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\GoodreadsAuthenticateView.xaml">
+    <Page Include="Import\ImportedBookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\GoodreadsImportView.xaml">
+    <Page Include="Import\ImportResultsStepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Import\ImportSelectionStepView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Import\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Import\ImportStepView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

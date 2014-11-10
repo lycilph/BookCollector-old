@@ -2,12 +2,11 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Reflection;
-using BookCollector.Services.Goodreads;
 using Newtonsoft.Json;
 using NLog;
 using ReactiveUI;
 
-namespace BookCollector.Services
+namespace BookCollector.Services.Settings
 {
     [Export(typeof(ApplicationSettings))]
     public class ApplicationSettings : ReactiveObject
@@ -15,15 +14,20 @@ namespace BookCollector.Services
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const string key = "827A1C31-9CFA-478C-92B9-350126EC8BD3";
 
-        private GoodreadsSettings  _GoodreadsSettings = new GoodreadsSettings();
+        private GoodreadsSettings _GoodreadsSettings = new GoodreadsSettings();
         public GoodreadsSettings GoodreadsSettings
         {
             get { return _GoodreadsSettings; }
             set { this.RaiseAndSetIfChanged(ref _GoodreadsSettings, value); }
         }
 
-        public EventHandler Loaded = (sender, args) => { };
-        
+        private GoogleBooksSettings _GoogleBooksSettings = new GoogleBooksSettings();
+        public GoogleBooksSettings GoogleBooksSettings
+        {
+            get { return _GoogleBooksSettings; }
+            set { this.RaiseAndSetIfChanged(ref _GoogleBooksSettings, value); }
+        }
+
         private static string GetFilename()
         {
             var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -51,21 +55,22 @@ namespace BookCollector.Services
             }
 
             var json = File.ReadAllText(filename);
-            var data_template = new { GoodreadsSettings };
+            var data_template = new { GoodreadsSettings, GoogleBooksSettings };
             var data = JsonConvert.DeserializeAnonymousType(json, data_template);
 
             GoodreadsSettings = data.GoodreadsSettings.Decrypt(key);
-
-            Loaded(this, new EventArgs());
+            GoogleBooksSettings = data.GoogleBooksSettings.Decrypt(key);
         }
 
         public void Save()
         {
             logger.Trace("Saving");
 
-            var encrypted_goodreads_settings = GoodreadsSettings.Encrypt(key);
-
-            var data = new { GoodreadsSettings = encrypted_goodreads_settings };
+            var data = new
+            {
+                GoodreadsSettings = GoodreadsSettings.Encrypt(key),
+                GoogleBooksSettings = GoogleBooksSettings.Encrypt(key)
+            };
             var json = JsonConvert.SerializeObject(data, Formatting.Indented);
             File.WriteAllText(GetFilename(), json);
         }

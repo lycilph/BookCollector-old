@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="BookCollector.Import.ImportSelectionStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <StackPanel HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+        <Button x:Name="SelectGoodreads" Content="Goodreads"/>
+        <Separator Margin="2"/>
+        <Button x:Name="SelectGoogleBooks" Content="Google Books"/>
+        <Separator Margin="2"/>
+        <Button x:Name="SelectAudible" Content="Audible"/>
+    </StackPanel>
+</UserControl>

@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using BookCollector.Services;
+using BookCollector.Services.Settings;
 using Caliburn.Micro;
 using Framework.Core.Shell;
+using ReactiveUI;
 using NLog;
 using LogManager = NLog.LogManager;
+using IScreen = Caliburn.Micro.IScreen;
 
 namespace BookCollector.Shell
 {
@@ -18,6 +21,20 @@ namespace BookCollector.Shell
         private readonly ApplicationSettings settings;
         private readonly BookRepository book_repository;
         private readonly IScreen main_view_model;
+
+        private string _StatusText1;
+        public string StatusText1
+        {
+            get { return _StatusText1; }
+            set { this.RaiseAndSetIfChanged(ref _StatusText1, value); }
+        }
+
+        private string _StatusText2;
+        public string StatusText2
+        {
+            get { return _StatusText2; }
+            set { this.RaiseAndSetIfChanged(ref _StatusText2, value); }
+        }
 
         [ImportingConstructor]
         public ShellViewModel(IEventAggregator event_aggregator, ApplicationSettings settings, BookRepository book_repository, [Import("Main")] IScreen main_view_model)
@@ -38,7 +55,9 @@ namespace BookCollector.Shell
 
             settings.Load();
             book_repository.Load();
+
             Show(main_view_model);
+            //Show(IoC.Get<IScreen>("Import"));
         }
 
         protected override void OnDeactivate(bool close)
@@ -78,6 +97,10 @@ namespace BookCollector.Shell
                     break;
                 case ShellMessage.MessageKind.Exit:
                     TryClose();
+                    break;
+                case ShellMessage.MessageKind.Text:
+                    StatusText1 = message.Text1;
+                    StatusText2 = message.Text2;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

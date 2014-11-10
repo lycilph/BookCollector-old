@@ -1,8 +1,8 @@
 ﻿namespace BookCollector.Import
 {
-    public partial class GoodreadsImportView
+    public partial class ImportSelectionStepView
     {
-        public GoodreadsImportView()
+        public ImportSelectionStepView()
         {
             InitializeComponent();
         }

@@ -18,12 +18,6 @@ namespace BookCollector.Main
             this.event_aggregator = event_aggregator;
         }
 
-        protected override void OnInitialize()
-        {
-            base.OnInitialize();
-            Import();
-        }
-
         public void Import()
         {
             event_aggregator.PublishOnCurrentThread(ShellMessage.ShowMessage(import_view_model));

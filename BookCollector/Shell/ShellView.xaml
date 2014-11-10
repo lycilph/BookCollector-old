@@ -5,7 +5,7 @@
                       xmlns:cal="http://www.caliburnproject.org"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                      xmlns:core="clr-namespace:Framework.Core;assembly=Framework.Core"
+                      xmlns:shell="clr-namespace:Framework.Core.Shell;assembly=Framework.Core"
                       mc:Ignorable="d" 
                       Title="Book Collector" Height="600" Width="800">
     
@@ -48,7 +48,7 @@
     </controls:MetroWindow.RightWindowCommands>
 
     <controls:MetroWindow.Flyouts>
-        <controls:FlyoutsControl x:Name="ShellFlyouts" d:DataContext="{d:DesignInstance core:FlyoutBase}">
+        <controls:FlyoutsControl x:Name="ShellFlyouts" d:DataContext="{d:DesignInstance shell:FlyoutBase}">
             <controls:FlyoutsControl.ItemContainerStyle>
                 <Style TargetType="{x:Type controls:Flyout}" BasedOn="{StaticResource {x:Type controls:Flyout}}">
                     <Setter Property="Header" Value="{Binding DisplayName}" />
@@ -60,5 +60,24 @@
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
-    <controls:MetroContentControl x:Name="ActiveItem"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <controls:MetroContentControl Grid.Row="0" x:Name="ActiveItem"/>
+        
+        <StatusBar Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" x:Name="StatusText1"/>
+                <TextBlock Grid.Column="1" x:Name="StatusText2" Margin="20,0,0,0"/>
+            </Grid>
+        </StatusBar>
+    </Grid>
 </controls:MetroWindow>

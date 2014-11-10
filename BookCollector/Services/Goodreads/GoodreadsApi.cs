@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
+using BookCollector.Services.Settings;
 using BookCollector.Utilities;
 using NLog;
 using RestSharp;
@@ -14,74 +13,77 @@ using RestSharp.Contrib;
 namespace BookCollector.Services.Goodreads
 {
     [Export(typeof(GoodreadsApi))]
-    public class GoodreadsApi
+    public class GoodreadsApi : ApiBase
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly Uri callback_uri = new Uri(@"http://bookcollector.com/oauth_callback");
 
         private const string base_url = @"https://www.goodreads.com";
 
-        private GoodreadsSettings settings;
+        private readonly ApplicationSettings application_settings;
+        private readonly RestClient client;
 
-        public bool IsAuthorized
+        private DateTime last_execution_time_stamp;
+
+        public override bool IsAuthenticated
         {
-            get { return !string.IsNullOrWhiteSpace(settings.OAuthToken); }
+            get { return !string.IsNullOrWhiteSpace(application_settings.GoodreadsSettings.OAuthToken); }
+        }
+
+        public GoodreadsSettings Settings
+        {
+            get { return application_settings.GoodreadsSettings; }
         }
 
         [ImportingConstructor]
-        public GoodreadsApi(ApplicationSettings application_settings)
+        public GoodreadsApi(ApplicationSettings application_settings) : base("Goodreads")
         {
-            application_settings.Loaded += (sender, args) => settings = application_settings.GoodreadsSettings;
+            this.application_settings = application_settings;
+
+            client = new RestClient(base_url);
+            client.AddHandler("application/xml", new CustomDeserializer());
+
+            last_execution_time_stamp = DateTime.Now.AddSeconds(-1);
         }
 
-        public void RequestAccessToken(GoodreadsAuthorizationResponse authorization_response, IProgress<string> progress)
+        private IRestResponse Execute(IRestRequest request)
         {
-            logger.Trace("Requesting access token");
-            var client = new RestClient
-            {
-                BaseUrl = base_url,
-                Authenticator = OAuth1Authenticator.ForAccessToken(settings.ConsumerKey, settings.ConsumerSecret, authorization_response.OAuthToken, authorization_response.OAuthTokenSecret)
-            };
-            var request = new RestRequest("oauth/access_token", Method.POST);
+            Delay().Wait();
             var response = client.Execute(request);
+            last_execution_time_stamp = DateTime.Now;
 
-            var query_string = HttpUtility.ParseQueryString(response.Content);
-            settings.OAuthToken = query_string["oauth_token"];
-            settings.OAuthTokenSecret = query_string["oauth_token_secret"];
+            return response;
+        }
+        
+        private T Execute<T>(IRestRequest request) where T : new()
+        {
+            Delay().Wait();
+            var response = client.Execute<T>(request);
+            last_execution_time_stamp = DateTime.Now;
+
+            return response.Data;
         }
 
-        public bool HandleAuthorizationCallback(Uri uri, Task task)
+        private Task Delay()
         {
-            if (uri.Host == callback_uri.Host && uri.AbsolutePath == callback_uri.AbsolutePath)
-            {
-                var query_string = HttpUtility.ParseQueryString(uri.Query);
-                if (query_string["authorize"] == "1")
-                {
-                    task.Start();
-                    return true;
-                }
-            }
-            return false;
+            var now = DateTime.Now;
+            var next_execution = last_execution_time_stamp.AddSeconds(1);
+            var difference = next_execution.Subtract(now);
+            var delay = (difference.Milliseconds > 0 ? difference.Milliseconds : 0);
+
+            logger.Trace("Waiting for {0} ms", delay);
+
+            return Task.Delay(delay);
         }
 
-        public GoodreadsAuthorizationResponse RequestAuthorizationToken(IProgress<string> progress)
+        public GoodreadsAuthorizationResponse RequestAuthorizationToken(string callback_uri)
         {
-            var client = new RestClient
-            {
-                BaseUrl = base_url,
-                Authenticator = OAuth1Authenticator.ForRequestToken(settings.ConsumerKey, settings.ConsumerSecret)
-            };
+            client.Authenticator = OAuth1Authenticator.ForRequestToken(Settings.ConsumerKey, Settings.ConsumerSecret);
 
-            logger.Trace("Requesting token");
-            progress.Report("Requesting Token");
             var request = new RestRequest("oauth/request_token", Method.POST);
-            var response = client.Execute(request);
+            var response = Execute(request);
 
             if (response.StatusCode != HttpStatusCode.OK)
                 throw new Exception("Response: " + response.StatusDescription);
-
-            logger.Trace("Token received");
-            progress.Report("Token received");
 
             var query_string = HttpUtility.ParseQueryString(response.Content);
             var oauth_token = query_string["oauth_token"];
@@ -100,72 +102,134 @@ namespace BookCollector.Services.Goodreads
             };
         }
 
-        public void GetUserId(IProgress<string> progress)
+        public GoodreadsAccessResponse RequestAccessToken(string token, string secret)
         {
-            logger.Trace("Getting user id");
-            progress.Report("Getting user id");
+            client.Authenticator = OAuth1Authenticator.ForAccessToken(Settings.ConsumerKey, Settings.ConsumerSecret, token, secret);
 
-            var client = new RestClient
+            var request = new RestRequest("oauth/access_token", Method.POST);
+            var response = client.Execute(request);
+
+            var query_string = HttpUtility.ParseQueryString(response.Content);
+            return new GoodreadsAccessResponse
             {
-                BaseUrl = base_url,
-                Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, settings.OAuthToken, settings.OAuthTokenSecret)
+                OAuthToken = query_string["oauth_token"],
+                OAuthTokenSecret = query_string["oauth_token_secret"]
             };
-            client.AddHandler("application/xml", new CustomDeserializer());
-            var request = new RestRequest("api/auth_user") { RequestFormat = DataFormat.Xml };
-            var response = client.Execute<GoodreadsUser>(request);
-            settings.UserId = response.Data.Id;
         }
 
-        public Task<List<GoodreadsBook>> GetBooksAsync(IProgress<string> progress, int items_per_page)
+        public string GetUserId()
         {
-            return Task.Factory.StartNew(() =>
-            {
-                logger.Trace("Importing books");
-                progress.Report("Importing books");
+            client.Authenticator = OAuth1Authenticator.ForProtectedResource(Settings.ConsumerKey, Settings.ConsumerSecret, Settings.OAuthToken, Settings.OAuthTokenSecret);
 
-                var client = new RestClient
-                {
-                    BaseUrl = base_url,
-                    Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, settings.OAuthToken, settings.OAuthTokenSecret)
-                };
-                client.AddHandler("application/xml", new CustomDeserializer());
-                var request = new RestRequest("review/list");
-                request.AddParameter("v", "2");
-                request.AddParameter("id", settings.UserId);
-                request.AddParameter("per_page", items_per_page);
-                request.AddParameter("shelf", "all");
-                var review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
-                var result = new List<GoodreadsBook>(review_collection.Reviews.Select(r => r.Book));
-
-                logger.Trace(string.Format("{0} books found", result.Count));
-                progress.Report(string.Format("{0} books found", result.Count));
-
-                if (review_collection.End < review_collection.Total)
-                {
-                    var pages = (int) Math.Ceiling((double) review_collection.Total/review_collection.End);
-                    for (var i = 2; i <= pages; i++)
-                    {
-                        Thread.Sleep(1000);
-
-                        request = new RestRequest("review/list");
-                        request.AddParameter("v", "2");
-                        request.AddParameter("id", settings.UserId);
-                        request.AddParameter("per_page", items_per_page);
-                        request.AddParameter("page", i);
-                        request.AddParameter("shelf", "all");
-                        review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
-                        result.AddRange(review_collection.Reviews.Select(r => r.Book));
-
-                        logger.Trace(string.Format("{0} books found", result.Count));
-                        progress.Report(string.Format("{0} books found", result.Count));
-                    }
-                }
-
-                logger.Trace("Importing done");
-                progress.Report("Importing done");
-
-                return result;
-            });
+            var request = new RestRequest("api/auth_user") { RequestFormat = DataFormat.Xml };
+            var response = Execute<GoodreadsUser>(request);
+            return response.Id;
         }
+
+        public GoodreadsImportResponse GetBooks(int page, int items_per_page, string shelf)
+        {
+            client.Authenticator = OAuth1Authenticator.ForProtectedResource(Settings.ConsumerKey, Settings.ConsumerSecret, Settings.OAuthToken, Settings.OAuthTokenSecret);
+
+            var request = new RestRequest("review/list");
+            request.AddParameter("v", "2");
+            request.AddParameter("id", Settings.UserId);
+            request.AddParameter("page", page);
+            request.AddParameter("per_page", items_per_page);
+            request.AddParameter("shelf", shelf);
+            var review_collection = Execute<GoodreadsReviewCollection>(request);
+
+            return new GoodreadsImportResponse
+            {
+                Books = review_collection.Reviews.Select(r => r.Book),
+                Total = review_collection.Total,
+                Start = review_collection.Start,
+                End = review_collection.End
+            };
+        }
+
+        //public GoodreadsImportResponse GetBooks(int page, int items_per_page, string shelf)
+        //{
+        //    var settings = application_settings.GoodreadsSettings;
+        //    var client = new RestClient
+        //    {
+        //        BaseUrl = base_url,
+        //        Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, settings.OAuthToken, settings.OAuthTokenSecret)
+        //    };
+        //    client.AddHandler("application/xml", new CustomDeserializer());
+
+        //    var request = new RestRequest("review/list");
+        //    request.AddParameter("v", "2");
+        //    request.AddParameter("id", settings.UserId);
+        //    request.AddParameter("page", page);
+        //    request.AddParameter("per_page", items_per_page);
+        //    request.AddParameter("shelf", shelf);
+        //    var review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
+
+        //    return new GoodreadsImportResponse
+        //    {
+        //        Books = review_collection.Reviews.Select(r => r.Book),
+        //        Total = review_collection.Total,
+        //        Start = review_collection.Start,
+        //        End = review_collection.End
+        //    };
+        //}
+
+        //public List<GoodreadsBook> GetBooks(IProgress<GoodreadsProgressStatus> progress, int items_per_page)
+        //{
+        //    logger.Trace("Importing books");
+        //    progress.Report(new GoodreadsProgressStatus("Importing books"));
+
+        //    var settings = application_settings.GoodreadsSettings;
+        //    var client = new RestClient
+        //    {
+        //        BaseUrl = base_url,
+        //        Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, settings.OAuthToken, settings.OAuthTokenSecret)
+        //    };
+        //    client.AddHandler("application/xml", new CustomDeserializer());
+        //    var request = new RestRequest("review/list");
+        //    request.AddParameter("v", "2");
+        //    request.AddParameter("id", settings.UserId);
+        //    request.AddParameter("per_page", items_per_page);
+        //    request.AddParameter("shelf", "all");
+        //    var review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
+        //    var books = review_collection.Reviews.Select(r => r.Book).ToList();
+        //    var result = new List<GoodreadsBook>(books);
+
+        //    logger.Trace(string.Format("{0} books found", result.Count));
+        //    progress.Report(new GoodreadsProgressStatus(string.Format("{0} books found", result.Count), books));
+
+
+        //    if (review_collection.End < review_collection.Total)
+        //    {
+        //        var pages = (int)Math.Ceiling((double)review_collection.Total / review_collection.End);
+        //        for (var i = 2; i <= pages; i++)
+        //        {
+        //            Thread.Sleep(1000);
+
+        //            request = new RestRequest("review/list");
+        //            request.AddParameter("v", "2");
+        //            request.AddParameter("id", settings.UserId);
+        //            request.AddParameter("per_page", items_per_page);
+        //            request.AddParameter("page", i);
+        //            request.AddParameter("shelf", "all");
+        //            review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
+        //            books = review_collection.Reviews.Select(r => r.Book).ToList();
+        //            result.AddRange(books);
+
+        //            logger.Trace(string.Format("{0} books found", result.Count));
+        //            progress.Report(new GoodreadsProgressStatus(string.Format("{0} books found", result.Count), books));
+        //        }
+        //    }
+
+        //    logger.Trace("Importing done");
+        //    progress.Report(new GoodreadsProgressStatus("Importing done"));
+
+        //    return result;            
+        //}
+
+        //public Task<List<GoodreadsBook>> GetBooksAsync(IProgress<GoodreadsProgressStatus> progress, int items_per_page)
+        //{
+        //    return Task.Factory.StartNew(() => GetBooks(progress, items_per_page));
+        //}
     }
 }
