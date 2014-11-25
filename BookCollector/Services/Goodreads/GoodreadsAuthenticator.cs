@@ -5,7 +5,7 @@ using RestSharp.Contrib;
 
 namespace BookCollector.Services.Goodreads
 {
-    public class GoodreadsAuthenticator : IAuthenticator
+    public class GoodreadsAuthenticator : AuthenticatorBase
     {
         private static readonly Uri callback_uri = new Uri(@"http://bookcollector.com/oauth_callback");
 
@@ -22,7 +22,7 @@ namespace BookCollector.Services.Goodreads
             this.api = api;
         }
 
-        public async void Start()
+        public override async void Start()
         {
             authorization_response = await Task.Factory.StartNew(() =>
             {
@@ -32,7 +32,7 @@ namespace BookCollector.Services.Goodreads
             handler.Navigate(authorization_response.Url);
         }
         
-        public async void Handle(Uri uri)
+        public override async void Navigating(Uri uri)
         {
             if (uri.Host != callback_uri.Host || uri.AbsolutePath != callback_uri.AbsolutePath) 
                 return;

@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="BookCollector.Old.ImportAuthenticationStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:utilities="clr-namespace:BookCollector.Utilities"
+             xmlns:converters="clr-namespace:BookCollector.Converters"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+        <converters:BooleanToVisibilityConverter x:Key="InvertedVisibilityConverter" TrueState="Collapsed" FalseState="Visible"/>
+    </UserControl.Resources>
+
+    <DockPanel>
+        <Button DockPanel.Dock="Bottom"
+                x:Name="Continue" 
+                Content="Continue"
+                HorizontalAlignment="Right"/>
+        
+        <Grid>
+            <WebBrowser x:Name="Browser"
+                        Visibility="{Binding IsBrowserVisible, Converter={StaticResource VisibilityConverter}}"
+                        utilities:WebBrowserUtility.Source="{Binding Url}"
+                        LoadCompleted="Browser_OnLoadCompleted"
+                        cal:Message.Attach="[Navigating] = [Navigating($eventArgs)]; [Navigated] = [Navigated($eventArgs)]"/>
+            
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="{Binding IsBrowserVisible, Converter={StaticResource InvertedVisibilityConverter}}">
+                <ItemsControl x:Name="Messages" MaxHeight="200"/>
+                <controls:MetroProgressBar IsIndeterminate="True"
+                                           Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"/>
+            </StackPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

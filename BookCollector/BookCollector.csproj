@@ -33,6 +33,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro, Version=2.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -48,11 +68,14 @@
     </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Framework.Core.1.0.0-alpha\lib\net45\Framework.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.Core.1.0.2-alpha\lib\net45\Framework.Core.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=0.15.0.92, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MahApps.Metro.0.15.0-ALPHA92\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.0.0-ALPHA006\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -62,19 +85,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="Omu.ValueInjecter">
-      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    <Reference Include="ReactiveUI">
+      <HintPath>..\packages\reactiveui-core.6.2.1.1\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="ReactiveUI, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\reactiveui-core.6.1.0\lib\Net45\ReactiveUI.dll</HintPath>
+      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\packages\RestSharp.104.5.0\lib\net4\RestSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Splat, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Splat, Version=1.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Splat.1.5.0\lib\Net45\Splat.dll</HintPath>
+      <HintPath>..\packages\Splat.1.5.1\lib\Net45\Splat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -100,7 +120,7 @@
       <HintPath>..\packages\Rx-Xaml.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.0.15.0-ALPHA92\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.0.0-ALPHA006\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -120,32 +140,65 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
-    <Compile Include="ImportResultsViewModel.cs" />
-    <Compile Include="Services\Authentication\IAuthenticationHandler.cs" />
-    <Compile Include="Import\ImportAuthenticationStepView.xaml.cs">
-      <DependentUpon>ImportAuthenticationStepView.xaml</DependentUpon>
+    <Compile Include="Import\AudibleImportController.cs" />
+    <Compile Include="Import\GoodreadsImportController.cs" />
+    <Compile Include="Import\GoogleBooksImportController.cs" />
+    <Compile Include="Import\IImportController.cs" />
+    <Compile Include="Import\ImportControllerView.xaml.cs">
+      <DependentUpon>ImportControllerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportAuthenticationStepViewModel.cs" />
-    <Compile Include="Import\ImportedBookView.xaml.cs">
-      <DependentUpon>ImportedBookView.xaml</DependentUpon>
+    <Compile Include="Import\ImportControllerViewModel.cs" />
+    <Compile Include="Import\ImportInformationView.xaml.cs">
+      <DependentUpon>ImportInformationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportedBookViewModel.cs" />
-    <Compile Include="Import\ImportResultsStepView.xaml.cs">
-      <DependentUpon>ImportResultsStepView.xaml</DependentUpon>
+    <Compile Include="Import\ImportSelectionView.xaml.cs">
+      <DependentUpon>ImportSelectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportResultsStepViewModel.cs" />
-    <Compile Include="Import\ImportSelectionStepView.xaml.cs">
-      <DependentUpon>ImportSelectionStepView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Import\ImportSelectionStepViewModel.cs" />
-    <Compile Include="Import\ImportView.xaml.cs">
-      <DependentUpon>ImportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Import\ImportViewModel.cs" />
+    <Compile Include="Import\ImportSelectionViewModel.cs" />
+    <Compile Include="Import\ImportInformationViewModel.cs" />
+    <Compile Include="Import\ImportResultsViewModel.cs" />
     <Compile Include="Import\ImportStepView.xaml.cs">
       <DependentUpon>ImportStepView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Import\ImportStepViewModel.cs" />
+    <Compile Include="Import\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Import\ImportViewModel.cs" />
+    <Compile Include="Main\MainBookView.xaml.cs">
+      <DependentUpon>MainBookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Main\MainBookViewModel.cs" />
+    <Compile Include="Services\Audible\AudibleAuthenticator.cs" />
+    <Compile Include="Services\Authentication\AuthenticatorBase.cs" />
+    <Compile Include="Services\Goodreads\GoodreadsAuthor.cs" />
+    <Compile Include="Services\Import\ImageLinks.cs" />
+    <Compile Include="Services\Import\ImportedBook.cs" />
+    <Compile Include="Services\Authentication\IAuthenticationHandler.cs" />
+    <Compile Include="Old\ImportAuthenticationStepView.xaml.cs">
+      <DependentUpon>ImportAuthenticationStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Old\ImportAuthenticationStepViewModel.cs" />
+    <Compile Include="Old\ImportedBookView.xaml.cs">
+      <DependentUpon>ImportedBookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Old\ImportedBookViewModel.cs" />
+    <Compile Include="Old\ImportResultsStepView.xaml.cs">
+      <DependentUpon>ImportResultsStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Old\ImportResultsStepViewModel.cs" />
+    <Compile Include="Old\ImportSelectionStepView.xaml.cs">
+      <DependentUpon>ImportSelectionStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Old\ImportSelectionStepViewModel.cs" />
+    <Compile Include="Old\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Old\ImportViewModel.cs" />
+    <Compile Include="Old\ImportStepView.xaml.cs">
+      <DependentUpon>ImportStepView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Old\ImportStepViewModel.cs" />
     <Compile Include="Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -153,11 +206,17 @@
     <Compile Include="Services\ApiBase.cs" />
     <Compile Include="Services\Audible\AudibleApi.cs" />
     <Compile Include="Services\Authentication\AuthenticatorFactory.cs" />
+    <Compile Include="Services\Downloader.cs" />
     <Compile Include="Services\Goodreads\GoodreadsAccessResponse.cs" />
     <Compile Include="Services\Goodreads\GoodreadsAuthenticator.cs" />
     <Compile Include="Services\Goodreads\GoodreadsImportResponse.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBook.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksAuthenticator.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksAuthorizationResponse.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksCollection.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksImageLinks.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksIndustryIdentifiers.cs" />
+    <Compile Include="Services\GoogleBooks\GoogleBooksVolumeInfo.cs" />
     <Compile Include="Services\IApi.cs" />
     <Compile Include="Services\Authentication\IAuthenticator.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksApi.cs" />
@@ -178,6 +237,10 @@
     <Compile Include="Services\Goodreads\GoodreadsUser.cs" />
     <Compile Include="Services\IEncryptable.cs" />
     <Compile Include="Services\Settings\GoogleBooksSettings.cs" />
+    <Compile Include="Settings\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\SettingsViewModel.cs" />
     <Compile Include="Shell\ShellMessage.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
@@ -188,6 +251,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utilities\CustomDeserializer.cs" />
+    <Compile Include="Utilities\HtmlExtensions.cs" />
+    <Compile Include="Utilities\ReactiveListExtensions.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
     <Compile Include="Utilities\WebBrowserUtility.cs" />
   </ItemGroup>
@@ -230,23 +295,15 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Page Include="Import\ImportAuthenticationStepView.xaml">
+    <Page Include="Import\ImportControllerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportedBookView.xaml">
+    <Page Include="Import\ImportInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportResultsStepView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Import\ImportSelectionStepView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Import\ImportView.xaml">
+    <Page Include="Import\ImportSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -254,7 +311,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Old\ImportAuthenticationStepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Old\ImportedBookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Old\ImportResultsStepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Old\ImportSelectionStepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Old\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Old\ImportStepView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Import\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Main\MainBookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Main\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -20,6 +20,7 @@ namespace BookCollector.Shell
         private readonly Stack<IScreen> items = new Stack<IScreen>();
         private readonly ApplicationSettings settings;
         private readonly BookRepository book_repository;
+        private readonly Downloader downloader;
         private readonly IScreen main_view_model;
 
         private string _StatusText1;
@@ -37,11 +38,16 @@ namespace BookCollector.Shell
         }
 
         [ImportingConstructor]
-        public ShellViewModel(IEventAggregator event_aggregator, ApplicationSettings settings, BookRepository book_repository, [Import("Main")] IScreen main_view_model)
+        public ShellViewModel(IEventAggregator event_aggregator, 
+                              ApplicationSettings settings,
+                              BookRepository book_repository, 
+                              Downloader downloader,
+                              [Import("Main")] IScreen main_view_model)
         {
             this.settings = settings;
             this.book_repository = book_repository;
             this.main_view_model = main_view_model;
+            this.downloader = downloader;
 
             event_aggregator.Subscribe(this);
         }
@@ -55,9 +61,9 @@ namespace BookCollector.Shell
 
             settings.Load();
             book_repository.Load();
+            downloader.Start();
 
             Show(main_view_model);
-            //Show(IoC.Get<IScreen>("Import"));
         }
 
         protected override void OnDeactivate(bool close)
@@ -70,6 +76,7 @@ namespace BookCollector.Shell
             {
                 settings.Save();
                 book_repository.Save();
+                downloader.Stop();
             }
         }
 

@@ -8,7 +8,7 @@ using BookCollector.Services.Authentication;
 
 namespace BookCollector.Services.GoogleBooks
 {
-    public class GoogleBooksAuthenticator : IAuthenticator
+    public class GoogleBooksAuthenticator : AuthenticatorBase
     {
         private static readonly Uri redirect_uri = new Uri(@"http://localhost:9327");
 
@@ -23,7 +23,7 @@ namespace BookCollector.Services.GoogleBooks
             this.handler = handler;
         }
 
-        public async void Start()
+        public override async void Start()
         {
             var task = Task.Factory.StartNew(() => Listen())
                                    .ContinueWith(parent => RequestToken(parent.Result), TaskScheduler.FromCurrentSynchronizationContext());
@@ -51,8 +51,6 @@ namespace BookCollector.Services.GoogleBooks
             progress.Report("Authorization done!");
             handler.AuthorizationDone();
         }
-
-        public void Handle(Uri uri) { }
 
         private static string Listen()
         {

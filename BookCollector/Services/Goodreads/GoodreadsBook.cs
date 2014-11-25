@@ -1,5 +1,4 @@
-﻿using BookCollector.Model;
-using Omu.ValueInjecter;
+﻿using System.Collections.Generic;
 
 namespace BookCollector.Services.Goodreads
 {
@@ -10,13 +9,8 @@ namespace BookCollector.Services.Goodreads
         public string Isbn13 { get; set; }
         public string Description { get; set; }
         public string ImageUrl { get; set; }
+        public string SmallImageUrl { get; set; }
         public string Link { get; set; }
-
-        public Book ToBook()
-        {
-            var book = new Book();
-            book.InjectFrom(this);
-            return book;
-        }
+        public List<GoodreadsAuthor> Authors { get; set; }
     }
 }

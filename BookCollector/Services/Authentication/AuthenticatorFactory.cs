@@ -1,4 +1,5 @@
 ﻿using System;
+using BookCollector.Services.Audible;
 using BookCollector.Services.Goodreads;
 using BookCollector.Services.GoogleBooks;
 
@@ -13,6 +14,9 @@ namespace BookCollector.Services.Authentication
 
             if (api is GoogleBooksApi)
                 return new GoogleBooksAuthenticator(api as GoogleBooksApi, progress, handler);
+
+            if (api is AudibleApi)
+                return new AudibleAuthenticator(api as AudibleApi, handler);
 
             throw new Exception("Unknown api");
         }

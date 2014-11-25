@@ -75,6 +75,11 @@ namespace BookCollector.Services.Goodreads
             return Task.Delay(delay);
         }
 
+        public Task<GoodreadsAuthorizationResponse> RequestAuthorizationTokenAsync(string callback_uri)
+        {
+            return Task.Factory.StartNew(() => RequestAuthorizationToken(callback_uri));
+        }
+
         public GoodreadsAuthorizationResponse RequestAuthorizationToken(string callback_uri)
         {
             client.Authenticator = OAuth1Authenticator.ForRequestToken(Settings.ConsumerKey, Settings.ConsumerSecret);
@@ -146,90 +151,5 @@ namespace BookCollector.Services.Goodreads
                 End = review_collection.End
             };
         }
-
-        //public GoodreadsImportResponse GetBooks(int page, int items_per_page, string shelf)
-        //{
-        //    var settings = application_settings.GoodreadsSettings;
-        //    var client = new RestClient
-        //    {
-        //        BaseUrl = base_url,
-        //        Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, settings.OAuthToken, settings.OAuthTokenSecret)
-        //    };
-        //    client.AddHandler("application/xml", new CustomDeserializer());
-
-        //    var request = new RestRequest("review/list");
-        //    request.AddParameter("v", "2");
-        //    request.AddParameter("id", settings.UserId);
-        //    request.AddParameter("page", page);
-        //    request.AddParameter("per_page", items_per_page);
-        //    request.AddParameter("shelf", shelf);
-        //    var review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
-
-        //    return new GoodreadsImportResponse
-        //    {
-        //        Books = review_collection.Reviews.Select(r => r.Book),
-        //        Total = review_collection.Total,
-        //        Start = review_collection.Start,
-        //        End = review_collection.End
-        //    };
-        //}
-
-        //public List<GoodreadsBook> GetBooks(IProgress<GoodreadsProgressStatus> progress, int items_per_page)
-        //{
-        //    logger.Trace("Importing books");
-        //    progress.Report(new GoodreadsProgressStatus("Importing books"));
-
-        //    var settings = application_settings.GoodreadsSettings;
-        //    var client = new RestClient
-        //    {
-        //        BaseUrl = base_url,
-        //        Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, settings.OAuthToken, settings.OAuthTokenSecret)
-        //    };
-        //    client.AddHandler("application/xml", new CustomDeserializer());
-        //    var request = new RestRequest("review/list");
-        //    request.AddParameter("v", "2");
-        //    request.AddParameter("id", settings.UserId);
-        //    request.AddParameter("per_page", items_per_page);
-        //    request.AddParameter("shelf", "all");
-        //    var review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
-        //    var books = review_collection.Reviews.Select(r => r.Book).ToList();
-        //    var result = new List<GoodreadsBook>(books);
-
-        //    logger.Trace(string.Format("{0} books found", result.Count));
-        //    progress.Report(new GoodreadsProgressStatus(string.Format("{0} books found", result.Count), books));
-
-
-        //    if (review_collection.End < review_collection.Total)
-        //    {
-        //        var pages = (int)Math.Ceiling((double)review_collection.Total / review_collection.End);
-        //        for (var i = 2; i <= pages; i++)
-        //        {
-        //            Thread.Sleep(1000);
-
-        //            request = new RestRequest("review/list");
-        //            request.AddParameter("v", "2");
-        //            request.AddParameter("id", settings.UserId);
-        //            request.AddParameter("per_page", items_per_page);
-        //            request.AddParameter("page", i);
-        //            request.AddParameter("shelf", "all");
-        //            review_collection = client.Execute<GoodreadsReviewCollection>(request).Data;
-        //            books = review_collection.Reviews.Select(r => r.Book).ToList();
-        //            result.AddRange(books);
-
-        //            logger.Trace(string.Format("{0} books found", result.Count));
-        //            progress.Report(new GoodreadsProgressStatus(string.Format("{0} books found", result.Count), books));
-        //        }
-        //    }
-
-        //    logger.Trace("Importing done");
-        //    progress.Report(new GoodreadsProgressStatus("Importing done"));
-
-        //    return result;            
-        //}
-
-        //public Task<List<GoodreadsBook>> GetBooksAsync(IProgress<GoodreadsProgressStatus> progress, int items_per_page)
-        //{
-        //    return Task.Factory.StartNew(() => GetBooks(progress, items_per_page));
-        //}
     }
 }

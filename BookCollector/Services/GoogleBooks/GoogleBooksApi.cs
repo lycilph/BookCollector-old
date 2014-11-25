@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using BookCollector.Services.Settings;
@@ -13,13 +14,13 @@ namespace BookCollector.Services.GoogleBooks
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private const string authorization_url = @"https://accounts.google.com";
-        private const string authorization_scope = "https://www.googleapis.com/auth/books";
+        private const string base_url = @"https://www.googleapis.com";
+        private const string authorization_scope = @"https://www.googleapis.com/auth/books";
 
         private readonly ApplicationSettings application_settings;
         private readonly RestClient client;
 
         private DateTime last_execution_time_stamp;
-
 
         public override bool IsAuthenticated
         {
@@ -36,7 +37,7 @@ namespace BookCollector.Services.GoogleBooks
         {
             this.application_settings = application_settings;
 
-            client = new RestClient(authorization_url);
+            client = new RestClient(base_url);
 
             last_execution_time_stamp = DateTime.Now.AddSeconds(-1);
         }
@@ -73,24 +74,67 @@ namespace BookCollector.Services.GoogleBooks
 
         public Uri RequestAuthorizationUrl(string redirect_uri)
         {
+            //client.BaseUrl = authorization_url;
+
             var request = new RestRequest("o/oauth2/auth");
             request.AddParameter("scope", authorization_scope);
             request.AddParameter("response_type", "code");
             request.AddParameter("client_id", Settings.ClientId);
             request.AddParameter("redirect_uri", redirect_uri);
             var response = Execute(request);
+
             return response.ResponseUri;
         }
 
         public GoogleBooksAuthorizationResponse RequestAccessToken(string code, string redirect_uri)
         {
+            //client.BaseUrl = authorization_url;
+
             var request = new RestRequest("o/oauth2/token", Method.POST);
             request.AddParameter("code", code);
             request.AddParameter("client_id", Settings.ClientId);
             request.AddParameter("client_secret", Settings.ClientSecret);
             request.AddParameter("redirect_uri", redirect_uri);
             request.AddParameter("grant_type", "authorization_code");
-            return Execute<GoogleBooksAuthorizationResponse>(request);
+            var response = Execute<GoogleBooksAuthorizationResponse>(request);
+
+            return response;
+        }
+
+        private void RefreshAccessToken()
+        {
+            logger.Trace("Refreshing access token");
+
+            //client.BaseUrl = authorization_url;
+
+            var request = new RestRequest("o/oauth2/token", Method.POST);
+            request.AddParameter("refresh_token", Settings.RefreshToken);
+            request.AddParameter("client_id", Settings.ClientId);
+            request.AddParameter("client_secret", Settings.ClientSecret);
+            request.AddParameter("grant_type", "refresh_token");
+            var response = Execute<GoogleBooksAuthorizationResponse>(request);
+
+            Settings.AccessToken = response.AccessToken;
+            Settings.ExpiresIn = DateTime.Now.AddSeconds(response.ExpiresIn);
+        }
+
+        private void Setup(string url)
+        {
+            // Refresh access token if necessary
+            if (DateTime.Now.CompareTo(Settings.ExpiresIn) > 0)
+                RefreshAccessToken();
+
+            //client.BaseUrl = url;
+        }
+
+        public List<GoogleBook> GetBooks()
+        {
+            Setup(base_url);
+
+            var request = new RestRequest("books/v1/mylibrary/bookshelves/7/volumes", Method.GET);
+            request.AddHeader("Authorization", "OAuth " + Settings.AccessToken);
+            var response = Execute<GoogleBooksCollection>(request);
+            return response.Items;
         }
     }
 }

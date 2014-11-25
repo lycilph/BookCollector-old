@@ -1,14 +1,15 @@
 ﻿using ReactiveUI;
-using System;
-using IScreen = Caliburn.Micro.IScreen;
 
 namespace BookCollector.Import
 {
     public class ImportStepViewModel : ReactiveObject
     {
-        public IScreen Screen { get; private set; }
-
-        public string DisplayName { get { return Screen.DisplayName; } }
+        private string _DisplayName;
+        public string DisplayName
+        {
+            get { return _DisplayName; }
+            set { this.RaiseAndSetIfChanged(ref _DisplayName, value); }
+        }
 
         private bool _IsActive;
         public bool IsActive
@@ -17,11 +18,16 @@ namespace BookCollector.Import
             set { this.RaiseAndSetIfChanged(ref _IsActive, value); }
         }
 
-        public ImportStepViewModel(IScreen screen)
+        private bool _IsEnabled;
+        public bool IsEnabled
         {
-            Screen = screen;
-            screen.WhenAnyValue(x => x.IsActive)
-                  .Subscribe(x => IsActive = x);
+            get { return _IsEnabled; }
+            set { this.RaiseAndSetIfChanged(ref _IsEnabled, value); }
+        }
+
+        public ImportStepViewModel(string name)
+        {
+            _DisplayName = name;
         }
     }
 }

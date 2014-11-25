@@ -17,14 +17,16 @@
             <TextBlock Text="Actions"/>
             <Button x:Name="Import" Content="Import"/>
             <Button Content="Search"/>
+            <Button x:Name="Settings" Content="Settings"/>
         </StackPanel>
         
-        <ListBox Grid.Column="1" Margin="0,20,10,20"/>
+        <ListBox Grid.Column="1" x:Name="Books" Margin="0,20,10,20"/>
 
         <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
         
         <StackPanel Grid.Column="3" Margin="10,20,20,20" >
             <TextBlock Text="Details"/>
+            <TextBlock x:Name="SelectedBook_Description" TextWrapping="Wrap"/>
         </StackPanel>
     </Grid>
 </UserControl>

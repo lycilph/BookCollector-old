@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using BookCollector.Services;
-using BookCollector.Shell;
+using BookCollector.Utilities;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using NLog;
@@ -16,52 +15,44 @@ namespace BookCollector.Import
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly IEventAggregator event_aggregator;
-        private readonly ImportSelectionStepViewModel selection_step;
-        private readonly ImportAuthenticationStepViewModel authentication_step;
-        private readonly ImportResultsStepViewModel results_step;
+        private readonly ImportSelectionViewModel selection;
+        private readonly ImportInformationViewModel information;
+        private readonly ImportResultsViewModel results;
 
-        public IReactiveDerivedList<ImportStepViewModel> Steps { get; set; }
-        
-        [ImportingConstructor]
-        public ImportViewModel(IEventAggregator event_aggregator)
+        private ReactiveList<ImportStepViewModel> _Steps;
+        public ReactiveList<ImportStepViewModel> Steps
         {
-            this.event_aggregator = event_aggregator;
+            get { return _Steps; }
+            set { this.RaiseAndSetIfChanged(ref _Steps, value); }
+        }
+   
+        [ImportingConstructor]
+        public ImportViewModel(IEventAggregator event_aggregator, ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results)
+        {
+            this.selection = selection;
+            this.information = information;
+            this.results = results;
 
-            selection_step = new ImportSelectionStepViewModel(this);
-            authentication_step = new ImportAuthenticationStepViewModel(this);
-            results_step = new ImportResultsStepViewModel(this);
+            Items.AddRange(new List<IScreen> {selection, information, results});
 
-            Items.AddRange(new List<IScreen> {selection_step, authentication_step, results_step});
-
-            Steps = Items.CreateDerivedCollection(i => new ImportStepViewModel(i));
+            event_aggregator.Subscribe(this);
         }
 
         protected override void OnActivate()
         {
             base.OnActivate();
-            ActivateItem(selection_step);
+            ActivateItem(selection);
         }
 
-        public void Import(IApi api)
+        public void Select(ImportControllerViewModel view_model)
         {
-            logger.Trace("Importing (api = {0})", api.Name);
+            var controller = view_model.AssociatedObject;
+            logger.Trace("Selected the {0} import controller", controller.Name);
 
-            if (api.IsAuthenticated)
-            {
-                results_step.Setup(api);
-                ActivateItem(results_step);                
-            }
-            else
-            {
-                authentication_step.Setup(api);
-                ActivateItem(authentication_step);
-            }
-        }
+            ActivateItem(information);
 
-        public void Done()
-        {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.BackMessage());
+            Steps = controller.Steps.ToReactiveList();
+            controller.Start();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace BookCollector.Services.GoogleBooks
+﻿namespace BookCollector.Services.GoogleBooks
 {
     public class GoogleBooksAuthorizationResponse
     {
