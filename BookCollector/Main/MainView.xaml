@@ -26,6 +26,7 @@
         
         <StackPanel Grid.Column="3" Margin="10,20,20,20" >
             <TextBlock Text="Details"/>
+            <Image x:Name="SelectedBook_Image"/>
             <TextBlock x:Name="SelectedBook_Description" TextWrapping="Wrap"/>
         </StackPanel>
     </Grid>

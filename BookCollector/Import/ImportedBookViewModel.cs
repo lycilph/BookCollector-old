@@ -15,6 +15,13 @@ namespace BookCollector.Import
             set { this.RaiseAndSetIfChanged(ref _IsSelected, value); }
         }
 
+        private bool _IsDuplicate;
+        public bool IsDuplicate
+        {
+            get { return _IsDuplicate; }
+            set { this.RaiseAndSetIfChanged(ref _IsDuplicate, value); }
+        }
+
         public ImportedBookViewModel(ImportedBook obj) : base(obj)
         {
         }

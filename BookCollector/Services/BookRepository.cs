@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BookCollector.Model;
 using Newtonsoft.Json;
@@ -56,6 +58,16 @@ namespace BookCollector.Services
             var path = GetFilename();
             var json = JsonConvert.SerializeObject(Books, Formatting.Indented);
             File.WriteAllText(path, json);
+        }
+
+        public bool IsDuplicate(Book book)
+        {
+            return Books.Any(book.IsDuplicate);
+        }
+
+        public Book Get(string book_id)
+        {
+            return Books.SingleOrDefault(b => b.Id == book_id);
         }
     }
 }

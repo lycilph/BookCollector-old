@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using BookCollector.Services.Import;
+using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using NLog;
@@ -15,16 +16,18 @@ namespace BookCollector.Import
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private readonly IEventAggregator event_aggregator;
         private readonly ImportSelectionViewModel selection;
         private readonly ImportInformationViewModel information;
         private readonly ImportResultsViewModel results;
    
         [ImportingConstructor]
-        public ImportViewModel(IEventAggregator event_aggregator, ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results)
+        public ImportViewModel(ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results, IEventAggregator event_aggregator)
         {
             this.selection = selection;
             this.information = information;
             this.results = results;
+            this.event_aggregator = event_aggregator;
 
             Items.AddRange(new List<IScreen> {selection, information, results});
 
@@ -37,9 +40,16 @@ namespace BookCollector.Import
             ActivateItem(selection);
         }
 
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+            event_aggregator.PublishOnUIThread(ShellMessage.TextMessage(string.Empty));
+        }
+
         private void Select(IImportController controller)
         {
-            logger.Trace("Selected the {0} import controller", controller.Name);
+            event_aggregator.PublishOnUIThread(ShellMessage.TextMessage("Importing from " + controller.Name));
+
             ActivateItem(information);
             controller.Start();
         }

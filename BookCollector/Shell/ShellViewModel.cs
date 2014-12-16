@@ -23,18 +23,18 @@ namespace BookCollector.Shell
         private readonly Downloader downloader;
         private readonly IScreen main_view_model;
 
-        private string _StatusText1;
-        public string StatusText1
+        private string _Text;
+        public string Text
         {
-            get { return _StatusText1; }
-            set { this.RaiseAndSetIfChanged(ref _StatusText1, value); }
+            get { return _Text; }
+            set { this.RaiseAndSetIfChanged(ref _Text, value); }
         }
 
-        private string _StatusText2;
-        public string StatusText2
+        private bool _IsBusy;
+        public bool IsBusy
         {
-            get { return _StatusText2; }
-            set { this.RaiseAndSetIfChanged(ref _StatusText2, value); }
+            get { return _IsBusy; }
+            set { this.RaiseAndSetIfChanged(ref _IsBusy, value); }
         }
 
         [ImportingConstructor]
@@ -94,6 +94,8 @@ namespace BookCollector.Shell
 
         public void Handle(ShellMessage message)
         {
+            logger.Trace("Shellmessage (Kind = {0})", Enum.GetName(typeof(ShellMessage.MessageKind), message.Kind));
+
             switch (message.Kind)
             {
                 case ShellMessage.MessageKind.Back:
@@ -106,8 +108,10 @@ namespace BookCollector.Shell
                     TryClose();
                     break;
                 case ShellMessage.MessageKind.Text:
-                    StatusText1 = message.Text1;
-                    StatusText2 = message.Text2;
+                    Text = message.Text;
+                    break;
+                case ShellMessage.MessageKind.Busy:
+                    IsBusy = message.Busy;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

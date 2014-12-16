@@ -10,6 +10,7 @@ namespace BookCollector.Services.Audible
         public List<string> Narrators { get; set; }
         public string Description { get; set; }
         public List<string> PartsAsin { get; set; }
+        public string ImageUrl { get; set; }
 
         public AudibleBook()
         {

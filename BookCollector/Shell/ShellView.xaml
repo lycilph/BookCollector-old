@@ -6,8 +6,15 @@
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:shell="clr-namespace:Framework.Core.Shell;assembly=Framework.Core"
+                      xmlns:converters="clr-namespace:BookCollector.Converters"
                       mc:Ignorable="d" 
-                      Title="Book Collector" Height="600" Width="800">
+                      Title="Book Collector" 
+                      Height="600" 
+                      Width="800" 
+                      d:DataContext="{d:DesignData ShellViewModel}">
+    <controls:MetroWindow.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter" TrueState="Visible" FalseState="Hidden"/>
+    </controls:MetroWindow.Resources>
     
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
@@ -69,15 +76,12 @@
         <controls:MetroContentControl Grid.Row="0" x:Name="ActiveItem"/>
         
         <StatusBar Grid.Row="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" x:Name="StatusText1"/>
-                <TextBlock Grid.Column="1" x:Name="StatusText2" Margin="20,0,0,0"/>
-            </Grid>
+            <StatusBarItem DockPanel.Dock="Right">
+                <ProgressBar Width="200" IsIndeterminate="True" Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock x:Name="Text"/>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </controls:MetroWindow>

@@ -4,12 +4,12 @@ namespace BookCollector.Shell
 {
     public class ShellMessage
     {
-        public enum MessageKind { Back, Show, Exit, Text }
+        public enum MessageKind { Back, Show, Exit, Text, Busy }
 
         public MessageKind Kind { get; set; }
         public IScreen ViewModel { get; set; }
-        public string Text1 { get; set; }
-        public string Text2 { get; set; }
+        public string Text { get; set; }
+        public bool Busy { get; set; }
         
         public static ShellMessage BackMessage()
         {
@@ -26,9 +26,14 @@ namespace BookCollector.Shell
             return new ShellMessage {Kind = MessageKind.Exit};
         }
 
-        public static ShellMessage TextMessage(string text1, string text2)
+        public static ShellMessage TextMessage(string text)
         {
-            return new ShellMessage {Kind = MessageKind.Text, Text1 = text1, Text2 = text2};
+            return new ShellMessage {Kind = MessageKind.Text, Text = text};
+        }
+
+        public static ShellMessage BusyMessage(bool busy)
+        {
+            return new ShellMessage {Kind = MessageKind.Busy, Busy = busy};
         }
     }
 }

@@ -110,6 +110,10 @@ namespace BookCollector.Import
                     Authors = b.Authors,
                     Narrators = b.Narrators,
                     ImportSource = Name
+                },
+                ImageLinks = new ImageLinks
+                {
+                    ImageLink = b.ImageUrl
                 }
             }).ToList();
             event_aggregator.PublishOnUIThread(ImportMessage.Results(imported_books));
@@ -157,12 +161,16 @@ namespace BookCollector.Import
                 var list = node.SelectNodes(".//strong");
                 if (list == null) continue;
 
+                var product_cover_node = node.SelectSingleNode(".//td[@name='productCover']");
+                var image_node = (product_cover_node != null ? product_cover_node.SelectSingleNode(".//img") : null);
+
                 var parent_asin = parent_asin_node.Attributes["value"].Value;
                 var asin = asin_node.Attributes["value"].Value;
                 var title = title_node.InnerText;
                 var description = description_node.InnerText;
                 var authors = list[0].InnerText;
                 var narrators = list[1].InnerText;
+                var image = (image_node == null ? "" : image_node.Attributes["src"].Value);
 
                 if (string.IsNullOrWhiteSpace(parent_asin))
                 {
@@ -179,7 +187,8 @@ namespace BookCollector.Import
                         Asin = asin,
                         Authors = authors_list,
                         Narrators = narrators_list,
-                        Description = description
+                        Description = description,
+                        ImageUrl = image
                     };
                     books.Add(book);
                 }

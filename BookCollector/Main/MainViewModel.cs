@@ -52,6 +52,9 @@ namespace BookCollector.Main
 
             if (Books.Any())
                 SelectedBook = Books.First();
+
+            if (Books.Count > 1)
+                event_aggregator.PublishOnUIThread(ShellMessage.TextMessage("Books: " + Books.Count));
         }
 
         public void Import()

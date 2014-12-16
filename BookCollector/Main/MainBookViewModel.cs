@@ -9,6 +9,8 @@ namespace BookCollector.Main
 
         public string Description { get { return AssociatedObject.Description; } }
 
+        public string Image { get { return AssociatedObject.Image; } }
+
         public MainBookViewModel(Book obj) : base(obj)
         {
         }
