@@ -1,4 +1,5 @@
-﻿using Framework.Core.MVVM;
+﻿using Caliburn.Micro;
+using Framework.Core.MVVM;
 
 namespace BookCollector.Import
 {
@@ -8,6 +9,12 @@ namespace BookCollector.Import
 
         public ImportControllerViewModel(IImportController obj) : base(obj)
         {
+        }
+
+        public void Select()
+        {
+            var event_aggregator = IoC.Get<IEventAggregator>();
+            event_aggregator.PublishOnUIThread(ImportMessage.Select(AssociatedObject));
         }
     }
 }

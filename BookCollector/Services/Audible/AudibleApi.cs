@@ -8,11 +8,6 @@ namespace BookCollector.Services.Audible
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public string BaseUrl 
-        {
-            get { return @"http://Audible.com"; }
-        }
-
         public override bool IsAuthenticated
         {
             get { return false; }

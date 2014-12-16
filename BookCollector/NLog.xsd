@@ -308,7 +308,7 @@
         <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element name="name" minOccurs="0" maxOccurs="1" type="xs:string" />
           <xs:element name="batchSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
-          <xs:element name="overflowAction" minOccurs="0" maxOccurs="1" type="NLog.Targets.Wrappers.AsyncTargetWrapperOverflowAction" />
+          <xs:element name="overflowLoadEndAction" minOccurs="0" maxOccurs="1" type="NLog.Targets.Wrappers.AsyncTargetWrapperOverflowLoadEndAction" />
           <xs:element name="queueLimit" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="timeToSleepBetweenBatches" minOccurs="0" maxOccurs="1" type="xs:integer" />
         </xs:choice>
@@ -322,9 +322,9 @@
             <xs:documentation>Number of log events that should be processed in a batch by the lazy writer thread.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="overflowAction" type="NLog.Targets.Wrappers.AsyncTargetWrapperOverflowAction">
+        <xs:attribute name="overflowLoadEndAction" type="NLog.Targets.Wrappers.AsyncTargetWrapperOverflowLoadEndAction">
           <xs:annotation>
-            <xs:documentation>Action to be taken when the lazy writer thread request queue count exceeds the set limit.</xs:documentation>
+            <xs:documentation>LoadEndAction to be taken when the lazy writer thread request queue count exceeds the set limit.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="queueLimit" type="xs:integer">
@@ -340,7 +340,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:simpleType name="NLog.Targets.Wrappers.AsyncTargetWrapperOverflowAction">
+  <xs:simpleType name="NLog.Targets.Wrappers.AsyncTargetWrapperOverflowLoadEndAction">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Grow" />
       <xs:enumeration value="Discard" />
@@ -402,7 +402,7 @@
           <xs:element name="layout" minOccurs="0" maxOccurs="1" type="Layout" />
           <xs:element name="maxMessageSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="newLine" minOccurs="0" maxOccurs="1" type="xs:boolean" />
-          <xs:element name="onOverflow" minOccurs="0" maxOccurs="1" type="NLog.Targets.NetworkTargetOverflowAction" />
+          <xs:element name="onOverflow" minOccurs="0" maxOccurs="1" type="NLog.Targets.NetworkTargetOverflowLoadEndAction" />
           <xs:element name="connectionCacheSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="address" minOccurs="0" maxOccurs="1" type="Layout" />
           <xs:element name="keepConnection" minOccurs="0" maxOccurs="1" type="xs:boolean" />
@@ -441,9 +441,9 @@
             <xs:documentation>Indicates whether to append newline at the end of log message.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="onOverflow" type="NLog.Targets.NetworkTargetOverflowAction">
+        <xs:attribute name="onOverflow" type="NLog.Targets.NetworkTargetOverflowLoadEndAction">
           <xs:annotation>
-            <xs:documentation>Action that should be taken if the message is larger than maxMessageSize.</xs:documentation>
+            <xs:documentation>LoadEndAction that should be taken if the message is larger than maxMessageSize.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="connectionCacheSize" type="xs:integer">
@@ -504,7 +504,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:simpleType name="NLog.Targets.NetworkTargetOverflowAction">
+  <xs:simpleType name="NLog.Targets.NetworkTargetOverflowLoadEndAction">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Error" />
       <xs:enumeration value="Split" />
@@ -1704,7 +1704,7 @@
           <xs:element name="encoding" minOccurs="0" maxOccurs="1" type="xs:string" />
           <xs:element name="maxMessageSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="newLine" minOccurs="0" maxOccurs="1" type="xs:boolean" />
-          <xs:element name="onOverflow" minOccurs="0" maxOccurs="1" type="NLog.Targets.NetworkTargetOverflowAction" />
+          <xs:element name="onOverflow" minOccurs="0" maxOccurs="1" type="NLog.Targets.NetworkTargetOverflowLoadEndAction" />
           <xs:element name="address" minOccurs="0" maxOccurs="1" type="Layout" />
           <xs:element name="connectionCacheSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="keepConnection" minOccurs="0" maxOccurs="1" type="xs:boolean" />
@@ -1735,9 +1735,9 @@
             <xs:documentation>Indicates whether to append newline at the end of log message.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="onOverflow" type="NLog.Targets.NetworkTargetOverflowAction">
+        <xs:attribute name="onOverflow" type="NLog.Targets.NetworkTargetOverflowLoadEndAction">
           <xs:annotation>
-            <xs:documentation>Action that should be taken if the message is larger than maxMessageSize.</xs:documentation>
+            <xs:documentation>LoadEndAction that should be taken if the message is larger than maxMessageSize.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="address" type="SimpleLayoutAttribute">
@@ -1772,7 +1772,7 @@
           <xs:element name="layout" minOccurs="0" maxOccurs="1" type="Layout" />
           <xs:element name="maxMessageSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="newLine" minOccurs="0" maxOccurs="1" type="xs:boolean" />
-          <xs:element name="onOverflow" minOccurs="0" maxOccurs="1" type="NLog.Targets.NetworkTargetOverflowAction" />
+          <xs:element name="onOverflow" minOccurs="0" maxOccurs="1" type="NLog.Targets.NetworkTargetOverflowLoadEndAction" />
           <xs:element name="connectionCacheSize" minOccurs="0" maxOccurs="1" type="xs:integer" />
           <xs:element name="address" minOccurs="0" maxOccurs="1" type="Layout" />
           <xs:element name="keepConnection" minOccurs="0" maxOccurs="1" type="xs:boolean" />
@@ -1811,9 +1811,9 @@
             <xs:documentation>Indicates whether to append newline at the end of log message.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="onOverflow" type="NLog.Targets.NetworkTargetOverflowAction">
+        <xs:attribute name="onOverflow" type="NLog.Targets.NetworkTargetOverflowLoadEndAction">
           <xs:annotation>
-            <xs:documentation>Action that should be taken if the message is larger than maxMessageSize.</xs:documentation>
+            <xs:documentation>LoadEndAction that should be taken if the message is larger than maxMessageSize.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="connectionCacheSize" type="xs:integer">
@@ -2506,7 +2506,7 @@
         </xs:choice>
         <xs:attribute name="action" type="FilterResult">
           <xs:annotation>
-            <xs:documentation>Action to be taken when filter matches.</xs:documentation>
+            <xs:documentation>LoadEndAction to be taken when filter matches.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="condition" type="Condition">
@@ -2537,7 +2537,7 @@
         </xs:choice>
         <xs:attribute name="action" type="FilterResult">
           <xs:annotation>
-            <xs:documentation>Action to be taken when filter matches.</xs:documentation>
+            <xs:documentation>LoadEndAction to be taken when filter matches.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="ignoreCase" type="xs:boolean">
@@ -2569,7 +2569,7 @@
         </xs:choice>
         <xs:attribute name="action" type="FilterResult">
           <xs:annotation>
-            <xs:documentation>Action to be taken when filter matches.</xs:documentation>
+            <xs:documentation>LoadEndAction to be taken when filter matches.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="compareTo" type="xs:string">
@@ -2601,7 +2601,7 @@
         </xs:choice>
         <xs:attribute name="action" type="FilterResult">
           <xs:annotation>
-            <xs:documentation>Action to be taken when filter matches.</xs:documentation>
+            <xs:documentation>LoadEndAction to be taken when filter matches.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="ignoreCase" type="xs:boolean">
@@ -2633,7 +2633,7 @@
         </xs:choice>
         <xs:attribute name="action" type="FilterResult">
           <xs:annotation>
-            <xs:documentation>Action to be taken when filter matches.</xs:documentation>
+            <xs:documentation>LoadEndAction to be taken when filter matches.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
         <xs:attribute name="compareTo" type="xs:string">

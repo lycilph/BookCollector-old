@@ -1,10 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
-using BookCollector.Import;
-using BookCollector.Services.Browsing;
 using CefSharp;
 
-namespace BookCollector
+namespace test
 {
     public partial class App
     {
@@ -14,13 +12,6 @@ namespace BookCollector
             {
                 CachePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)
             };
-
-            settings.RegisterScheme(new CefCustomScheme
-            {
-                SchemeName = SchemeHandlerFactory.Name,
-                SchemeHandlerFactory = new SchemeHandlerFactory()
-            });
-
             Cef.Initialize(settings);
         }
     }

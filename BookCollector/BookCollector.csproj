@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props" Condition="Exists('..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props')" />
+  <Import Project="..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,6 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <NuGetPackageImportStamp>9f5bad12</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -68,14 +72,14 @@
     </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Framework.Core.1.0.2-alpha\lib\net45\Framework.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.Core.1.0.3-alpha\lib\net45\Framework.Core.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MahApps.Metro, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MahApps.Metro.1.0.0-ALPHA006\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.0.1-ALPHA001\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -119,9 +123,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Xaml.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.0.0-ALPHA006\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -142,8 +143,20 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Import\AudibleImportController.cs" />
     <Compile Include="Import\GoodreadsImportController.cs" />
+    <Compile Include="Import\ImportMessage.cs" />
+    <Compile Include="Import\ImportResultsView.xaml.cs">
+      <DependentUpon>ImportResultsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Audible\AudibleBook.cs" />
+    <Compile Include="Services\Browsing\BrowserController.cs" />
+    <Compile Include="Services\Browsing\BrowsingMessage.cs" />
+    <Compile Include="Services\Browsing\SchemeHandler.cs" />
     <Compile Include="Import\GoogleBooksImportController.cs" />
     <Compile Include="Import\IImportController.cs" />
+    <Compile Include="Services\Browsing\BrowserView.xaml.cs">
+      <DependentUpon>BrowserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Browsing\BrowserViewModel.cs" />
     <Compile Include="Import\ImportControllerView.xaml.cs">
       <DependentUpon>ImportControllerView.xaml</DependentUpon>
     </Compile>
@@ -157,74 +170,39 @@
     <Compile Include="Import\ImportSelectionViewModel.cs" />
     <Compile Include="Import\ImportInformationViewModel.cs" />
     <Compile Include="Import\ImportResultsViewModel.cs" />
-    <Compile Include="Import\ImportStepView.xaml.cs">
-      <DependentUpon>ImportStepView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Import\ImportStepViewModel.cs" />
     <Compile Include="Import\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Import\ImportViewModel.cs" />
+    <Compile Include="Services\Browsing\SchemeHandlerFactory.cs" />
     <Compile Include="Main\MainBookView.xaml.cs">
       <DependentUpon>MainBookView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainBookViewModel.cs" />
-    <Compile Include="Services\Audible\AudibleAuthenticator.cs" />
-    <Compile Include="Services\Authentication\AuthenticatorBase.cs" />
     <Compile Include="Services\Goodreads\GoodreadsAuthor.cs" />
     <Compile Include="Services\Import\ImageLinks.cs" />
     <Compile Include="Services\Import\ImportedBook.cs" />
-    <Compile Include="Services\Authentication\IAuthenticationHandler.cs" />
-    <Compile Include="Old\ImportAuthenticationStepView.xaml.cs">
-      <DependentUpon>ImportAuthenticationStepView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Old\ImportAuthenticationStepViewModel.cs" />
-    <Compile Include="Old\ImportedBookView.xaml.cs">
+    <Compile Include="Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Old\ImportedBookViewModel.cs" />
-    <Compile Include="Old\ImportResultsStepView.xaml.cs">
-      <DependentUpon>ImportResultsStepView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Old\ImportResultsStepViewModel.cs" />
-    <Compile Include="Old\ImportSelectionStepView.xaml.cs">
-      <DependentUpon>ImportSelectionStepView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Old\ImportSelectionStepViewModel.cs" />
-    <Compile Include="Old\ImportView.xaml.cs">
-      <DependentUpon>ImportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Old\ImportViewModel.cs" />
-    <Compile Include="Old\ImportStepView.xaml.cs">
-      <DependentUpon>ImportStepView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Old\ImportStepViewModel.cs" />
+    <Compile Include="Import\ImportedBookViewModel.cs" />
     <Compile Include="Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainViewModel.cs" />
     <Compile Include="Services\ApiBase.cs" />
     <Compile Include="Services\Audible\AudibleApi.cs" />
-    <Compile Include="Services\Authentication\AuthenticatorFactory.cs" />
     <Compile Include="Services\Downloader.cs" />
     <Compile Include="Services\Goodreads\GoodreadsAccessResponse.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsAuthenticator.cs" />
     <Compile Include="Services\Goodreads\GoodreadsImportResponse.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBook.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksAuthenticator.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksAuthorizationResponse.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksCollection.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksImageLinks.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksIndustryIdentifiers.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksVolumeInfo.cs" />
     <Compile Include="Services\IApi.cs" />
-    <Compile Include="Services\Authentication\IAuthenticator.cs" />
     <Compile Include="Services\GoogleBooks\GoogleBooksApi.cs" />
-    <Compile Include="Services\Import\ImportProgressStatus.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsImporter.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksImporter.cs" />
-    <Compile Include="Services\Import\IImporter.cs" />
-    <Compile Include="Services\Import\ImporterFactory.cs" />
     <Compile Include="Services\Settings\ApplicationSettings.cs" />
     <Compile Include="Services\BookRepository.cs" />
     <Compile Include="Services\Goodreads\GoodreadsApi.cs" />
@@ -254,7 +232,6 @@
     <Compile Include="Utilities\HtmlExtensions.cs" />
     <Compile Include="Utilities\ReactiveListExtensions.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
-    <Compile Include="Utilities\WebBrowserUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Book.cs" />
@@ -280,10 +257,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="BookCollector.defaultsettings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -293,8 +275,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
+    <Page Include="Import\ImportResultsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Services\Browsing\BrowserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Import\ImportControllerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -307,31 +296,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportStepView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Old\ImportAuthenticationStepView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Old\ImportedBookView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Old\ImportResultsStepView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Old\ImportSelectionStepView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Old\ImportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Old\ImportStepView.xaml">
+    <Page Include="Import\ImportedBookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -356,7 +321,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props'))" />
+  </Target>
+  <Import Project="..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" />
+  <Import Project="..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

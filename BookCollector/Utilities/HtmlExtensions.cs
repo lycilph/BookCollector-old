@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media.Media3D;
 using HtmlAgilityPack;
 
 namespace BookCollector.Utilities

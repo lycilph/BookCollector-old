@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="BookCollector.Services.Browsing.BrowserView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:browsing="clr-namespace:BookCollector.Services.Browsing"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:converters="clr-namespace:BookCollector.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="300"
+             Margin="50" 
+             d:DataContext="{d:DesignInstance browsing:BrowserViewModel}">
+    <UserControl.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter" TrueState="Visible" FalseState="Hidden"/>
+    </UserControl.Resources>
+    
+    <DockPanel Background="{StaticResource WhiteBrush}">
+        <DockPanel DockPanel.Dock="Top" Margin="10">
+            <TextBlock DockPanel.Dock="Left" Text="Address:" Margin="0,0,10,0"/>
+            <TextBlock Text="{Binding ElementName=Browser, Path=Address}"/>
+        </DockPanel>
+
+        <controls:MetroProgressBar DockPanel.Dock="Top" 
+                                   IsIndeterminate="True" 
+                                   Visibility="{Binding ElementName=Browser, Path=IsLoading, Converter={StaticResource VisibilityConverter}}"/>
+
+        <wpf:ChromiumWebBrowser x:Name="Browser"
+                                Address="{Binding Url}"
+                                FrameLoadEnd="OnFrameLoadEnd"
+                                FrameLoadStart="OnFrameLoadStart"/>
+    </DockPanel>
+</UserControl>

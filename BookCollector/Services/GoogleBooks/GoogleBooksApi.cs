@@ -12,8 +12,8 @@ namespace BookCollector.Services.GoogleBooks
     public class GoogleBooksApi : ApiBase
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Uri authorization_url = new Uri(@"https://accounts.google.com");
 
-        private const string authorization_url = @"https://accounts.google.com";
         private const string base_url = @"https://www.googleapis.com";
         private const string authorization_scope = @"https://www.googleapis.com/auth/books";
 
@@ -74,7 +74,7 @@ namespace BookCollector.Services.GoogleBooks
 
         public Uri RequestAuthorizationUrl(string redirect_uri)
         {
-            //client.BaseUrl = authorization_url;
+            client.BaseUrl = authorization_url;
 
             var request = new RestRequest("o/oauth2/auth");
             request.AddParameter("scope", authorization_scope);
@@ -88,7 +88,7 @@ namespace BookCollector.Services.GoogleBooks
 
         public GoogleBooksAuthorizationResponse RequestAccessToken(string code, string redirect_uri)
         {
-            //client.BaseUrl = authorization_url;
+            client.BaseUrl = authorization_url;
 
             var request = new RestRequest("o/oauth2/token", Method.POST);
             request.AddParameter("code", code);
@@ -105,7 +105,7 @@ namespace BookCollector.Services.GoogleBooks
         {
             logger.Trace("Refreshing access token");
 
-            //client.BaseUrl = authorization_url;
+            client.BaseUrl = authorization_url;
 
             var request = new RestRequest("o/oauth2/token", Method.POST);
             request.AddParameter("refresh_token", Settings.RefreshToken);
@@ -124,7 +124,7 @@ namespace BookCollector.Services.GoogleBooks
             if (DateTime.Now.CompareTo(Settings.ExpiresIn) > 0)
                 RefreshAccessToken();
 
-            //client.BaseUrl = url;
+            client.BaseUrl = new Uri(url);
         }
 
         public List<GoogleBook> GetBooks()
