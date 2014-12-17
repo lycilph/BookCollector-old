@@ -7,6 +7,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using BookCollector.Model;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using NLog;
@@ -39,13 +40,13 @@ namespace BookCollector.Services.Repository
             Directory.CreateDirectory(GetImageFolder());
         }
 
-        private static string GetImageFilename(ImportedBook imported_book)
+        private static string GetImageFilename(string url, string name, string postfix)
         {
-            var extension = Path.GetExtension(imported_book.ImageLinks.ImageLink);
+            var extension = Path.GetExtension(url);
             if (string.IsNullOrWhiteSpace(extension))
                 extension = ".jpg";
-
-            return Path.Combine(GetImageFolder(),  imported_book.Book.Id + extension);
+            var filename = string.Format("{0}_{1}{2}", name, postfix, extension);
+            return Path.Combine(GetImageFolder(), filename);
         }
 
         private static string GetFilename()
@@ -72,23 +73,30 @@ namespace BookCollector.Services.Repository
 
                         try
                         {
-                            if (!string.IsNullOrWhiteSpace(imported_book.ImageLinks.ImageLink))
+                            foreach (var image_link in imported_book.ImageLinks)
                             {
-                                var filename = GetImageFilename(imported_book);
-                                client.DownloadFile(imported_book.ImageLinks.ImageLink, filename);
-                                imported_book.Book.Image = filename;
+                               if (!string.IsNullOrWhiteSpace(image_link.Url))
+                               {
+                                   var filename = GetImageFilename(image_link.Url, imported_book.Book.Id, image_link.Property);
+                                   client.DownloadFile(image_link.Url, filename);
+
+                                   var property = typeof (Book).GetProperty(image_link.Property);
+                                   property.SetValue(imported_book.Book, filename);
+
+                                   Thread.Sleep(100);
+                               }
                             }
 
-                            logger.Trace("Image for {0} downloaded", imported_book.Book.Title);
+                            logger.Trace("Image(s) for {0} downloaded", imported_book.Book.Title);
                         }
                         catch (Exception e)
                         {
                             logger.Error(e.Message);
                         }
 
-                        Thread.Sleep(100);
-                        //for (var i = 0; i < 100 && !cts.Token.IsCancellationRequested; i++)
-                        //    Thread.Sleep(50);
+                        //Thread.Sleep(100);
+                        for (var i = 0; i < 100 && !cts.Token.IsCancellationRequested; i++)
+                            Thread.Sleep(50);
                     }
                 }
             }, cts.Token);
@@ -129,7 +137,7 @@ namespace BookCollector.Services.Repository
             if (!File.Exists(path))
                 return;
 
-            var dummy_links = new ImageLinks();
+            var dummy_links = new [] { new ImageLink() };
             var dummy = new [] { new {BookId = string.Empty, Imagelinks = dummy_links} };
 
             var json = File.ReadAllText(path);
@@ -138,7 +146,7 @@ namespace BookCollector.Services.Repository
             links.Select(l => new ImportedBook
             {
                 Book = book_repository.Get(l.BookId),
-                ImageLinks = l.Imagelinks
+                ImageLinks = l.Imagelinks.ToList()
             })
             .Apply(queue.Add);
         }

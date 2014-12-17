@@ -181,7 +181,7 @@
     </Compile>
     <Compile Include="Main\MainBookViewModel.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAuthor.cs" />
-    <Compile Include="Services\Repository\ImageLinks.cs" />
+    <Compile Include="Services\Repository\ImageLink.cs" />
     <Compile Include="Services\Repository\ImportedBook.cs" />
     <Compile Include="Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
@@ -254,6 +254,7 @@
     </EmbeddedResource>
     <Resource Include="Images\appbar.chevron.right.png" />
     <Resource Include="Images\appbar.page.copy.png" />
+    <Resource Include="Images\noimage.gif" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

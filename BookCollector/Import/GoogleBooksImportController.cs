@@ -81,10 +81,10 @@ namespace BookCollector.Import
                     ISBN13 = isbn13.Identifier,
                     ImportSource = Name
                 },
-                ImageLinks = new ImageLinks
+                ImageLinks = new List<ImageLink>
                 {
-                    ImageLink = book.VolumeInfo.ImageLinks.Thumbnail,
-                    SmallImageLink = book.VolumeInfo.ImageLinks.SmallThumbnail
+                    new ImageLink(book.VolumeInfo.ImageLinks.Thumbnail, "Image"),
+                    new ImageLink(book.VolumeInfo.ImageLinks.SmallThumbnail, "SmallImage")
                 }
             };
         }

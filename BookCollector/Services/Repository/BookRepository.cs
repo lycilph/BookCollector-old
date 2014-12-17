@@ -49,13 +49,12 @@ namespace BookCollector.Services.Repository
         public void Load()
         {
             logger.Trace("Loading");
-
             var path = GetFilename();
-            if (!File.Exists(path))
-                return;
-
-            var json = File.ReadAllText(path);
-            Books = JsonConvert.DeserializeObject<List<Book>>(json);
+            if (File.Exists(path))
+            {
+                var json = File.ReadAllText(path);
+                Books = JsonConvert.DeserializeObject<List<Book>>(json);
+            }
 
             image_downloader.Start();
         }
@@ -63,7 +62,6 @@ namespace BookCollector.Services.Repository
         public void Save()
         {
             logger.Trace("Saving");
-
             var path = GetFilename();
             var json = JsonConvert.SerializeObject(Books, Formatting.Indented);
             File.WriteAllText(path, json);
@@ -74,6 +72,11 @@ namespace BookCollector.Services.Repository
         public bool IsDuplicate(Book book)
         {
             return Books.Any(book.IsDuplicate);
+        }
+
+        public Book GetDuplicate(Book book)
+        {
+            return Books.FirstOrDefault(book.IsDuplicate);
         }
 
         public Book Get(string book_id)

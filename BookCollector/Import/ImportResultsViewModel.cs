@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Linq;
+using BookCollector.Model;
 using BookCollector.Services.Repository;
 using BookCollector.Shell;
 using BookCollector.Utilities;
@@ -70,7 +71,8 @@ namespace BookCollector.Import
             IsAllSelected = false;
 
             logger.Trace("Got {0} books", message.ImportedBooks.Count);
-            Books = message.ImportedBooks.Select(b => new ImportedBookViewModel(b) { IsDuplicate = book_repository.IsDuplicate(b.Book) }).ToReactiveList();
+            var duplicates = message.ImportedBooks.Select(b => book_repository.GetDuplicate(b.Book));
+            Books = message.ImportedBooks.Zip(duplicates, (book, duplicate) => new ImportedBookViewModel(book, duplicate)).ToReactiveList();
 
             Books.Apply(b => b.IsSelected = !b.IsDuplicate);
             if (Books.All(b => b.IsSelected))

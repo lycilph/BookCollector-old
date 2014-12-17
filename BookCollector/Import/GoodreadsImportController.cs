@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media.Animation;
 using BookCollector.Apis.Goodreads;
 using BookCollector.Model;
 using BookCollector.Services.Browsing;
@@ -95,6 +96,13 @@ namespace BookCollector.Import
 
         private ImportedBook Convert(GoodreadsBook book)
         {
+            var image_links = new List<ImageLink>();
+
+            if (!book.ImageUrl.ToLowerInvariant().Contains("nophoto"))
+                image_links.Add(new ImageLink(book.ImageUrl, "Image"));
+            if (!book.SmallImageUrl.ToLowerInvariant().Contains("nophoto"))
+                image_links.Add(new ImageLink(book.SmallImageUrl, "SmallImage"));
+
             return new ImportedBook
             {
                 Book = new Book
@@ -106,11 +114,7 @@ namespace BookCollector.Import
                     ISBN13 = book.Isbn13,
                     ImportSource = Name
                 },
-                ImageLinks = new ImageLinks
-                {
-                    ImageLink = book.ImageUrl,
-                    SmallImageLink = book.SmallImageUrl
-                }
+                ImageLinks = image_links
             };
         }
 

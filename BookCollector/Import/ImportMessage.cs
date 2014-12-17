@@ -14,17 +14,17 @@ namespace BookCollector.Import
 
         public static ImportMessage Select(IImportController import_controller)
         {
-            return new ImportMessage {Kind = MessageKind.Selection, ImportController = import_controller};
+            return new ImportMessage { Kind = MessageKind.Selection, ImportController = import_controller };
         }
 
         public static ImportMessage Information(string text)
         {
-            return new ImportMessage {Kind = MessageKind.Information, Text = text};
+            return new ImportMessage { Kind = MessageKind.Information, Text = text };
         }
 
         public static ImportMessage Results(List<ImportedBook> imported_books)
         {
-            return new ImportMessage {Kind = MessageKind.Results, ImportedBooks = imported_books};
+            return new ImportMessage { Kind = MessageKind.Results, ImportedBooks = imported_books };
         }
     }
 }

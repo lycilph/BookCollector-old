@@ -51,6 +51,7 @@ namespace BookCollector.Import
             event_aggregator.Subscribe(this);
    
             progress.Report("Starting offscreen webbrowser");
+            current_state = State.LoadingMainPage;
             BrowserController.NavigateOffscreen(audible_uri.ToString());
         }
 
@@ -95,7 +96,7 @@ namespace BookCollector.Import
 
             var books = new List<AudibleBook>();
             var doc = await BrowserController.GetOffscreenSource();
-            var content = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'adbl-lib-content')]");
+            var content = doc.DocumentNode.SelectSingleNode("//div[@class='adbl-lib-content']");
             foreach (var node in content.SelectNodes(".//tr"))
             {
                 if (!node.HasChildNodes) continue;
@@ -173,9 +174,9 @@ namespace BookCollector.Import
                     Narrators = b.Narrators,
                     ImportSource = Name
                 },
-                ImageLinks = new ImageLinks
+                ImageLinks = new List<ImageLink>
                 {
-                    ImageLink = b.ImageUrl
+                    new ImageLink(b.ImageUrl, "Image")
                 }
             }).ToList();
             event_aggregator.PublishOnUIThread(ImportMessage.Results(imported_books));
