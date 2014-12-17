@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using BookCollector.Apis.Goodreads;
 using BookCollector.Model;
 using BookCollector.Services.Browsing;
-using BookCollector.Services.Goodreads;
-using BookCollector.Services.Import;
+using BookCollector.Services.Repository;
 using Caliburn.Micro;
 using NLog;
 using RestSharp.Contrib;
@@ -21,7 +21,6 @@ namespace BookCollector.Import
         private static readonly Uri callback_uri = new Uri(@"custom://www.bookcollector.com");
 
         private readonly GoodreadsApi api;
-        private readonly ImportInformationViewModel information;
         private readonly IEventAggregator event_aggregator;
         private readonly IProgress<string> progress;
         private GoodreadsAuthorizationResponse authorization_response;
@@ -30,27 +29,26 @@ namespace BookCollector.Import
         public string Name { get { return "Goodreads"; } }
 
         [ImportingConstructor]
-        public GoodreadsImportController(GoodreadsApi api, ImportInformationViewModel information, IEventAggregator event_aggregator)
+        public GoodreadsImportController(GoodreadsApi api, IEventAggregator event_aggregator)
         {
             this.api = api;
-            this.information = information;
             this.event_aggregator = event_aggregator;
 
-            progress = new Progress<string>(information.Write);
+            progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
 
         public async void Start()
         {
             event_aggregator.Subscribe(this);
 
-            information.Write("Authenticating");
+            progress.Report("Authenticating");
             if (api.IsAuthenticated)
             {
                 await Finish();
             }
             else
             {
-                information.Write("Requesting authorization token");
+                progress.Report("Requesting authorization token");
                 authorization_response = await api.RequestAuthorizationTokenAsync(callback_uri.ToString());
                 logger.Trace("Response url: " + authorization_response.Url);
 
@@ -116,9 +114,8 @@ namespace BookCollector.Import
             };
         }
 
-        private async void HandleLoadEnd(string url)
+        private async void HandleLoadEnd(Uri uri)
         {
-            var uri = new Uri(url);
             if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
                 return;
 
@@ -127,30 +124,30 @@ namespace BookCollector.Import
                 return;
 
             tcs.SetResult(true);
-            information.Write("Requesting access token");
+            progress.Report("Requesting access token");
             var access_response = await Task.Factory.StartNew(() => api.RequestAccessToken(authorization_response.OAuthToken, authorization_response.OAuthTokenSecret));
             api.Settings.OAuthToken = access_response.OAuthToken;
             api.Settings.OAuthTokenSecret = access_response.OAuthTokenSecret;
 
-            information.Write("Requesting user id");
+            progress.Report("Requesting user id");
             var user_response = await Task.Factory.StartNew(() => api.GetUserId());
             api.Settings.UserId = user_response;
 
-            information.Write("Authorization done!");
+            progress.Report("Authorization done!");
 
             await Finish();
         }
 
         public void Handle(BrowsingMessage message)
         {
-            logger.Trace("{0}: {1}", Enum.GetName(typeof(BrowsingMessage.MessageKind), message.Kind), message.Url);
+            logger.Trace("{0}: {1}", Enum.GetName(typeof(BrowsingMessage.MessageKind), message.Kind), message.Uri);
 
             switch (message.Kind)
             {
                 case BrowsingMessage.MessageKind.LoadStart:
                     break;
                 case BrowsingMessage.MessageKind.LoadEnd:
-                    HandleLoadEnd(message.Url);
+                    HandleLoadEnd(message.Uri);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

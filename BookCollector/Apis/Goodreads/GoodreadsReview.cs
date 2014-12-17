@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Services.Goodreads
+﻿namespace BookCollector.Apis.Goodreads
 {
     public class GoodreadsReview
     {

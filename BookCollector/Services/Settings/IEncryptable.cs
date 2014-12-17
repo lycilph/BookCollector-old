@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Services
+﻿namespace BookCollector.Services.Settings
 {
     public interface IEncryptable<out T> where T : class
     {

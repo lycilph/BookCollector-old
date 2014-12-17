@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Services.Audible
+namespace BookCollector.Apis.Audible
 {
     public class AudibleBook
     {

@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
+using BookCollector.Services;
 using BookCollector.Services.Settings;
 using NLog;
 using RestSharp;
 
-namespace BookCollector.Services.GoogleBooks
+namespace BookCollector.Apis.GoogleBooks
 {
     [Export(typeof(GoogleBooksApi))]
     public class GoogleBooksApi : ApiBase

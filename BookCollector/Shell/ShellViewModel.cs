@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using BookCollector.Services;
+using BookCollector.Services.Repository;
 using BookCollector.Services.Settings;
 using Caliburn.Micro;
 using Framework.Core.Shell;
@@ -20,7 +21,6 @@ namespace BookCollector.Shell
         private readonly Stack<IScreen> items = new Stack<IScreen>();
         private readonly ApplicationSettings settings;
         private readonly BookRepository book_repository;
-        private readonly Downloader downloader;
         private readonly IScreen main_view_model;
 
         private string _Text;
@@ -41,13 +41,11 @@ namespace BookCollector.Shell
         public ShellViewModel(IEventAggregator event_aggregator, 
                               ApplicationSettings settings,
                               BookRepository book_repository, 
-                              Downloader downloader,
                               [Import("Main")] IScreen main_view_model)
         {
             this.settings = settings;
             this.book_repository = book_repository;
             this.main_view_model = main_view_model;
-            this.downloader = downloader;
 
             event_aggregator.Subscribe(this);
         }
@@ -61,7 +59,6 @@ namespace BookCollector.Shell
 
             settings.Load();
             book_repository.Load();
-            downloader.Start();
 
             Show(main_view_model);
         }
@@ -76,7 +73,6 @@ namespace BookCollector.Shell
             {
                 settings.Save();
                 book_repository.Save();
-                downloader.Stop();
             }
         }
 

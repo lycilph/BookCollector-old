@@ -1,8 +1,7 @@
-﻿namespace BookCollector.Services.Import
+﻿namespace BookCollector.Services.Repository
 {
     public class ImageLinks
     {
-        public string BookId { get; set; }
         public string ImageLink { get; set; }
         public string SmallImageLink { get; set; }
     }

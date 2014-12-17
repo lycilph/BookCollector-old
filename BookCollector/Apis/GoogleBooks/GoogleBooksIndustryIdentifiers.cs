@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Services.GoogleBooks
+﻿namespace BookCollector.Apis.GoogleBooks
 {
     public class GoogleBooksIndustryIdentifiers
     {

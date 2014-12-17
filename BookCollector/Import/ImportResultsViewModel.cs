@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Linq;
-using BookCollector.Services;
+using BookCollector.Services.Repository;
 using BookCollector.Shell;
 using BookCollector.Utilities;
 using Caliburn.Micro;
@@ -19,7 +19,6 @@ namespace BookCollector.Import
 
         private readonly IEventAggregator event_aggregator;
         private readonly BookRepository book_repository;
-        private readonly Downloader downloader;
 
         private ReactiveList<ImportedBookViewModel> _Books = new ReactiveList<ImportedBookViewModel>();
         public ReactiveList<ImportedBookViewModel> Books
@@ -36,11 +35,10 @@ namespace BookCollector.Import
         }
 
         [ImportingConstructor]
-        public ImportResultsViewModel(IEventAggregator event_aggregator, BookRepository book_repository, Downloader downloader)
+        public ImportResultsViewModel(IEventAggregator event_aggregator, BookRepository book_repository)
         {
             this.event_aggregator = event_aggregator;
             this.book_repository = book_repository;
-            this.downloader = downloader;
 
             event_aggregator.Subscribe(this);
 
@@ -50,11 +48,12 @@ namespace BookCollector.Import
 
         public void Ok()
         {
-            var selected_books = Books.Where(b => b.IsSelected).ToList();
-            book_repository.AddRange(selected_books.Select(b => b.AssociatedObject.Book));
-            downloader.AddRange(selected_books.Select(b => b.AssociatedObject));
+            var selected_books = Books.Where(b => b.IsSelected)
+                                      .Select(b => b.AssociatedObject)
+                                      .ToList();
+            book_repository.Import(selected_books);
 
-            Cancel();           
+            Cancel();
         }
 
         public void Cancel()

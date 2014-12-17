@@ -147,9 +147,10 @@
     <Compile Include="Import\ImportResultsView.xaml.cs">
       <DependentUpon>ImportResultsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Services\Audible\AudibleBook.cs" />
+    <Compile Include="Apis\Audible\AudibleBook.cs" />
     <Compile Include="Services\Browsing\BrowserController.cs" />
     <Compile Include="Services\Browsing\BrowsingMessage.cs" />
+    <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
     <Compile Include="Services\Browsing\SchemeHandler.cs" />
     <Compile Include="Import\GoogleBooksImportController.cs" />
     <Compile Include="Import\IImportController.cs" />
@@ -179,9 +180,9 @@
       <DependentUpon>MainBookView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainBookViewModel.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsAuthor.cs" />
-    <Compile Include="Services\Import\ImageLinks.cs" />
-    <Compile Include="Services\Import\ImportedBook.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsAuthor.cs" />
+    <Compile Include="Services\Repository\ImageLinks.cs" />
+    <Compile Include="Services\Repository\ImportedBook.cs" />
     <Compile Include="Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
     </Compile>
@@ -190,30 +191,29 @@
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Main\MainViewModel.cs" />
-    <Compile Include="Services\ApiBase.cs" />
-    <Compile Include="Services\Audible\AudibleApi.cs" />
-    <Compile Include="Services\Downloader.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsAccessResponse.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsImportResponse.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBook.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksAuthorizationResponse.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksCollection.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksImageLinks.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksIndustryIdentifiers.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksVolumeInfo.cs" />
-    <Compile Include="Services\IApi.cs" />
-    <Compile Include="Services\GoogleBooks\GoogleBooksApi.cs" />
+    <Compile Include="Apis\ApiBase.cs" />
+    <Compile Include="Apis\Audible\AudibleApi.cs" />
+    <Compile Include="Services\Repository\ImageDownloader.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsAccessResponse.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsImportResponse.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBook.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksAuthorizationResponse.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksCollection.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksImageLinks.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksIndustryIdentifiers.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksVolumeInfo.cs" />
+    <Compile Include="Apis\IApi.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksApi.cs" />
     <Compile Include="Services\Settings\ApplicationSettings.cs" />
-    <Compile Include="Services\BookRepository.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsApi.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsAuthorizationResponse.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsBook.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsReview.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsReviewCollection.cs" />
-    <Compile Include="Services\Settings\AudibleSettings.cs" />
+    <Compile Include="Services\Repository\BookRepository.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsApi.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsAuthorizationResponse.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsBook.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsReview.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsReviewCollection.cs" />
     <Compile Include="Services\Settings\GoodreadsSettings.cs" />
-    <Compile Include="Services\Goodreads\GoodreadsUser.cs" />
-    <Compile Include="Services\IEncryptable.cs" />
+    <Compile Include="Apis\Goodreads\GoodreadsUser.cs" />
+    <Compile Include="Services\Settings\IEncryptable.cs" />
     <Compile Include="Services\Settings\GoogleBooksSettings.cs" />
     <Compile Include="Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>

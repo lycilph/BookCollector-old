@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Services.GoogleBooks
+namespace BookCollector.Apis.GoogleBooks
 {
     public class GoogleBooksVolumeInfo
     {

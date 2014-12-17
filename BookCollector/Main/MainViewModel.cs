@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Linq;
 using BookCollector.Services;
+using BookCollector.Services.Repository;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;

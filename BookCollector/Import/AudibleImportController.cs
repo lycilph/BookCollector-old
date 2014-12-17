@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using BookCollector.Apis.Audible;
 using BookCollector.Model;
-using BookCollector.Services.Audible;
-using BookCollector.Services.Import;
+using BookCollector.Services.Browsing;
+using BookCollector.Services.Repository;
+using BookCollector.Utilities;
 using Caliburn.Micro;
-using CefSharp;
-using CefSharp.OffScreen;
-using HtmlAgilityPack;
 using NLog;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector.Import
 {
     [Export(typeof(IImportController))]
-    public class AudibleImportController : IImportController
+    public class AudibleImportController : IImportController, IHandle<BrowsingMessage>
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Uri audible_uri = new Uri(@"http://www.audible.com");
+        private static readonly Uri amazon_uri = new Uri(@"http://www.amazon.com");
+
         private enum State
         {
             LoadingMainPage,
@@ -28,72 +31,131 @@ namespace BookCollector.Import
             SettingItemsFilter
         }
 
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
         private readonly IEventAggregator event_aggregator;
         private readonly IProgress<string> progress;
-        private ChromiumWebBrowser wb;
+        private TaskCompletionSource<bool> tcs;
         private State current_state;
 
         public string Name { get { return "Audible"; } }
 
         [ImportingConstructor]
-        public AudibleImportController(IEventAggregator event_aggregator, ImportInformationViewModel information)
+        public AudibleImportController(IEventAggregator event_aggregator)
         {
             this.event_aggregator = event_aggregator;
 
-            progress = new Progress<string>(information.Write);
+            progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
 
         public void Start()
         {
+            event_aggregator.Subscribe(this);
+   
             progress.Report("Starting offscreen webbrowser");
-
-            wb = new ChromiumWebBrowser();
-            wb.FrameLoadEnd += OnFrameLoadEnd;
-            wb.Load(@"http://www.audible.com");
-
-            current_state = State.LoadingMainPage;
+            BrowserController.NavigateOffscreen(audible_uri.ToString());
         }
 
-        private async void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs args)
+        private async void LoadEnd(Uri uri)
         {
-            logger.Trace("Loaded: " + args.Url);
-
-            var uri = new Uri(args.Url);
-            if (uri.Host != @"www.audible.com" && uri.Host != @"www.amazon.com")
+            if (uri.Host != audible_uri.Host && uri.Host != amazon_uri.Host)
                 return;
 
-            if (current_state == State.LoadingMainPage)
-            {
-                progress.Report("Loaded main page");
+            logger.Trace("Current state: " + Enum.GetName(typeof(State), current_state));
 
-                if (await IsSignedIn())
+            switch (current_state)
+            {
+                case State.LoadingMainPage:
+                    HandleMainPage();
+                    break;
+                case State.LoadingSignInPage:
+                    current_state = State.SigningIn;
+                    break;
+                case State.SigningIn:
+                    tcs.SetResult(true);
                     LoadLibraryPage();
+                    break;
+                case State.LoadingLibraryPage:
+                    progress.Report("Library page loaded");
+                    await SetTimeFilter();
+                    break;
+                case State.SettingTimeFilter:
+                    await SetItemsFilter();
+                    break;
+                case State.SettingItemsFilter:
+                    var books = await ParseBooks();
+                    Finish(books);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private async Task<List<AudibleBook>> ParseBooks()
+        {
+            progress.Report("Parsing books");
+
+            var books = new List<AudibleBook>();
+            var doc = await BrowserController.GetOffscreenSource();
+            var content = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'adbl-lib-content')]");
+            foreach (var node in content.SelectNodes(".//tr"))
+            {
+                if (!node.HasChildNodes) continue;
+
+                var inputs = node.SelectNodes(".//input");
+                if (inputs == null) continue;
+
+                var asin_node = inputs.SingleNodeWithAttributeNameAndValue("name", "asin");
+                if (asin_node == null) continue;
+
+                var parent_asin_node = inputs.SingleNodeWithAttributeNameAndValue("name", "parentasin");
+                if (parent_asin_node == null) continue;
+
+                var title_node = node.SelectSingleNode(".//a[@name='tdTitle']");
+                if (title_node == null) continue;
+
+                var description_node = node.SelectSingleNode(".//p");
+                if (description_node == null) continue;
+
+                var list = node.SelectNodes(".//strong");
+                if (list == null) continue;
+
+                var product_cover_node = node.SelectSingleNode(".//td[@name='productCover']");
+                var image_node = (product_cover_node != null ? product_cover_node.SelectSingleNode(".//img") : null);
+
+                var parent_asin = parent_asin_node.Attributes["value"].Value;
+                var asin = asin_node.Attributes["value"].Value;
+
+                if (string.IsNullOrWhiteSpace(parent_asin))
+                {
+                    var authors = list[0].InnerText;
+                    var authors_list = authors.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(a => a.Trim())
+                        .ToList();
+
+                    var narrators = list[1].InnerText;
+                    var narrators_list = narrators.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(n => n.Trim())
+                        .ToList();
+
+                    var book = new AudibleBook
+                    {
+                        Title = title_node.InnerText,
+                        Asin = asin,
+                        Authors = authors_list,
+                        Narrators = narrators_list,
+                        Description = description_node.InnerText.Trim(),
+                        ImageUrl = (image_node == null ? "" : image_node.Attributes["src"].Value)
+                    };
+                    books.Add(book);
+                }
                 else
-                    await LoadSignInPage();
+                {
+                    var parent = books.SingleOrDefault(b => b.Asin == parent_asin);
+                    if (parent != null)
+                        parent.PartsAsin.Add(asin);
+                }
             }
-            else if (current_state == State.LoadingSignInPage)
-            {
-                await SignIn();
-            }
-            else if (current_state == State.SigningIn)
-            {
-                LoadLibraryPage();
-            }
-            else if (current_state == State.LoadingLibraryPage)
-            {
-                await SetTimeFilter();
-            }
-            else if (current_state == State.SettingTimeFilter)
-            {
-                await SetItemsFilter();
-            }
-            else if (current_state == State.SettingItemsFilter)
-            {
-                var books = await ParseBooks();
-                Finish(books);
-            }
+
+            return books;
         }
 
         private void Finish(IReadOnlyCollection<AudibleBook> books)
@@ -117,174 +179,93 @@ namespace BookCollector.Import
                 }
             }).ToList();
             event_aggregator.PublishOnUIThread(ImportMessage.Results(imported_books));
-        }
-
-        private async Task<List<AudibleBook>> ParseBooks()
-        {
-            progress.Report("Parsing items");
-
-            var source = await wb.GetSourceAsync();
-            var doc = new HtmlDocument();
-            doc.LoadHtml(source);
-
-            var books = new List<AudibleBook>();
-            var content = doc.DocumentNode.SelectSingleNode("//div[contains(@class, 'adbl-lib-content')]");
-            foreach (var node in content.SelectNodes(".//tr"))
-            {
-                if (!node.HasChildNodes) continue;
-
-                var inputs = node.SelectNodes(".//input");
-                if (inputs == null) continue;
-
-                var asin_node =
-                    inputs.SingleOrDefault(
-                        i =>
-                            i.HasAttributes && i.Attributes.Contains("name") &&
-                            i.Attributes["name"].Value.ToLowerInvariant() == "asin");
-                if (asin_node == null) continue;
-
-                var parent_asin_node =
-                    inputs.SingleOrDefault(
-                        i =>
-                            i.HasAttributes && i.Attributes.Contains("name") &&
-                            i.Attributes["name"].Value.ToLowerInvariant() == "parentasin");
-                if (parent_asin_node == null) continue;
-
-                var title_node =
-                    node.SelectNodes(".//a[@name]")
-                        .SingleOrDefault(n => n.Attributes["name"].Value.ToLowerInvariant() == "tdtitle");
-                if (title_node == null) continue;
-
-                var description_node = node.SelectSingleNode(".//p");
-                if (description_node == null) continue;
-
-                var list = node.SelectNodes(".//strong");
-                if (list == null) continue;
-
-                var product_cover_node = node.SelectSingleNode(".//td[@name='productCover']");
-                var image_node = (product_cover_node != null ? product_cover_node.SelectSingleNode(".//img") : null);
-
-                var parent_asin = parent_asin_node.Attributes["value"].Value;
-                var asin = asin_node.Attributes["value"].Value;
-                var title = title_node.InnerText;
-                var description = description_node.InnerText;
-                var authors = list[0].InnerText;
-                var narrators = list[1].InnerText;
-                var image = (image_node == null ? "" : image_node.Attributes["src"].Value);
-
-                if (string.IsNullOrWhiteSpace(parent_asin))
-                {
-                    var authors_list = authors.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(a => a.Trim())
-                        .ToList();
-                    var narrators_list = narrators.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(n => n.Trim())
-                        .ToList();
-
-                    var book = new AudibleBook
-                    {
-                        Title = title,
-                        Asin = asin,
-                        Authors = authors_list,
-                        Narrators = narrators_list,
-                        Description = description,
-                        ImageUrl = image
-                    };
-                    books.Add(book);
-                }
-                else
-                {
-                    var parent = books.SingleOrDefault(b => b.Asin == parent_asin);
-                    if (parent != null)
-                        parent.PartsAsin.Add(asin);
-                }
-            }
-
-            return books;
+            
         }
 
         private async Task SetItemsFilter()
         {
-            progress.Report("Settings items filter");
+            progress.Report("Setting items filter");
 
-            var result = await wb.EvaluateScriptAsync("document.getElementsByName('itemsPerPage')[0].value = document.getElementById('totalItems').value");
+            var result = await BrowserController.EvaluateOffscreen("document.getElementsByName('itemsPerPage')[0].value = document.getElementById('totalItems').value");
             if (!result.Success)
                 throw new Exception();
 
             current_state = State.SettingItemsFilter;
-            wb.ExecuteScriptAsync("document.getElementById('myLibraryForm').submit()");
+            BrowserController.ExecuteOffscreen("document.getElementById('myLibraryForm').submit()");
         }
 
         private async Task SetTimeFilter()
         {
-            progress.Report("Loaded library page");
+            progress.Report("Setting time filter");
 
-            var result = await wb.EvaluateScriptAsync("document.getElementsByName('timeFilter')[0].value = 'all'");
+            var result = await BrowserController.EvaluateOffscreen("document.getElementsByName('timeFilter')[0].value = 'all'");
             if (!result.Success)
                 throw new Exception();
 
-            progress.Report("Setting time filter");
-
             current_state = State.SettingTimeFilter;
-            wb.ExecuteScriptAsync("document.getElementById('myLibraryForm').submit()");
-        }
-
-        private async Task SignIn()
-        {
-            progress.Report("Loaded sign in page");
-
-            var email_result = await wb.EvaluateScriptAsync("document.getElementById('ap_email').value = 'lycilph@gmail.com'");
-            if (!email_result.Success)
-                throw new Exception();
-
-            var password_result = await wb.EvaluateScriptAsync("document.getElementById('ap_password').value = 'zgubbtCmsu7B'");
-            if (!password_result.Success)
-                throw new Exception();
-
-            current_state = State.SigningIn;
-            wb.ExecuteScriptAsync("document.getElementById('signInSubmit').click()");
-        }
-
-        private async Task LoadSignInPage()
-        {
-            var source = await wb.GetSourceAsync();
-            var doc = new HtmlDocument();
-            doc.LoadHtml(source);
-
-            var node = doc.GetElementbyId("anon_header_v2_signin");
-            var link_node = node.SelectSingleNode("a[@href]");
-            var href = link_node.Attributes["href"].Value;
-
-            var sign_in_uri = new Uri(new Uri(@"http://www.audible.com/"), href);
-            logger.Trace("login page url: " + sign_in_uri);
-
-            current_state = State.LoadingSignInPage;
-            wb.Load(sign_in_uri.ToString());
+            BrowserController.ExecuteOffscreen("document.getElementById('myLibraryForm').submit()");
         }
 
         private async void LoadLibraryPage()
         {
             progress.Report("Finding library page link");
 
-            var source = await wb.GetSourceAsync();
-            var doc = new HtmlDocument();
-            doc.LoadHtml(source);
+            var doc = await BrowserController.GetOffscreenSource();
+            var link = doc.ChildLinkById("library-menu");
+            var library_uri = new Uri(audible_uri, link);
 
-            var node = doc.GetElementbyId("library-menu");
-            var link_node = node.SelectSingleNode(".//a[@href]");
-            var href = link_node.Attributes["href"].Value;
-
-            var library_uri = new Uri(new Uri(@"http://www.audible.com/"), href);
             logger.Trace("Library page url: " + library_uri);
 
             current_state = State.LoadingLibraryPage;
-            wb.Load(library_uri.ToString());
+            BrowserController.NavigateOffscreen(library_uri.ToString());
         }
 
-        private async Task<bool> IsSignedIn()
+        private async void HandleMainPage()
         {
-            var result = await wb.EvaluateScriptAsync("document.getElementById('anon_header_v2_signin') == null");
+            progress.Report("Main page loaded");
+
+            if (await IsSignedIn())
+                LoadLibraryPage();
+            else
+                HandleSignIn();
+        }
+
+        private async void HandleSignIn()
+        {
+            logger.Trace("Signing in");
+
+            var doc = await BrowserController.GetOffscreenSource();
+            var link = doc.ChildLinkById("anon_header_v2_signin");
+            var sign_in_uri = new Uri(audible_uri, link);
+
+            logger.Trace("login page url: " + sign_in_uri);
+
+            current_state = State.LoadingSignInPage;
+            tcs = BrowserController.ShowAndNavigate(sign_in_uri.ToString());
+        }
+
+        private static async Task<bool> IsSignedIn()
+        {
+            logger.Trace("Authenticating");
+
+            var result = await BrowserController.EvaluateOffscreen("document.getElementById('anon_header_v2_signin') == null");
             return Convert.ToBoolean(result.Result);
+        }
+
+        public void Handle(BrowsingMessage message)
+        {
+            logger.Trace("{0}: {1}", Enum.GetName(typeof(BrowsingMessage.MessageKind), message.Kind), message.Uri);
+
+            switch (message.Kind)
+            {
+                case BrowsingMessage.MessageKind.LoadStart:
+                    break;
+                case BrowsingMessage.MessageKind.LoadEnd:
+                    LoadEnd(message.Uri);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

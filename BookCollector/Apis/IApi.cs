@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Services
+﻿namespace BookCollector.Apis
 {
     public interface IApi
     {

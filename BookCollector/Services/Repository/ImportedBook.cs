@@ -1,6 +1,6 @@
 ﻿using BookCollector.Model;
 
-namespace BookCollector.Services.Import
+namespace BookCollector.Services.Repository
 {
     public class ImportedBook
     {

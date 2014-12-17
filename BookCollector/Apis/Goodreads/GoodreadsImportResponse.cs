@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Services.Goodreads
+namespace BookCollector.Apis.Goodreads
 {
     public class GoodreadsImportResponse
     {

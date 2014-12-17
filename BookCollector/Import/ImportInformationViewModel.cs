@@ -2,17 +2,13 @@
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using NLog;
 using ReactiveUI;
-using LogManager = NLog.LogManager;
 
 namespace BookCollector.Import
 {
     [Export(typeof(ImportInformationViewModel))]
-    public class ImportInformationViewModel : ReactiveScreen
+    public class ImportInformationViewModel : ReactiveScreen, IHandle<ImportMessage>
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
         private readonly IEventAggregator event_aggregator;
 
         private ReactiveList<string> _Messages = new ReactiveList<string>();
@@ -26,6 +22,7 @@ namespace BookCollector.Import
         public ImportInformationViewModel(IEventAggregator event_aggregator)
         {
             this.event_aggregator = event_aggregator;
+            event_aggregator.Subscribe(this);
         }
 
         protected override void OnActivate()
@@ -43,9 +40,10 @@ namespace BookCollector.Import
             event_aggregator.PublishOnUIThread(ShellMessage.BusyMessage(false));
         }
 
-        public void Write(string message)
+        public void Handle(ImportMessage message)
         {
-            Messages.Add(message);
+            if (message.Kind == ImportMessage.MessageKind.Information)
+                Messages.Add(message.Text);
         }
     }
 }

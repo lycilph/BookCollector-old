@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using BookCollector.Services.Import;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
@@ -64,8 +63,6 @@ namespace BookCollector.Import
                 case ImportMessage.MessageKind.Results:
                     ActivateItem(results);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
     }

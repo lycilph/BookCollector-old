@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using BookCollector.Services.Import;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using NLog;
 using LogManager = NLog.LogManager;
 
-namespace BookCollector.Services
+namespace BookCollector.Services.Repository
 {
-    [Export(typeof(Downloader))]
-    public class Downloader
+    public class ImageDownloader
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -26,18 +23,29 @@ namespace BookCollector.Services
         private CancellationTokenSource cts;
         private Task task;
 
-        [ImportingConstructor]
-        public Downloader(BookRepository book_repository)
+        public ImageDownloader(BookRepository book_repository)
         {
             this.book_repository = book_repository;
         }
 
-        private static string GetImageFilename(string name)
+        private static string GetImageFolder()
         {
             var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var path = Path.Combine(folder, "Images", name + ".jpg");
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
-            return path;
+            return Path.Combine(folder, "Images");
+        }
+
+        private static void EnsureImageFolderExists()
+        {
+            Directory.CreateDirectory(GetImageFolder());
+        }
+
+        private static string GetImageFilename(ImportedBook imported_book)
+        {
+            var extension = Path.GetExtension(imported_book.ImageLinks.ImageLink);
+            if (string.IsNullOrWhiteSpace(extension))
+                extension = ".jpg";
+
+            return Path.Combine(GetImageFolder(),  imported_book.Book.Id + extension);
         }
 
         private static string GetFilename()
@@ -51,23 +59,27 @@ namespace BookCollector.Services
             logger.Trace("Starting");
 
             Load();
+            EnsureImageFolderExists();
 
             cts = new CancellationTokenSource();
             task = Task.Factory.StartNew(() =>
             {
                 using (var client = new WebClient())
                 {
-                    foreach (var book in queue.GetConsumingEnumerable(cts.Token))
+                    foreach (var imported_book in queue.GetConsumingEnumerable(cts.Token))
                     {
-                        logger.Trace("Processing {0}", book.Book.Title);
+                        logger.Trace("Processing {0}", imported_book.Book.Title);
 
                         try
                         {
-                            var filename = GetImageFilename(book.Book.Id.ToString());
-                            client.DownloadFile(book.ImageLinks.ImageLink, filename);
-                            book.Book.Image = filename;
+                            if (!string.IsNullOrWhiteSpace(imported_book.ImageLinks.ImageLink))
+                            {
+                                var filename = GetImageFilename(imported_book);
+                                client.DownloadFile(imported_book.ImageLinks.ImageLink, filename);
+                                imported_book.Book.Image = filename;
+                            }
 
-                            logger.Trace("Image for {0} downloaded", book.Book.Title);
+                            logger.Trace("Image for {0} downloaded", imported_book.Book.Title);
                         }
                         catch (Exception e)
                         {
@@ -103,11 +115,9 @@ namespace BookCollector.Services
         {
             logger.Trace("Saving download queue");
 
-            queue.Apply(b => b.ImageLinks.BookId = b.Book.Id);
-
             var path = GetFilename();
-            var links = queue.Select(b => b.ImageLinks);
-            var json = JsonConvert.SerializeObject(links, Formatting.Indented);
+            var items = queue.Select(b => new { BookId = b.Book.Id, b.ImageLinks });
+            var json = JsonConvert.SerializeObject(items, Formatting.Indented);
             File.WriteAllText(path, json);
         }
 
@@ -119,20 +129,24 @@ namespace BookCollector.Services
             if (!File.Exists(path))
                 return;
 
+            var dummy_links = new ImageLinks();
+            var dummy = new [] { new {BookId = string.Empty, Imagelinks = dummy_links} };
+
             var json = File.ReadAllText(path);
-            var links = JsonConvert.DeserializeObject<List<ImageLinks>>(json);
-            var books = links.Select(l => new ImportedBook
+            var links = JsonConvert.DeserializeAnonymousType(json, dummy);
+
+            links.Select(l => new ImportedBook
             {
                 Book = book_repository.Get(l.BookId),
-                ImageLinks = l
-            });
-            AddRange(books);
+                ImageLinks = l.Imagelinks
+            })
+            .Apply(queue.Add);
         }
 
-        public void AddRange(IEnumerable<ImportedBook> books)
+        public void Add(IEnumerable<ImportedBook> imported_books)
         {
-            logger.Trace("Adding {0} books to download queue", books.Count());
-            books.Apply(queue.Add);
+            logger.Trace("Adding {0} books to the image download queue", imported_books.Count());
+            imported_books.Apply(queue.Add);
         }
     }
 }

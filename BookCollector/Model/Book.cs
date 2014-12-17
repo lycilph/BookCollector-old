@@ -19,7 +19,7 @@ namespace BookCollector.Model
         public string ISBN13 { get; set; }
         public string ImportSource { get; set; }
 
-        // The image properties is updated by the Downloader
+        // The image properties is updated by the ImageDownloader
         private string _Image;
         public string Image
         {

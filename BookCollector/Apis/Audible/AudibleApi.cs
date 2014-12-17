@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.Composition;
+using BookCollector.Services;
 using NLog;
 
-namespace BookCollector.Services.Audible
+namespace BookCollector.Apis.Audible
 {
     [Export(typeof(AudibleApi))]
     public class AudibleApi : ApiBase

@@ -6,10 +6,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using BookCollector.Apis.GoogleBooks;
 using BookCollector.Model;
 using BookCollector.Services.Browsing;
-using BookCollector.Services.GoogleBooks;
-using BookCollector.Services.Import;
+using BookCollector.Services.Repository;
 using Caliburn.Micro;
 using NLog;
 using LogManager = NLog.LogManager;
@@ -23,7 +23,6 @@ namespace BookCollector.Import
         private static readonly Uri redirect_uri = new Uri(@"http://localhost:9327");
 
         private readonly GoogleBooksApi api;
-        private readonly ImportInformationViewModel information;
         private readonly IEventAggregator event_aggregator;
         private readonly IProgress<string> progress;
         private TaskCompletionSource<bool> tcs;
@@ -31,26 +30,21 @@ namespace BookCollector.Import
         public string Name { get { return "Google Books"; } }
 
         [ImportingConstructor]
-        public GoogleBooksImportController(ImportInformationViewModel information, GoogleBooksApi api, IEventAggregator event_aggregator)
+        public GoogleBooksImportController(GoogleBooksApi api, IEventAggregator event_aggregator)
         {
-            this.information = information;
             this.api = api;
             this.event_aggregator = event_aggregator;
 
-            progress = new Progress<string>(information.Write);
+            progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
 
         public void Start()
         {
-            information.Write("Authenticating");
+            progress.Report("Authenticating");
             if (api.IsAuthenticated)
-            {
                 Finish();
-            }
             else
-            {
                 Authenticate();
-            }
         }
 
         private async void Finish()

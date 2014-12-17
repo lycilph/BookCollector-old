@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
@@ -9,12 +8,14 @@ using Newtonsoft.Json;
 using NLog;
 using ReactiveUI;
 
-namespace BookCollector.Services
+namespace BookCollector.Services.Repository
 {
     [Export(typeof(BookRepository))]
     public class BookRepository : ReactiveObject
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private readonly ImageDownloader image_downloader;
 
         private List<Book> _Books = new List<Book>();
         public List<Book> Books
@@ -23,15 +24,21 @@ namespace BookCollector.Services
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
 
+        public BookRepository()
+        {
+            image_downloader = new ImageDownloader(this);
+        }
+
         private static string GetFilename()
         {
             var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             return Path.Combine(folder, "Books.txt");
         }
 
-        public void AddRange(IEnumerable<Book> books)
+        public void Import(IEnumerable<ImportedBook> imported_books)
         {
-            Books.AddRange(books);
+            Books.AddRange(imported_books.Select(ib => ib.Book));
+            image_downloader.Add(imported_books);
         }
 
         public void Clear()
@@ -49,6 +56,8 @@ namespace BookCollector.Services
 
             var json = File.ReadAllText(path);
             Books = JsonConvert.DeserializeObject<List<Book>>(json);
+
+            image_downloader.Start();
         }
 
         public void Save()
@@ -58,6 +67,8 @@ namespace BookCollector.Services
             var path = GetFilename();
             var json = JsonConvert.SerializeObject(Books, Formatting.Indented);
             File.WriteAllText(path, json);
+
+            image_downloader.Stop();
         }
 
         public bool IsDuplicate(Book book)

@@ -21,6 +21,7 @@
             <TextBlock DockPanel.Dock="Left" Text="Address:" Margin="0,0,10,0"/>
             <TextBlock Text="{Binding ElementName=Browser, Path=Address}"/>
         </DockPanel>
+        <Separator DockPanel.Dock="Top"/>
 
         <controls:MetroProgressBar DockPanel.Dock="Top" 
                                    IsIndeterminate="True" 

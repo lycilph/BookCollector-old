@@ -3,6 +3,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using BookCollector.Services;
 using BookCollector.Services.Settings;
 using BookCollector.Utilities;
 using NLog;
@@ -10,7 +11,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Contrib;
 
-namespace BookCollector.Services.Goodreads
+namespace BookCollector.Apis.Goodreads
 {
     [Export(typeof(GoodreadsApi))]
     public class GoodreadsApi : ApiBase
