@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
-using BookCollector.Services;
 using BookCollector.Services.Settings;
 using NLog;
 using RestSharp;

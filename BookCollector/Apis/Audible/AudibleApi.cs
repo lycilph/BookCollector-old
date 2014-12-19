@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using BookCollector.Services;
 using NLog;
 
 namespace BookCollector.Apis.Audible

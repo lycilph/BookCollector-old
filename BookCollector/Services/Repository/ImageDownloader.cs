@@ -32,6 +32,8 @@ namespace BookCollector.Services.Repository
         private static string GetImageFolder()
         {
             var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (string.IsNullOrWhiteSpace(folder))
+                throw new ArgumentNullException();
             return Path.Combine(folder, "Images");
         }
 
@@ -52,6 +54,8 @@ namespace BookCollector.Services.Repository
         private static string GetFilename()
         {
             var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (string.IsNullOrWhiteSpace(folder))
+                throw new ArgumentNullException();
             return Path.Combine(folder, "download.txt");
         }
 
@@ -106,13 +110,13 @@ namespace BookCollector.Services.Repository
         {
             try
             {
-                logger.Trace("Stopping download");
+                logger.Trace("Stopping image download queue");
                 cts.Cancel();
                 task.Wait();
             }
             catch (AggregateException)
             {
-                logger.Trace("Download stopped");
+                logger.Trace("Image download queue stopped");
             }
 
             // Save queue
@@ -121,7 +125,7 @@ namespace BookCollector.Services.Repository
 
         private void Save()
         {
-            logger.Trace("Saving download queue");
+            logger.Trace("Saving image download queue");
 
             var path = GetFilename();
             var items = queue.Select(b => new { BookId = b.Book.Id, b.ImageLinks });
@@ -131,7 +135,7 @@ namespace BookCollector.Services.Repository
 
         private void Load()
         {
-            logger.Trace("Loading download queue");
+            logger.Trace("Loading image download queue");
 
             var path = GetFilename();
             if (!File.Exists(path))
@@ -153,8 +157,9 @@ namespace BookCollector.Services.Repository
 
         public void Add(IEnumerable<ImportedBook> imported_books)
         {
-            logger.Trace("Adding {0} books to the image download queue", imported_books.Count());
-            imported_books.Apply(queue.Add);
+            var imported_books_list = imported_books.ToList();
+            logger.Trace("Adding {0} books to the image download queue", imported_books_list.Count());
+            imported_books_list.Apply(queue.Add);
         }
     }
 }

@@ -70,6 +70,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.2.1\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
     </Reference>
+    <Reference Include="Framework.Controls">
+      <HintPath>..\packages\Framework.Controls.1.0.0-alpha\lib\net45\Framework.Controls.dll</HintPath>
+    </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Framework.Core.1.0.3-alpha\lib\net45\Framework.Core.dll</HintPath>
@@ -141,56 +144,61 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
-    <Compile Include="Import\AudibleImportController.cs" />
-    <Compile Include="Import\GoodreadsImportController.cs" />
-    <Compile Include="Import\ImportMessage.cs" />
-    <Compile Include="Import\ImportResultsView.xaml.cs">
+    <Compile Include="Screens\Import\AudibleImportController.cs" />
+    <Compile Include="Screens\Import\GoodreadsImportController.cs" />
+    <Compile Include="Screens\Import\ImportMessage.cs" />
+    <Compile Include="Screens\Import\ImportResultsView.xaml.cs">
       <DependentUpon>ImportResultsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Apis\Audible\AudibleBook.cs" />
+    <Compile Include="Model\Collection.cs" />
+    <Compile Include="Screens\Users\CollectionsView.xaml.cs">
+      <DependentUpon>CollectionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Users\CollectionsViewModel.cs" />
     <Compile Include="Services\Browsing\BrowserController.cs" />
     <Compile Include="Services\Browsing\BrowsingMessage.cs" />
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
     <Compile Include="Services\Browsing\SchemeHandler.cs" />
-    <Compile Include="Import\GoogleBooksImportController.cs" />
-    <Compile Include="Import\IImportController.cs" />
+    <Compile Include="Screens\Import\GoogleBooksImportController.cs" />
+    <Compile Include="Screens\Import\IImportController.cs" />
     <Compile Include="Services\Browsing\BrowserView.xaml.cs">
       <DependentUpon>BrowserView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Services\Browsing\BrowserViewModel.cs" />
-    <Compile Include="Import\ImportControllerView.xaml.cs">
+    <Compile Include="Screens\Import\ImportControllerView.xaml.cs">
       <DependentUpon>ImportControllerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportControllerViewModel.cs" />
-    <Compile Include="Import\ImportInformationView.xaml.cs">
+    <Compile Include="Screens\Import\ImportControllerViewModel.cs" />
+    <Compile Include="Screens\Import\ImportInformationView.xaml.cs">
       <DependentUpon>ImportInformationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportSelectionView.xaml.cs">
+    <Compile Include="Screens\Import\ImportSelectionView.xaml.cs">
       <DependentUpon>ImportSelectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportSelectionViewModel.cs" />
-    <Compile Include="Import\ImportInformationViewModel.cs" />
-    <Compile Include="Import\ImportResultsViewModel.cs" />
-    <Compile Include="Import\ImportView.xaml.cs">
+    <Compile Include="Screens\Import\ImportSelectionViewModel.cs" />
+    <Compile Include="Screens\Import\ImportInformationViewModel.cs" />
+    <Compile Include="Screens\Import\ImportResultsViewModel.cs" />
+    <Compile Include="Screens\Import\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportViewModel.cs" />
+    <Compile Include="Screens\Import\ImportViewModel.cs" />
     <Compile Include="Services\Browsing\SchemeHandlerFactory.cs" />
-    <Compile Include="Main\MainBookView.xaml.cs">
+    <Compile Include="Screens\Main\MainBookView.xaml.cs">
       <DependentUpon>MainBookView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Main\MainBookViewModel.cs" />
+    <Compile Include="Screens\Main\MainBookViewModel.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAuthor.cs" />
     <Compile Include="Services\Repository\ImageLink.cs" />
     <Compile Include="Services\Repository\ImportedBook.cs" />
-    <Compile Include="Import\ImportedBookView.xaml.cs">
+    <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Import\ImportedBookViewModel.cs" />
-    <Compile Include="Main\MainView.xaml.cs">
+    <Compile Include="Screens\Import\ImportedBookViewModel.cs" />
+    <Compile Include="Screens\Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Main\MainViewModel.cs" />
+    <Compile Include="Screens\Main\MainViewModel.cs" />
     <Compile Include="Apis\ApiBase.cs" />
     <Compile Include="Apis\Audible\AudibleApi.cs" />
     <Compile Include="Services\Repository\ImageDownloader.cs" />
@@ -215,10 +223,10 @@
     <Compile Include="Apis\Goodreads\GoodreadsUser.cs" />
     <Compile Include="Services\Settings\IEncryptable.cs" />
     <Compile Include="Services\Settings\GoogleBooksSettings.cs" />
-    <Compile Include="Settings\SettingsView.xaml.cs">
+    <Compile Include="Screens\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings\SettingsViewModel.cs" />
+    <Compile Include="Screens\Settings\SettingsViewModel.cs" />
     <Compile Include="Shell\ShellMessage.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
@@ -252,9 +260,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Resource Include="Images\appbar.chevron.right.png" />
     <Resource Include="Images\appbar.page.copy.png" />
     <Resource Include="Images\noimage.gif" />
+    <Resource Include="Images\appbar.add.png" />
+    <Resource Include="Images\appbar.minus.png" />
+    <Resource Include="Images\appbar.check.png" />
+    <Resource Include="Images\appbar.checkmark.cross.png" />
+    <Resource Include="Images\appbar.chevron.left.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -278,7 +290,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Import\ImportResultsView.xaml">
+    <Page Include="Screens\Import\ImportResultsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Users\CollectionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -286,35 +302,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportControllerView.xaml">
+    <Page Include="Screens\Import\ImportControllerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportInformationView.xaml">
+    <Page Include="Screens\Import\ImportInformationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportSelectionView.xaml">
+    <Page Include="Screens\Import\ImportSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportedBookView.xaml">
+    <Page Include="Screens\Import\ImportedBookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Import\ImportView.xaml">
+    <Page Include="Screens\Import\ImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Main\MainBookView.xaml">
+    <Page Include="Screens\Main\MainBookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Main\MainView.xaml">
+    <Page Include="Screens\Main\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Settings\SettingsView.xaml">
+    <Page Include="Screens\Settings\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace BookCollector.Services.Repository
+﻿namespace BookCollector.Services.Repository
 {
     public class ImageLink
     {

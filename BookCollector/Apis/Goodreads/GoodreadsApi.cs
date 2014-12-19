@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using BookCollector.Services;
 using BookCollector.Services.Settings;
 using BookCollector.Utilities;
 using NLog;

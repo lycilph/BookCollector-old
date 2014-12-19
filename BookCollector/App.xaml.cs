@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using BookCollector.Import;
 using BookCollector.Services.Browsing;
 using CefSharp;
 

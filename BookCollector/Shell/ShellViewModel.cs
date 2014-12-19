@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using BookCollector.Services;
 using BookCollector.Services.Repository;
 using BookCollector.Services.Settings;
 using Caliburn.Micro;
@@ -22,6 +21,8 @@ namespace BookCollector.Shell
         private readonly ApplicationSettings settings;
         private readonly BookRepository book_repository;
         private readonly IScreen main_view_model;
+        private readonly IScreen collections_view_model;
+        private readonly WindowCommand change_collection_command;
 
         private string _Text;
         public string Text
@@ -41,11 +42,16 @@ namespace BookCollector.Shell
         public ShellViewModel(IEventAggregator event_aggregator, 
                               ApplicationSettings settings,
                               BookRepository book_repository, 
-                              [Import("Main")] IScreen main_view_model)
+                              [Import("Main")] IScreen main_view_model,
+                              [Import("Collections")] IScreen collections_view_model)
         {
             this.settings = settings;
             this.book_repository = book_repository;
             this.main_view_model = main_view_model;
+            this.collections_view_model = collections_view_model;
+
+            change_collection_command = new WindowCommand("NN", () => Show(collections_view_model));
+            RightShellCommands.Add(change_collection_command);
 
             event_aggregator.Subscribe(this);
         }
@@ -57,10 +63,11 @@ namespace BookCollector.Shell
             base.OnInitialize();
             DisplayName = "Book Collector";
 
-            settings.Load();
-            book_repository.Load();
+            //settings.Load();
+            //book_repository.Load();
 
-            Show(main_view_model);
+            //Show(main_view_model);
+            Show(collections_view_model);
         }
 
         protected override void OnDeactivate(bool close)
@@ -69,11 +76,11 @@ namespace BookCollector.Shell
 
             base.OnDeactivate(close);
 
-            if (close)
-            {
-                settings.Save();
-                book_repository.Save();
-            }
+            //if (close)
+            //{
+            //    settings.Save();
+            //    book_repository.Save();
+            //}
         }
 
         protected void Back()

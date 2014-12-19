@@ -37,8 +37,9 @@ namespace BookCollector.Services.Repository
 
         public void Import(IEnumerable<ImportedBook> imported_books)
         {
-            Books.AddRange(imported_books.Select(ib => ib.Book));
-            image_downloader.Add(imported_books);
+            var imported_books_list = imported_books.ToList();
+            Books.AddRange(imported_books_list.Select(ib => ib.Book));
+            image_downloader.Add(imported_books_list);
         }
 
         public void Clear()
@@ -61,12 +62,12 @@ namespace BookCollector.Services.Repository
 
         public void Save()
         {
+            image_downloader.Stop();
+
             logger.Trace("Saving");
             var path = GetFilename();
             var json = JsonConvert.SerializeObject(Books, Formatting.Indented);
             File.WriteAllText(path, json);
-
-            image_downloader.Stop();
         }
 
         public bool IsDuplicate(Book book)
