@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Linq;
-using BookCollector.Services.Repository;
+using BookCollector.Services.Books;
 using BookCollector.Shell;
 using BookCollector.Utilities;
 using Caliburn.Micro;
@@ -58,7 +58,7 @@ namespace BookCollector.Screens.Import
 
         public void Cancel()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.BackMessage());
+            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());
         }
 
         public void Handle(ImportMessage message)

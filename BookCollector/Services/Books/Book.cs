@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using ReactiveUI;
 
-namespace BookCollector.Model
+namespace BookCollector.Services.Books
 {
     [JsonObject(MemberSerialization.OptOut)]
     public class Book : ReactiveObject
     {
-        public string Id { get; set; }
+        [JsonProperty]
+        public string Id { get; private set; }
 
         public string Title { get; set; }
         public List<string> Authors { get; set; }
@@ -26,6 +27,7 @@ namespace BookCollector.Model
             get { return _Image; }
             set { this.RaiseAndSetIfChanged(ref _Image, value); }
         }
+
         private string _SmallImage;
         public string SmallImage
         {
@@ -35,7 +37,7 @@ namespace BookCollector.Model
 
         public Book()
         {
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid().ToString().ToUpperInvariant();
         }
 
         public bool IsDuplicate(Book book)

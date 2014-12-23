@@ -40,15 +40,20 @@ namespace BookCollector.Screens.Import
         protected override void OnDeactivate(bool close)
         {
             base.OnDeactivate(close);
-            event_aggregator.PublishOnUIThread(ShellMessage.TextMessage(string.Empty));
+            event_aggregator.PublishOnUIThread(ShellMessage.Text(string.Empty));
         }
 
         private void Select(IImportController controller)
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.TextMessage("Importing from " + controller.Name));
+            event_aggregator.PublishOnUIThread(ShellMessage.Text("Importing from " + controller.Name));
 
             ActivateItem(information);
             controller.Start();
+        }
+
+        public void Back()
+        {
+            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());            
         }
 
         public void Handle(ImportMessage message)

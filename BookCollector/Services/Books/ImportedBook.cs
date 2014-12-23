@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using BookCollector.Model;
 
-namespace BookCollector.Services.Repository
+namespace BookCollector.Services.Books
 {
     public class ImportedBook
     {

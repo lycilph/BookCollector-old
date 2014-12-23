@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using BookCollector.Services.Repository;
+using System.Data;
+using BookCollector.Services.Collections;
 using BookCollector.Services.Settings;
 using Caliburn.Micro;
 using Framework.Core.Shell;
@@ -17,12 +18,12 @@ namespace BookCollector.Shell
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly Stack<IScreen> items = new Stack<IScreen>();
         private readonly ApplicationSettings settings;
-        private readonly BookRepository book_repository;
+        private readonly CollectionsController collections_controller;
+        private readonly Stack<IScreen> items = new Stack<IScreen>();
         private readonly IScreen main_view_model;
         private readonly IScreen collections_view_model;
-        private readonly WindowCommand change_collection_command;
+        private readonly IWindowCommand collections_window_command;
 
         private string _Text;
         public string Text
@@ -39,57 +40,73 @@ namespace BookCollector.Shell
         }
 
         [ImportingConstructor]
-        public ShellViewModel(IEventAggregator event_aggregator, 
+        public ShellViewModel(IEventAggregator event_aggregator,
                               ApplicationSettings settings,
-                              BookRepository book_repository, 
+                              CollectionsController collections_controller,
                               [Import("Main")] IScreen main_view_model,
                               [Import("Collections")] IScreen collections_view_model)
         {
-            this.settings = settings;
-            this.book_repository = book_repository;
             this.main_view_model = main_view_model;
             this.collections_view_model = collections_view_model;
+            this.settings = settings;
+            this.collections_controller = collections_controller;
 
-            change_collection_command = new WindowCommand("NN", () => Show(collections_view_model));
-            RightShellCommands.Add(change_collection_command);
+            collections_window_command = new WindowCommand("", () => Show(collections_view_model));
+            RightShellCommands.Add(collections_window_command);
 
             event_aggregator.Subscribe(this);
         }
 
         protected override void OnInitialize()
         {
-            logger.Trace("Shell initializing");
-
             base.OnInitialize();
+
+            logger.Trace("Shell initializing");
             DisplayName = "Book Collector";
+            Show(main_view_model);
 
-            //settings.Load();
-            //book_repository.Load();
+            if (!settings.RememberLastCollection || collections_controller.Current == null)
+                Show(collections_view_model);
+        }
 
-            //Show(main_view_model);
-            Show(collections_view_model);
+        protected override void OnActivate()
+        {                   
+            base.OnActivate();
+
+            logger.Trace("Shell activating");
         }
 
         protected override void OnDeactivate(bool close)
         {
-            logger.Trace(string.Format("Shell deactivating ({0})", close));
-
             base.OnDeactivate(close);
 
-            //if (close)
-            //{
-            //    settings.Save();
-            //    book_repository.Save();
-            //}
+            logger.Trace(string.Format("Shell deactivating ({0})", close));
         }
 
-        protected void Back()
+        protected override void OnActivationProcessed(IScreen item, bool success)
+        {
+            base.OnActivationProcessed(item, success);
+
+            logger.Trace("Activation of {0} processed", item.DisplayName);
+
+            var visible = (item != collections_view_model);
+            var enabled = (item == main_view_model);
+            RightShellCommands.Apply(cmd =>
+            {
+                cmd.IsVisible = visible;
+                cmd.IsEnabled = enabled;
+            });
+
+            collections_window_command.DisplayName = (collections_controller.Current == null ? "" : collections_controller.Current.DisplayName);
+        }
+
+        private void Back()
         {
             items.Pop();
             ActivateItem(items.Peek());
         }
 
-        protected void Show(IScreen view_model)
+        private void Show(IScreen view_model)
         {
             items.Push(view_model);
             ActivateItem(view_model);
@@ -107,14 +124,11 @@ namespace BookCollector.Shell
                 case ShellMessage.MessageKind.Show:
                     Show(message.ViewModel);
                     break;
-                case ShellMessage.MessageKind.Exit:
-                    TryClose();
-                    break;
                 case ShellMessage.MessageKind.Text:
-                    Text = message.Text;
+                    Text = message.Message;
                     break;
                 case ShellMessage.MessageKind.Busy:
-                    IsBusy = message.Busy;
+                    IsBusy = message.State;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

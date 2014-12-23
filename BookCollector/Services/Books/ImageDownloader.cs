@@ -7,13 +7,12 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using BookCollector.Model;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using NLog;
 using LogManager = NLog.LogManager;
 
-namespace BookCollector.Services.Repository
+namespace BookCollector.Services.Books
 {
     public class ImageDownloader
     {

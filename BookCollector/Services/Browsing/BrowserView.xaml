@@ -6,14 +6,14 @@
              xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              xmlns:browsing="clr-namespace:BookCollector.Services.Browsing"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:converters="clr-namespace:BookCollector.Converters"
+             xmlns:ui="clr-namespace:Framework.UI;assembly=Framework.UI"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300"
              Margin="50" 
              d:DataContext="{d:DesignInstance browsing:BrowserViewModel}">
     <UserControl.Resources>
-        <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter" TrueState="Visible" FalseState="Hidden"/>
+        <ui:BooleanToVisibilityConverter x:Key="VisibilityConverter" TrueState="Visible" FalseState="Hidden"/>
     </UserControl.Resources>
     
     <DockPanel Background="{StaticResource WhiteBrush}">

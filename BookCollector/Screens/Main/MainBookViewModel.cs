@@ -1,4 +1,4 @@
-﻿using BookCollector.Model;
+﻿using BookCollector.Services.Books;
 using Framework.Core.MVVM;
 
 namespace BookCollector.Screens.Main

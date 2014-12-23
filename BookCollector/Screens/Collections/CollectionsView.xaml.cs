@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Screens.Users
+﻿namespace BookCollector.Screens.Collections
 {
     public partial class CollectionsView
     {

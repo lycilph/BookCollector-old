@@ -31,7 +31,7 @@ namespace BookCollector.Screens.Import
         protected override void OnActivate()
         {
             base.OnActivate();
-            event_aggregator.PublishOnUIThread(ShellMessage.TextMessage("Select where to import from"));
+            event_aggregator.PublishOnUIThread(ShellMessage.Text("Select where to import from"));
         }
     }
 }

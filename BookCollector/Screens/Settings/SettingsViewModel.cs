@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Composition;
-using BookCollector.Services.Repository;
+using BookCollector.Services.Books;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
@@ -26,7 +26,7 @@ namespace BookCollector.Screens.Settings
 
         public void Back()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.BackMessage());
+            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());
         }
     }
 }

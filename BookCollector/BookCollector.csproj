@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props" Condition="Exists('..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props')" />
-  <Import Project="..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props')" />
-  <Import Project="..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props" Condition="Exists('..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,7 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <NuGetPackageImportStamp>9f5bad12</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>3eec8f71</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -70,23 +70,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.2.1\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="Framework.Controls">
-      <HintPath>..\packages\Framework.Controls.1.0.0-alpha\lib\net45\Framework.Controls.dll</HintPath>
-    </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Framework.Core.1.0.3-alpha\lib\net45\Framework.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.Core.1.0.8-alpha\lib\net45\Framework.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Framework.UI">
+      <HintPath>..\packages\Framework.UI.1.0.0-alpha\lib\net45\Framework.UI.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.0.1.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MahApps.Metro, Version=1.0.1.7, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MahApps.Metro.1.0.1-ALPHA001\lib\net45\MahApps.Metro.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.0.1-ALPHA007\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.7\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -126,6 +126,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Xaml.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.0.1-ALPHA007\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -143,7 +146,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Apis\ApisController.cs" />
+    <Compile Include="ApplicationController.cs" />
+    <Compile Include="Screens\Collections\CollectionDescriptionView.xaml.cs">
+      <DependentUpon>CollectionDescriptionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\CollectionDescriptionViewModel.cs" />
     <Compile Include="Screens\Import\AudibleImportController.cs" />
     <Compile Include="Screens\Import\GoodreadsImportController.cs" />
     <Compile Include="Screens\Import\ImportMessage.cs" />
@@ -151,11 +159,12 @@
       <DependentUpon>ImportResultsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Apis\Audible\AudibleBook.cs" />
-    <Compile Include="Model\Collection.cs" />
-    <Compile Include="Screens\Users\CollectionsView.xaml.cs">
+    <Compile Include="Services\Books\CollectionController.cs" />
+    <Compile Include="Services\Collections\CollectionDescription.cs" />
+    <Compile Include="Screens\Collections\CollectionsView.xaml.cs">
       <DependentUpon>CollectionsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Users\CollectionsViewModel.cs" />
+    <Compile Include="Screens\Collections\CollectionsViewModel.cs" />
     <Compile Include="Services\Browsing\BrowserController.cs" />
     <Compile Include="Services\Browsing\BrowsingMessage.cs" />
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
@@ -189,8 +198,8 @@
     </Compile>
     <Compile Include="Screens\Main\MainBookViewModel.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAuthor.cs" />
-    <Compile Include="Services\Repository\ImageLink.cs" />
-    <Compile Include="Services\Repository\ImportedBook.cs" />
+    <Compile Include="Services\Books\ImageLink.cs" />
+    <Compile Include="Services\Books\ImportedBook.cs" />
     <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
     </Compile>
@@ -201,7 +210,7 @@
     <Compile Include="Screens\Main\MainViewModel.cs" />
     <Compile Include="Apis\ApiBase.cs" />
     <Compile Include="Apis\Audible\AudibleApi.cs" />
-    <Compile Include="Services\Repository\ImageDownloader.cs" />
+    <Compile Include="Services\Books\ImageDownloader.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAccessResponse.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsImportResponse.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBook.cs" />
@@ -212,8 +221,9 @@
     <Compile Include="Apis\GoogleBooks\GoogleBooksVolumeInfo.cs" />
     <Compile Include="Apis\IApi.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksApi.cs" />
+    <Compile Include="Services\Collections\CollectionsController.cs" />
     <Compile Include="Services\Settings\ApplicationSettings.cs" />
-    <Compile Include="Services\Repository\BookRepository.cs" />
+    <Compile Include="Services\Books\BookRepository.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsApi.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAuthorizationResponse.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsBook.cs" />
@@ -238,11 +248,13 @@
     </Compile>
     <Compile Include="Utilities\CustomDeserializer.cs" />
     <Compile Include="Utilities\HtmlExtensions.cs" />
+    <Compile Include="Utilities\IPersistable.cs" />
     <Compile Include="Utilities\ReactiveListExtensions.cs" />
+    <Compile Include="ApplicationTasks.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Book.cs" />
+    <Compile Include="Services\Books\Book.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -265,8 +277,9 @@
     <Resource Include="Images\appbar.add.png" />
     <Resource Include="Images\appbar.minus.png" />
     <Resource Include="Images\appbar.check.png" />
-    <Resource Include="Images\appbar.checkmark.cross.png" />
     <Resource Include="Images\appbar.chevron.left.png" />
+    <Resource Include="Images\appbar.cancel.png" />
+    <Resource Include="Images\appbar.clear.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -290,11 +303,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Screens\Collections\CollectionDescriptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Import\ImportResultsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Users\CollectionsView.xaml">
+    <Page Include="Screens\Collections\CollectionsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -348,13 +365,13 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets'))" />
     <Error Condition="!Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.37.0.0-pre02\build\CefSharp.Wpf.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.OffScreen.37.0.0-pre02\build\CefSharp.OffScreen.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props'))" />
   </Target>
   <Import Project="..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" />
-  <Import Project="..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.37.0.0-pre02\build\CefSharp.Common.targets')" />
+  <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

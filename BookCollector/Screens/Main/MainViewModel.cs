@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using BookCollector.Services.Repository;
+using BookCollector.Services.Books;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
+using NLog;
 using ReactiveUI;
 using IScreen = Caliburn.Micro.IScreen;
+using LogManager = NLog.LogManager;
 
 namespace BookCollector.Screens.Main
 {
     [Export("Main", typeof(IScreen))]
     public class MainViewModel : ReactiveScreen
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly IEventAggregator event_aggregator;
         private readonly BookRepository book_repository;
-        private readonly IScreen import_view_model;
-        private readonly IScreen settings_view_model;
 
         private List<MainBookViewModel> _Books;
         public List<MainBookViewModel> Books
@@ -33,20 +35,15 @@ namespace BookCollector.Screens.Main
         }
         
         [ImportingConstructor]
-        public MainViewModel([Import("Import")] IScreen import_view_model,
-                             [Import("Settings")] IScreen settings_view_model,
-                             IEventAggregator event_aggregator, 
-                             BookRepository book_repository)
+        public MainViewModel(IEventAggregator event_aggregator, BookRepository book_repository)
         {
-            this.import_view_model = import_view_model;
-            this.settings_view_model = settings_view_model;
             this.event_aggregator = event_aggregator;
             this.book_repository = book_repository;
         }
 
         protected override void OnActivate()
         {
-            base.OnActivate();
+            logger.Trace("Activating");
 
             Books = book_repository.Books.OrderBy(b => b.Title).Select(b => new MainBookViewModel(b)).ToList();
 
@@ -54,17 +51,17 @@ namespace BookCollector.Screens.Main
                 SelectedBook = Books.First();
 
             if (Books.Count > 1)
-                event_aggregator.PublishOnUIThread(ShellMessage.TextMessage("Books: " + Books.Count));
+                event_aggregator.PublishOnUIThread(ShellMessage.Text("Books: " + Books.Count));
         }
 
         public void Import()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.ShowMessage(import_view_model));
+            event_aggregator.PublishOnCurrentThread(ShellMessage.Show("Import"));
         }
 
         public void Settings()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.ShowMessage(settings_view_model));
+            event_aggregator.PublishOnCurrentThread(ShellMessage.Show("Settings"));
         }
     }
 }

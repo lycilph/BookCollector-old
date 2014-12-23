@@ -4,36 +4,37 @@ namespace BookCollector.Shell
 {
     public class ShellMessage
     {
-        public enum MessageKind { Back, Show, Exit, Text, Busy }
+        public enum MessageKind { Back, Show, Text, Busy }
 
         public MessageKind Kind { get; set; }
         public IScreen ViewModel { get; set; }
-        public string Text { get; set; }
-        public bool Busy { get; set; }
+        public string Message { get; set; }
+        public bool State { get; set; }
         
-        public static ShellMessage BackMessage()
+        public static ShellMessage Back()
         {
             return new ShellMessage {Kind = MessageKind.Back};
         }
 
-        public static ShellMessage ShowMessage(IScreen view_model)
+        public static ShellMessage Show(IScreen view_model)
         {
             return new ShellMessage {Kind = MessageKind.Show, ViewModel = view_model};
         }
 
-        public static ShellMessage ExitMessage()
+        public static ShellMessage Show(string screen)
         {
-            return new ShellMessage {Kind = MessageKind.Exit};
+            var view_model = IoC.Get<IScreen>(screen);
+            return Show(view_model);
         }
 
-        public static ShellMessage TextMessage(string text)
+        public static ShellMessage Text(string message)
         {
-            return new ShellMessage {Kind = MessageKind.Text, Text = text};
+            return new ShellMessage {Kind = MessageKind.Text, Message = message};
         }
 
-        public static ShellMessage BusyMessage(bool busy)
+        public static ShellMessage Busy(bool state)
         {
-            return new ShellMessage {Kind = MessageKind.Busy, Busy = busy};
+            return new ShellMessage {Kind = MessageKind.Busy, State = state};
         }
     }
 }

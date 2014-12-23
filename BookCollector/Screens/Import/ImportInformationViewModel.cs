@@ -30,14 +30,14 @@ namespace BookCollector.Screens.Import
             base.OnActivate();
             Messages.Clear();
 
-            event_aggregator.PublishOnUIThread(ShellMessage.BusyMessage(true));
+            event_aggregator.PublishOnUIThread(ShellMessage.Busy(true));
         }
 
         protected override void OnDeactivate(bool close)
         {
             base.OnDeactivate(close);
 
-            event_aggregator.PublishOnUIThread(ShellMessage.BusyMessage(false));
+            event_aggregator.PublishOnUIThread(ShellMessage.Busy(false));
         }
 
         public void Handle(ImportMessage message)
