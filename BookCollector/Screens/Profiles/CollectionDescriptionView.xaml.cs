@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Screens.Collections
+﻿namespace BookCollector.Screens.Profiles
 {
     public partial class CollectionDescriptionView
     {

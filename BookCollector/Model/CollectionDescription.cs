@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using ReactiveUI;
 
-namespace BookCollector.Services.Collections
+namespace BookCollector.Model
 {
     [JsonObject(MemberSerialization.OptOut)]
     public class CollectionDescription : ReactiveObject

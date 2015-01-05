@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using BookCollector.Apis.GoogleBooks;
-using BookCollector.Services.Books;
+using BookCollector.Model;
 using BookCollector.Services.Browsing;
 using Caliburn.Micro;
 using NLog;

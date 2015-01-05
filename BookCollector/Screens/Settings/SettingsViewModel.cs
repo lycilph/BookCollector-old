@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Composition;
-using BookCollector.Services.Books;
+using BookCollector.Model;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;

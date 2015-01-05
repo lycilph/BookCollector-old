@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.Reactive.Linq;
 using System.Reflection;
@@ -10,16 +9,22 @@ using ReactiveUI;
 
 namespace BookCollector.Services.Settings
 {
-    [Export(typeof(ApplicationSettings))]
     [JsonObject(MemberSerialization.OptOut)]
-    public class ApplicationSettings : ReactiveObject, IPersistable
+    public sealed class ApplicationSettings : ReactiveObject
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ApplicationSettings instance = new ApplicationSettings();
+
         private const string filename = "Settings.txt";
-        private const string data = "data";
-        private const string image = "image";
+        private const string data = "Data";
+        private const string image = "Images";
 
         private readonly string settings_path;
+
+        public static ApplicationSettings Instance
+        {
+            get { return instance; }
+        }
 
         private string _DataDir;
         public string DataDir
@@ -42,7 +47,7 @@ namespace BookCollector.Services.Settings
             set { this.RaiseAndSetIfChanged(ref _RememberLastCollection, value); }
         }
 
-        public ApplicationSettings()
+        private ApplicationSettings()
         {
             var base_dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (base_dir == null)
@@ -74,12 +79,11 @@ namespace BookCollector.Services.Settings
             if (!File.Exists(settings_path))
                 return;
 
-            var json = File.ReadAllText(settings_path);
-            var temp = JsonConvert.DeserializeObject<ApplicationSettings>(json);
+            var settings = JsonExtensions.DeserializeFromFile<ApplicationSettings>(settings_path);
 
-            DataDir = temp.DataDir;
-            ImageDir = temp.ImageDir;
-            RememberLastCollection = temp.RememberLastCollection;
+            DataDir = settings.DataDir;
+            ImageDir = settings.ImageDir;
+            RememberLastCollection = settings.RememberLastCollection;
 
         }
 
@@ -87,8 +91,7 @@ namespace BookCollector.Services.Settings
         {
             logger.Trace("Saving (path = {0})", settings_path);
 
-            var json = JsonConvert.SerializeObject(this, Formatting.Indented);
-            File.WriteAllText(settings_path, json);
+            JsonExtensions.SerializeToFile(settings_path, this);
         }
 
 
@@ -98,19 +101,19 @@ namespace BookCollector.Services.Settings
 
         //private const string key = "827A1C31-9CFA-478C-92B9-350126EC8BD3";
 
-        private GoodreadsSettings _GoodreadsSettings = new GoodreadsSettings();
-        public GoodreadsSettings GoodreadsSettings
-        {
-            get { return _GoodreadsSettings; }
-            set { this.RaiseAndSetIfChanged(ref _GoodreadsSettings, value); }
-        }
+        //private GoodreadsSettings _GoodreadsSettings = new GoodreadsSettings();
+        //public GoodreadsSettings GoodreadsSettings
+        //{
+        //    get { return _GoodreadsSettings; }
+        //    set { this.RaiseAndSetIfChanged(ref _GoodreadsSettings, value); }
+        //}
 
-        private GoogleBooksSettings _GoogleBooksSettings = new GoogleBooksSettings();
-        public GoogleBooksSettings GoogleBooksSettings
-        {
-            get { return _GoogleBooksSettings; }
-            set { this.RaiseAndSetIfChanged(ref _GoogleBooksSettings, value); }
-        }
+        //private GoogleBooksSettings _GoogleBooksSettings = new GoogleBooksSettings();
+        //public GoogleBooksSettings GoogleBooksSettings
+        //{
+        //    get { return _GoogleBooksSettings; }
+        //    set { this.RaiseAndSetIfChanged(ref _GoogleBooksSettings, value); }
+        //}
 
         //private static string GetFilename()
         //{

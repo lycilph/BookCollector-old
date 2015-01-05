@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Services.Books
+namespace BookCollector.Model
 {
     public class ImportedBook
     {

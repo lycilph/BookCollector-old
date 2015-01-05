@@ -1,4 +1,4 @@
-﻿using BookCollector.Services.Books;
+﻿using BookCollector.Model;
 using Framework.Core.MVVM;
 using ReactiveUI;
 

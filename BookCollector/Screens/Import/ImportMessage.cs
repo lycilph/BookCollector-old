@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using BookCollector.Services.Books;
+using BookCollector.Model;
 
 namespace BookCollector.Screens.Import
 {

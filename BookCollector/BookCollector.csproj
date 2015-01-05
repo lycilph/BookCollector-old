@@ -148,10 +148,12 @@
     </ApplicationDefinition>
     <Compile Include="Apis\ApisController.cs" />
     <Compile Include="ApplicationController.cs" />
-    <Compile Include="Screens\Collections\CollectionDescriptionView.xaml.cs">
+    <Compile Include="ApplicationMessage.cs" />
+    <Compile Include="Model\ProfileDescription.cs" />
+    <Compile Include="Screens\Profiles\CollectionDescriptionView.xaml.cs">
       <DependentUpon>CollectionDescriptionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Collections\CollectionDescriptionViewModel.cs" />
+    <Compile Include="Screens\Profiles\CollectionDescriptionViewModel.cs" />
     <Compile Include="Screens\Import\AudibleImportController.cs" />
     <Compile Include="Screens\Import\GoodreadsImportController.cs" />
     <Compile Include="Screens\Import\ImportMessage.cs" />
@@ -159,12 +161,16 @@
       <DependentUpon>ImportResultsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Apis\Audible\AudibleBook.cs" />
-    <Compile Include="Services\Books\CollectionController.cs" />
-    <Compile Include="Services\Collections\CollectionDescription.cs" />
-    <Compile Include="Screens\Collections\CollectionsView.xaml.cs">
-      <DependentUpon>CollectionsView.xaml</DependentUpon>
+    <Compile Include="Model\ProfileController.cs" />
+    <Compile Include="Model\CollectionDescription.cs" />
+    <Compile Include="Screens\Profiles\ProfileDescriptionView.xaml.cs">
+      <DependentUpon>ProfileDescriptionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Collections\CollectionsViewModel.cs" />
+    <Compile Include="Screens\Profiles\ProfileDescriptionViewModel.cs" />
+    <Compile Include="Screens\Profiles\ProfilesView.xaml.cs">
+      <DependentUpon>ProfilesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Profiles\ProfilesViewModel.cs" />
     <Compile Include="Services\Browsing\BrowserController.cs" />
     <Compile Include="Services\Browsing\BrowsingMessage.cs" />
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
@@ -198,8 +204,8 @@
     </Compile>
     <Compile Include="Screens\Main\MainBookViewModel.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAuthor.cs" />
-    <Compile Include="Services\Books\ImageLink.cs" />
-    <Compile Include="Services\Books\ImportedBook.cs" />
+    <Compile Include="Model\ImageLink.cs" />
+    <Compile Include="Model\ImportedBook.cs" />
     <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
     </Compile>
@@ -210,7 +216,7 @@
     <Compile Include="Screens\Main\MainViewModel.cs" />
     <Compile Include="Apis\ApiBase.cs" />
     <Compile Include="Apis\Audible\AudibleApi.cs" />
-    <Compile Include="Services\Books\ImageDownloader.cs" />
+    <Compile Include="Model\ImageDownloader.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAccessResponse.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsImportResponse.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBook.cs" />
@@ -221,9 +227,8 @@
     <Compile Include="Apis\GoogleBooks\GoogleBooksVolumeInfo.cs" />
     <Compile Include="Apis\IApi.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksApi.cs" />
-    <Compile Include="Services\Collections\CollectionsController.cs" />
     <Compile Include="Services\Settings\ApplicationSettings.cs" />
-    <Compile Include="Services\Books\BookRepository.cs" />
+    <Compile Include="Model\BookRepository.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsApi.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsAuthorizationResponse.cs" />
     <Compile Include="Apis\Goodreads\GoodreadsBook.cs" />
@@ -248,13 +253,13 @@
     </Compile>
     <Compile Include="Utilities\CustomDeserializer.cs" />
     <Compile Include="Utilities\HtmlExtensions.cs" />
-    <Compile Include="Utilities\IPersistable.cs" />
+    <Compile Include="Utilities\JsonExtensions.cs" />
     <Compile Include="Utilities\ReactiveListExtensions.cs" />
     <Compile Include="ApplicationTasks.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\Books\Book.cs" />
+    <Compile Include="Model\Book.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -303,7 +308,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Screens\Collections\CollectionDescriptionView.xaml">
+    <Page Include="Screens\Profiles\CollectionDescriptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,7 +316,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Collections\CollectionsView.xaml">
+    <Page Include="Screens\Profiles\ProfileDescriptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Profiles\ProfilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

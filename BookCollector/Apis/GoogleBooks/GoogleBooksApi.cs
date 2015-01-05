@@ -24,12 +24,12 @@ namespace BookCollector.Apis.GoogleBooks
 
         public override bool IsAuthenticated
         {
-            get { return !string.IsNullOrWhiteSpace(application_settings.GoogleBooksSettings.AccessToken); }
+            get { return false; /*!string.IsNullOrWhiteSpace(application_settings.GoogleBooksSettings.AccessToken);*/ }
         }
 
         public GoogleBooksSettings Settings
         {
-            get { return application_settings.GoogleBooksSettings; }
+            get { return null; /*application_settings.GoogleBooksSettings;*/ }
         }
 
         [ImportingConstructor]

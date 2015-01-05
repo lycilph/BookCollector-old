@@ -1,7 +1,7 @@
-﻿using BookCollector.Services.Collections;
+﻿using BookCollector.Model;
 using Framework.Core.MVVM;
 
-namespace BookCollector.Screens.Collections
+namespace BookCollector.Screens.Profiles
 {
     public class CollectionDescriptionViewModel : ItemViewModelBase<CollectionDescription>
     {

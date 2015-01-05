@@ -4,7 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using BookCollector.Apis.Audible;
-using BookCollector.Services.Books;
+using BookCollector.Model;
 using BookCollector.Services.Browsing;
 using BookCollector.Utilities;
 using Caliburn.Micro;

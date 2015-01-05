@@ -4,7 +4,7 @@ using System.Linq;
 using NLog;
 using ReactiveUI;
 
-namespace BookCollector.Services.Books
+namespace BookCollector.Model
 {
     [Export(typeof(BookRepository))]
     public class BookRepository : ReactiveObject

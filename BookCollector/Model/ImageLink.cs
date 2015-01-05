@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Services.Books
+﻿namespace BookCollector.Model
 {
     public class ImageLink
     {

@@ -26,12 +26,14 @@ namespace BookCollector.Apis.Goodreads
 
         public override bool IsAuthenticated
         {
-            get { return !string.IsNullOrWhiteSpace(application_settings.GoodreadsSettings.OAuthToken); }
+            get
+            {
+                return false; /*!string.IsNullOrWhiteSpace(application_settings.GoodreadsSettings.OAuthToken);*/ }
         }
 
         public GoodreadsSettings Settings
         {
-            get { return application_settings.GoodreadsSettings; }
+            get { return null; /*application_settings.GoodreadsSettings;*/ }
         }
 
         [ImportingConstructor]

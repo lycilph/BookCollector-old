@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -12,8 +13,9 @@ using Newtonsoft.Json;
 using NLog;
 using LogManager = NLog.LogManager;
 
-namespace BookCollector.Services.Books
+namespace BookCollector.Model
 {
+    [Export(typeof(ImageDownloader))]
     public class ImageDownloader
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -23,6 +25,7 @@ namespace BookCollector.Services.Books
         private CancellationTokenSource cts;
         private Task task;
 
+        [ImportingConstructor]
         public ImageDownloader(BookRepository book_repository)
         {
             this.book_repository = book_repository;

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Data;
-using BookCollector.Services.Collections;
-using BookCollector.Services.Settings;
+using BookCollector.Model;
 using Caliburn.Micro;
 using Framework.Core.Shell;
 using ReactiveUI;
@@ -18,11 +16,8 @@ namespace BookCollector.Shell
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly ApplicationSettings settings;
-        private readonly CollectionsController collections_controller;
         private readonly Stack<IScreen> items = new Stack<IScreen>();
-        private readonly IScreen main_view_model;
-        private readonly IScreen collections_view_model;
+        private readonly IEventAggregator event_aggregator;
         private readonly IWindowCommand collections_window_command;
 
         private string _Text;
@@ -40,19 +35,14 @@ namespace BookCollector.Shell
         }
 
         [ImportingConstructor]
-        public ShellViewModel(IEventAggregator event_aggregator,
-                              ApplicationSettings settings,
-                              CollectionsController collections_controller,
-                              [Import("Main")] IScreen main_view_model,
-                              [Import("Collections")] IScreen collections_view_model)
+        public ShellViewModel(IEventAggregator event_aggregator, ProfileController profile_controller)
         {
-            this.main_view_model = main_view_model;
-            this.collections_view_model = collections_view_model;
-            this.settings = settings;
-            this.collections_controller = collections_controller;
+            this.event_aggregator = event_aggregator;
 
-            collections_window_command = new WindowCommand("", () => Show(collections_view_model));
+            collections_window_command = new WindowCommand("Click here", () => logger.Trace("Command clicked"));
             RightShellCommands.Add(collections_window_command);
+
+            //profile_controller.WhenAnyValue(x => x.)
 
             event_aggregator.Subscribe(this);
         }
@@ -63,10 +53,8 @@ namespace BookCollector.Shell
 
             logger.Trace("Shell initializing");
             DisplayName = "Book Collector";
-            Show(main_view_model);
 
-            if (!settings.RememberLastCollection || collections_controller.Current == null)
-                Show(collections_view_model);
+            event_aggregator.PublishOnUIThread(ApplicationMessage.ShellInitialized());
         }
 
         protected override void OnActivate()
@@ -88,16 +76,6 @@ namespace BookCollector.Shell
             base.OnActivationProcessed(item, success);
 
             logger.Trace("Activation of {0} processed", item.DisplayName);
-
-            var visible = (item != collections_view_model);
-            var enabled = (item == main_view_model);
-            RightShellCommands.Apply(cmd =>
-            {
-                cmd.IsVisible = visible;
-                cmd.IsEnabled = enabled;
-            });
-
-            collections_window_command.DisplayName = (collections_controller.Current == null ? "" : collections_controller.Current.DisplayName);
         }
 
         private void Back()
