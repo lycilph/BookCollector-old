@@ -1,11 +1,12 @@
 ﻿using System;
+using Caliburn.Micro;
 using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace BookCollector.Model
 {
     [JsonObject(MemberSerialization.OptOut)]
-    public class CollectionDescription : ReactiveObject
+    public class CollectionDescription : ReactiveObject, IHaveDisplayName
     {
         [JsonProperty]
         public string Id { get; private set; }

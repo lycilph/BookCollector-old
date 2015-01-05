@@ -7,7 +7,11 @@ namespace BookCollector.Screens.Profiles
 {
     public class ProfileDescriptionViewModel : ItemViewModelBase<ProfileDescription>
     {
-        public string DisplayName { get { return AssociatedObject.DisplayName; } }
+        public string DisplayName
+        {
+            get { return AssociatedObject.DisplayName; }
+            set { AssociatedObject.DisplayName = value; }
+        }
 
         private IReactiveDerivedList<CollectionDescriptionViewModel> _Collections;
         public IReactiveDerivedList<CollectionDescriptionViewModel> Collections

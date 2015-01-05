@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using BookCollector.Screens;
+using Caliburn.Micro;
 
 namespace BookCollector.Shell
 {
@@ -7,7 +8,7 @@ namespace BookCollector.Shell
         public enum MessageKind { Back, Show, Text, Busy }
 
         public MessageKind Kind { get; set; }
-        public IScreen ViewModel { get; set; }
+        public IShellScreen ViewModel { get; set; }
         public string Message { get; set; }
         public bool State { get; set; }
         
@@ -16,14 +17,14 @@ namespace BookCollector.Shell
             return new ShellMessage {Kind = MessageKind.Back};
         }
 
-        public static ShellMessage Show(IScreen view_model)
+        public static ShellMessage Show(IShellScreen view_model)
         {
             return new ShellMessage {Kind = MessageKind.Show, ViewModel = view_model};
         }
 
         public static ShellMessage Show(string screen)
         {
-            var view_model = IoC.Get<IScreen>(screen);
+            var view_model = IoC.Get<IShellScreen>(screen);
             return Show(view_model);
         }
 

@@ -74,11 +74,10 @@ namespace BookCollector.Services.Settings
 
         public void Load()
         {
-            logger.Trace("Loading (path = {0})", settings_path);
-
             if (!File.Exists(settings_path))
                 return;
 
+            logger.Trace("Loading (path = {0})", settings_path);
             var settings = JsonExtensions.DeserializeFromFile<ApplicationSettings>(settings_path);
 
             DataDir = settings.DataDir;
@@ -90,7 +89,6 @@ namespace BookCollector.Services.Settings
         public void Save()
         {
             logger.Trace("Saving (path = {0})", settings_path);
-
             JsonExtensions.SerializeToFile(settings_path, this);
         }
 

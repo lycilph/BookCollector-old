@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using BookCollector.Model;
+using BookCollector.Screens;
 using BookCollector.Services.Settings;
 using BookCollector.Shell;
 using Caliburn.Micro;
@@ -25,11 +26,13 @@ namespace BookCollector
         public void Activate()
         {
             ApplicationSettings.Instance.Load();
+            profile_controller.Load();
         }
 
         public void Deactivate()
         {
             ApplicationSettings.Instance.Save();
+            profile_controller.Save();
         }
 
         public void Handle(ApplicationMessage message)
@@ -39,19 +42,28 @@ namespace BookCollector
                 case ApplicationMessage.MessageKind.ShellInitialized:
                     Initialize();
                     break;
+                case ApplicationMessage.MessageKind.ShowProfiles:
+                    ShowProfiles();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
+        private void ShowProfiles()
+        {
+            var profiles = IoC.Get<IShellScreen>("Profiles");
+            event_aggregator.PublishOnUIThread(ShellMessage.Show(profiles));
+        }
+
         private void Initialize()
         {
-            var main = IoC.Get<IScreen>("Main");
+            var main = IoC.Get<IShellScreen>("Main");
             event_aggregator.PublishOnUIThread(ShellMessage.Show(main));
 
-            if (!ApplicationSettings.Instance.RememberLastCollection)
+            if (ApplicationSettings.Instance.RememberLastCollection == false || profile_controller.CurrentCollection == null)
             {
-                var profiles = IoC.Get<IScreen>("Profiles");
+                var profiles = IoC.Get<IShellScreen>("Profiles");
                 event_aggregator.PublishOnUIThread(ShellMessage.Show(profiles));
             }
         }

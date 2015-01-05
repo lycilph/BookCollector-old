@@ -1,20 +1,26 @@
 ﻿using System.ComponentModel.Composition;
-using System.Linq;
+using System.IO;
+using BookCollector.Services.Settings;
+using BookCollector.Utilities;
+using Newtonsoft.Json;
 using NLog;
 using ReactiveUI;
 
 namespace BookCollector.Model
 {
     [Export(typeof(ProfileController))]
+    [JsonObject(MemberSerialization.OptOut)]
     public class ProfileController : ReactiveObject
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        private const string filename = "Profiles.txt";
 
         private readonly BookRepository repository;
         private readonly ImageDownloader downloader;
         // SearchProvider
 
-        private ReactiveList<ProfileDescription> _Profiles;
+        private ReactiveList<ProfileDescription> _Profiles = new ReactiveList<ProfileDescription>();
         public ReactiveList<ProfileDescription> Profiles
         {
             get { return _Profiles; }
@@ -22,17 +28,19 @@ namespace BookCollector.Model
         }
 
         private ProfileDescription _CurrentProfile;
+        [JsonProperty]
         public ProfileDescription CurrentProfile
         {
             get { return _CurrentProfile; }
-            set { this.RaiseAndSetIfChanged(ref _CurrentProfile, value); }
+            private set { this.RaiseAndSetIfChanged(ref _CurrentProfile, value); }
         }
 
         private CollectionDescription _CurrentCollection;
+        [JsonProperty]
         public CollectionDescription CurrentCollection
         {
             get { return _CurrentCollection; }
-            set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
+            private set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
         [ImportingConstructor]
@@ -40,37 +48,61 @@ namespace BookCollector.Model
         {
             this.repository = repository;
             this.downloader = downloader;
+        }
 
-            // Debug
-            Profiles = new ReactiveList<ProfileDescription>
-            {
-                new ProfileDescription {DisplayName = "Profile 1"},
-                new ProfileDescription {DisplayName = "Profile 2"},
-                new ProfileDescription {DisplayName = "Profile 3"},
-            };
+        public void SetCurrent(ProfileDescription profile, CollectionDescription collection)
+        {
+            CurrentProfile = profile;
+            CurrentCollection = collection;
 
-            foreach (var profile in Profiles)
-            {
-                profile.Collections = new ReactiveList<CollectionDescription>
-                {
-                    new CollectionDescription {DisplayName = profile.DisplayName + " - Collection 1"},
-                    new CollectionDescription {DisplayName = profile.DisplayName + " - Collection 2"},
-                    new CollectionDescription {DisplayName = profile.DisplayName + " - Collection 3"},
-                };
-            }
+            // Load books into repository
+            // Stop and save image queue for old collection
+            // Load and start image queue for new collection
+            // Load search provider
+        }
 
-            CurrentProfile = Profiles[1];
-            CurrentCollection = CurrentProfile.Collections.First();
+        public ProfileDescription CreateProfile()
+        {
+            var profile = new ProfileDescription { DisplayName = "No name" };
+            Profiles.Add(profile);
+            return profile;
+        }
+
+        public void RemoveProfile(ProfileDescription profile)
+        {
+            Profiles.Remove(profile);
+        }
+
+        public CollectionDescription CreateCollection(ProfileDescription profile)
+        {
+            var collection = new CollectionDescription { DisplayName = profile.DisplayName + " - Collection " + (profile.Collections.Count + 1) };
+            profile.Collections.Add(collection);
+            return collection;
+        }
+
+        public void RemoveCollection(ProfileDescription profile, CollectionDescription collection)
+        {
+            profile.Collections.Remove(collection);
         }
 
         public void Load()
         {
-            
+            var path = Path.Combine(ApplicationSettings.Instance.DataDir, filename);
+            if (!File.Exists(path))
+                return;
+
+            logger.Trace("Loading (path = {0})", path);
+            var controller = JsonExtensions.DeserializeFromFile<ProfileController>(path);
+
+            Profiles = controller.Profiles;
+            SetCurrent(controller.CurrentProfile, controller.CurrentCollection);
         }
 
         public void Save()
         {
-            
+            var path = Path.Combine(ApplicationSettings.Instance.DataDir, filename);
+            logger.Trace("Saving (path = {0})", path);
+            JsonExtensions.SerializeToFile(path, this, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
         }
     }
 }

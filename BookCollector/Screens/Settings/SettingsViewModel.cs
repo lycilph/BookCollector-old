@@ -2,12 +2,11 @@
 using BookCollector.Model;
 using BookCollector.Shell;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 
 namespace BookCollector.Screens.Settings
 {
-    [Export("Settings", typeof(IScreen))]
-    public class SettingsViewModel : ReactiveScreen
+    [Export("Settings", typeof(IShellScreen))]
+    public class SettingsViewModel : ShellScreenBase
     {
         private readonly IEventAggregator event_aggregator;
         private readonly BookRepository book_repository;

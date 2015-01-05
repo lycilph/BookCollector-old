@@ -4,16 +4,14 @@ using System.Linq;
 using BookCollector.Model;
 using BookCollector.Shell;
 using Caliburn.Micro;
-using Caliburn.Micro.ReactiveUI;
 using NLog;
 using ReactiveUI;
-using IScreen = Caliburn.Micro.IScreen;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector.Screens.Main
 {
-    [Export("Main", typeof(IScreen))]
-    public class MainViewModel : ReactiveScreen
+    [Export("Main", typeof(IShellScreen))]
+    public class MainViewModel : ShellScreenBase
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

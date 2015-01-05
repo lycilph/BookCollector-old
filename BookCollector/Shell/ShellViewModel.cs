@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Reactive.Linq;
 using BookCollector.Model;
+using BookCollector.Screens;
 using Caliburn.Micro;
 using Framework.Core.Shell;
 using ReactiveUI;
 using NLog;
 using LogManager = NLog.LogManager;
-using IScreen = Caliburn.Micro.IScreen;
 
 namespace BookCollector.Shell
 {
     [Export(typeof(IShell))]
-    public class ShellViewModel : ConductorShell<IScreen>, IHandle<ShellMessage>
+    public class ShellViewModel : ConductorShell<IShellScreen>, IHandle<ShellMessage>
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly Stack<IScreen> items = new Stack<IScreen>();
+        private readonly Stack<IShellScreen> items = new Stack<IShellScreen>();
         private readonly IEventAggregator event_aggregator;
-        private readonly IWindowCommand collections_window_command;
 
         private string _Text;
         public string Text
@@ -39,10 +39,20 @@ namespace BookCollector.Shell
         {
             this.event_aggregator = event_aggregator;
 
-            collections_window_command = new WindowCommand("Click here", () => logger.Trace("Command clicked"));
-            RightShellCommands.Add(collections_window_command);
+            var cmd = new WindowCommand(string.Empty, () => event_aggregator.PublishOnUIThread(ApplicationMessage.ShowProfiles()));
+            RightShellCommands.Add(cmd);
 
-            //profile_controller.WhenAnyValue(x => x.)
+            profile_controller.WhenAnyValue(x => x.CurrentProfile.DisplayName, x => x.CurrentCollection.DisplayName)
+                              .Where(pair => pair.Item1 != null && pair.Item2 != null)
+                              .Subscribe(x =>
+                              {
+                                  var name = string.Format("{0} [{1}]", profile_controller.CurrentProfile.DisplayName, profile_controller.CurrentCollection.DisplayName);
+                                  cmd.DisplayName = name;
+                              });
+
+            this.WhenAnyValue(x => x.ActiveItem)
+                .Where(x => x != null)
+                .Subscribe(x => cmd.IsEnabled = x.IsCommandsEnabled);
 
             event_aggregator.Subscribe(this);
         }
@@ -71,7 +81,7 @@ namespace BookCollector.Shell
             logger.Trace(string.Format("Shell deactivating ({0})", close));
         }
 
-        protected override void OnActivationProcessed(IScreen item, bool success)
+        protected override void OnActivationProcessed(IShellScreen item, bool success)
         {
             base.OnActivationProcessed(item, success);
 
@@ -84,7 +94,7 @@ namespace BookCollector.Shell
             ActivateItem(items.Peek());
         }
 
-        private void Show(IScreen view_model)
+        private void Show(IShellScreen view_model)
         {
             items.Push(view_model);
             ActivateItem(view_model);

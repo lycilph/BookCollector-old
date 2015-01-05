@@ -1,8 +1,10 @@
 ﻿using Caliburn.Micro;
+using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace BookCollector.Model
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class ProfileDescription : ReactiveObject, IHaveDisplayName
     {
         private string _DisplayName;

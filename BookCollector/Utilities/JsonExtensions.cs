@@ -11,6 +11,12 @@ namespace BookCollector.Utilities
             File.WriteAllText(filename, json);
         }
 
+        public static void SerializeToFile<T>(string filename, T obj, JsonSerializerSettings settings)
+        {
+            var json = JsonConvert.SerializeObject(obj, Formatting.Indented, settings);
+            File.WriteAllText(filename, json);
+        }
+
         public static T DeserializeFromFile<T>(string filename)
         {
             var json = File.ReadAllText(filename);

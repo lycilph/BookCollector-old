@@ -8,8 +8,8 @@ using LogManager = NLog.LogManager;
 
 namespace BookCollector.Screens.Import
 {
-    [Export("Import", typeof(IScreen))]
-    public class ImportViewModel : ReactiveConductor<IScreen>.Collection.OneActive, IHandle<ImportMessage>
+    [Export("Import", typeof(IShellScreen))]
+    public class ImportViewModel : ReactiveConductor<IScreen>.Collection.OneActive, IShellScreen, IHandle<ImportMessage>
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -17,6 +17,8 @@ namespace BookCollector.Screens.Import
         private readonly ImportSelectionViewModel selection;
         private readonly ImportInformationViewModel information;
         private readonly ImportResultsViewModel results;
+
+        public bool IsCommandsEnabled { get { return true; } }
    
         [ImportingConstructor]
         public ImportViewModel(ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results, IEventAggregator event_aggregator)
