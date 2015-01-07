@@ -20,7 +20,7 @@
         </Grid.ColumnDefinitions>
         
         <CheckBox Grid.Column="0" x:Name="IsSelected" VerticalAlignment="Center"/>
-        <Image Grid.Column="1" Source="../Images/appbar.page.copy.png" Height="24" Visibility="{Binding IsDuplicate, Converter={StaticResource VisibilityConverter}}">
+        <Image Grid.Column="1" Source="../../Images/appbar.page.copy.png" Height="24" Visibility="{Binding IsDuplicate, Converter={StaticResource VisibilityConverter}}">
             <Image.ToolTip>
                 <ToolTip>
                     <TextBlock Text="{Binding ImportSource, StringFormat=Already imported by {0}}"/>

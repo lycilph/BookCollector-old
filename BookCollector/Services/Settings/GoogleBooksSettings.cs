@@ -3,7 +3,7 @@ using BookCollector.Utilities;
 
 namespace BookCollector.Services.Settings
 {
-    public class GoogleBooksSettings : IEncryptable<GoogleBooksSettings>
+    public class GoogleBooksSettings //: IEncryptable<GoogleBooksSettings>
     {
         // Settings
         public string AccessToken { get; set; }

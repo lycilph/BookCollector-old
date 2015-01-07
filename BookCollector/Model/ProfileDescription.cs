@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using System;
+using Caliburn.Micro;
 using Newtonsoft.Json;
 using ReactiveUI;
 
@@ -7,6 +8,9 @@ namespace BookCollector.Model
     [JsonObject(MemberSerialization.OptOut)]
     public class ProfileDescription : ReactiveObject, IHaveDisplayName
     {
+        [JsonProperty]
+        public string Id { get; private set; }
+
         private string _DisplayName;
         public string DisplayName
         {
@@ -21,5 +25,9 @@ namespace BookCollector.Model
             set { this.RaiseAndSetIfChanged(ref _Collections, value); }
         }
 
+        public ProfileDescription()
+        {
+            Id = Guid.NewGuid().ToString().ToUpperInvariant();
+        }
     }
 }

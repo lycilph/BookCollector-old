@@ -85,9 +85,9 @@ namespace BookCollector.Model
             profile.Collections.Remove(collection);
         }
 
-        public void Load()
+        public void Load(string dir)
         {
-            var path = Path.Combine(ApplicationSettings.Instance.DataDir, filename);
+            var path = Path.Combine(dir, filename);
             if (!File.Exists(path))
                 return;
 
@@ -98,9 +98,9 @@ namespace BookCollector.Model
             SetCurrent(controller.CurrentProfile, controller.CurrentCollection);
         }
 
-        public void Save()
+        public void Save(string dir)
         {
-            var path = Path.Combine(ApplicationSettings.Instance.DataDir, filename);
+            var path = Path.Combine(dir, filename);
             logger.Trace("Saving (path = {0})", path);
             JsonExtensions.SerializeToFile(path, this, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
         }

@@ -3,72 +3,84 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
-using BookCollector.Apis.Goodreads;
 using BookCollector.Model;
+using BookCollector.Screens.Import;
 using BookCollector.Services.Browsing;
+using BookCollector.Services.Settings;
 using Caliburn.Micro;
 using NLog;
 using RestSharp.Contrib;
 using LogManager = NLog.LogManager;
 
-namespace BookCollector.Screens.Import
+namespace BookCollector.Apis.GoodReads
 {
     [Export(typeof(IImportController))]
-    public class GoodreadsImportController : IImportController, IHandle<BrowsingMessage>
+    public class GoodReadsImportController : IImportController, IHandle<BrowsingMessage>
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Uri callback_uri = new Uri(@"custom://www.bookcollector.com");
 
-        private readonly GoodreadsApi api;
+        private readonly ApplicationSettings application_settings;
+        private readonly GoodReadsApi api;
         private readonly IEventAggregator event_aggregator;
         private readonly IProgress<string> progress;
-        private GoodreadsAuthorizationResponse authorization_response;
         private TaskCompletionSource<bool> tcs;
 
-        public string Name { get { return "Goodreads"; } }
+        public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public GoodreadsImportController(GoodreadsApi api, IEventAggregator event_aggregator)
+        public GoodReadsImportController(GoodReadsApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator)
         {
             this.api = api;
+            this.application_settings = application_settings;
             this.event_aggregator = event_aggregator;
 
             progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
 
-        public async void Start()
+        public async void Start(ProfileDescription profile)
         {
             event_aggregator.Subscribe(this);
 
-            progress.Report("Authenticating");
-            if (api.IsAuthenticated)
-            {
-                await Finish();
-            }
-            else
-            {
-                progress.Report("Requesting authorization token");
-                authorization_response = await api.RequestAuthorizationTokenAsync(callback_uri.ToString());
-                logger.Trace("Response url: " + authorization_response.Url);
-
-                tcs = BrowserController.ShowAndNavigate(authorization_response.Url);
-            }
-        }
-
-        private async Task Finish()
-        {
-            var result = await GetBooksAsync();
+            var credentials = await Authenticate(profile);
+            var result = await GetBooksAsync(credentials);
 
             event_aggregator.Unsubscribe(this);
             event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
         }
 
-        public Task<List<ImportedBook>> GetBooksAsync()
+        private async Task<GoodReadsCredentials> Authenticate(ProfileDescription profile)
+        {
+            var credentials = application_settings.GetCredentials<GoodReadsCredentials>(profile.Id);
+            if (credentials != null)
+                return credentials;
+
+            progress.Report("Requesting authorization token");
+            var authorization_response = await api.RequestAuthorizationTokenAsync(callback_uri.ToString());
+            logger.Trace("Response url: " + authorization_response.Url);
+
+            tcs = BrowserController.ShowAndNavigate(authorization_response.Url);
+            await tcs.Task;
+
+            progress.Report("Requesting access token");
+            var access_response = await Task.Factory.StartNew(() => api.RequestAccessToken(authorization_response));
+            credentials = new GoodReadsCredentials(access_response);
+
+            progress.Report("Requesting user id");
+            credentials.UserId = await Task.Factory.StartNew(() => api.GetUserId(credentials));
+
+            progress.Report("Authorization done!");
+            application_settings.AddCredentials(profile.Id, credentials);
+
+            return credentials;
+        }
+
+        public Task<List<ImportedBook>> GetBooksAsync(GoodReadsCredentials credentials)
         {
             return Task.Factory.StartNew(() =>
             {
                 progress.Report("Getting books");
-                var response = api.GetBooks(1, 50, "all");
+                var response = api.GetBooks(credentials, 1, 50, "all");
                 var result = response.Books.Select(Convert).ToList();
 
                 progress.Report(string.Format("Downloaded {0} books", result.Count));
@@ -79,7 +91,7 @@ namespace BookCollector.Screens.Import
                 var pages = (int)Math.Ceiling((double)response.Total / response.End);
                 for (var i = 2; i <= pages; i++)
                 {
-                    response = api.GetBooks(i, 50, "all");
+                    response = api.GetBooks(credentials, i, 50, "all");
                     var books = response.Books.Select(Convert).ToList();
                     result.AddRange(books);
 
@@ -92,7 +104,7 @@ namespace BookCollector.Screens.Import
             });
         }
 
-        private ImportedBook Convert(GoodreadsBook book)
+        private ImportedBook Convert(GoodReadsBook book)
         {
             var image_links = new List<ImageLink>();
 
@@ -110,13 +122,13 @@ namespace BookCollector.Screens.Import
                     Authors = book.Authors.Select(a => a.Name).ToList(),
                     ISBN10 = book.Isbn,
                     ISBN13 = book.Isbn13,
-                    ImportSource = Name
+                    ImportSource = ApiName
                 },
                 ImageLinks = image_links
             };
         }
 
-        private async void HandleLoadEnd(Uri uri)
+        private void HandleLoadEnd(Uri uri)
         {
             if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
                 return;
@@ -126,18 +138,6 @@ namespace BookCollector.Screens.Import
                 return;
 
             tcs.SetResult(true);
-            progress.Report("Requesting access token");
-            var access_response = await Task.Factory.StartNew(() => api.RequestAccessToken(authorization_response.OAuthToken, authorization_response.OAuthTokenSecret));
-            api.Settings.OAuthToken = access_response.OAuthToken;
-            api.Settings.OAuthTokenSecret = access_response.OAuthTokenSecret;
-
-            progress.Report("Requesting user id");
-            var user_response = await Task.Factory.StartNew(() => api.GetUserId());
-            api.Settings.UserId = user_response;
-
-            progress.Report("Authorization done!");
-
-            await Finish();
         }
 
         public void Handle(BrowsingMessage message)

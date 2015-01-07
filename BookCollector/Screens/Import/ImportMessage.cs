@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using BookCollector.Apis;
 using BookCollector.Model;
 
 namespace BookCollector.Screens.Import
 {
     public class ImportMessage
     {
-        public enum MessageKind { Selection, Information, Results }
+        public enum MessageKind { Select, Information, Results }
 
         public MessageKind Kind { get; set; }
         public IImportController ImportController { get; set; }
@@ -14,7 +15,7 @@ namespace BookCollector.Screens.Import
 
         public static ImportMessage Select(IImportController import_controller)
         {
-            return new ImportMessage { Kind = MessageKind.Selection, ImportController = import_controller };
+            return new ImportMessage { Kind = MessageKind.Select, ImportController = import_controller };
         }
 
         public static ImportMessage Information(string text)

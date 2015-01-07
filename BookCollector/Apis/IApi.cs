@@ -3,6 +3,5 @@
     public interface IApi
     {
         string Name { get; }
-        bool IsAuthenticated { get; }
     }
 }

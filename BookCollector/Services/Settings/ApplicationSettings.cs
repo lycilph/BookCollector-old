@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
-using System.Reactive.Linq;
+using System.Linq;
 using System.Reflection;
 using BookCollector.Utilities;
 using Newtonsoft.Json;
@@ -9,11 +11,11 @@ using ReactiveUI;
 
 namespace BookCollector.Services.Settings
 {
+    [Export(typeof(ApplicationSettings))]
     [JsonObject(MemberSerialization.OptOut)]
     public sealed class ApplicationSettings : ReactiveObject
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly ApplicationSettings instance = new ApplicationSettings();
 
         private const string filename = "Settings.txt";
         private const string data = "Data";
@@ -21,10 +23,10 @@ namespace BookCollector.Services.Settings
 
         private readonly string settings_path;
 
-        public static ApplicationSettings Instance
-        {
-            get { return instance; }
-        }
+        [JsonProperty]
+        private Dictionary<string, bool> api_enabled = new Dictionary<string, bool>();
+        [JsonProperty]
+        private Dictionary<string, string> api_credentials = new Dictionary<string, string>(); 
 
         private string _DataDir;
         public string DataDir
@@ -47,16 +49,14 @@ namespace BookCollector.Services.Settings
             set { this.RaiseAndSetIfChanged(ref _RememberLastCollection, value); }
         }
 
-        private ApplicationSettings()
+        public ApplicationSettings()
         {
             var base_dir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (base_dir == null)
                 throw new InvalidOperationException();
 
-            var data_dir_observable = this.WhenAnyValue(x => x.DataDir);
-            var image_dir_observable = this.WhenAnyValue(x => x.ImageDir);
-            Observable.Merge(data_dir_observable, image_dir_observable)
-                      .Subscribe(_ => EnsureDirectoriesExists());
+            this.WhenAnyValue(x => x.DataDir, x => x.ImageDir)
+                .Subscribe(_ => EnsureDirectoriesExists());
 
             settings_path = Path.Combine(base_dir, filename);
             DataDir = Path.Combine(base_dir, data);
@@ -83,7 +83,8 @@ namespace BookCollector.Services.Settings
             DataDir = settings.DataDir;
             ImageDir = settings.ImageDir;
             RememberLastCollection = settings.RememberLastCollection;
-
+            api_enabled = settings.api_enabled;
+            api_credentials = settings.api_credentials;
         }
 
         public void Save()
@@ -92,78 +93,33 @@ namespace BookCollector.Services.Settings
             JsonExtensions.SerializeToFile(settings_path, this);
         }
 
+        public T GetSettings<T>(string api_name)
+        {
+            var settings_filename = Assembly.GetExecutingAssembly().GetManifestResourceNames().First(n => n.Contains(api_name));
+            using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(settings_filename))
+            using (var sr = new StreamReader(s))
+            {
+                var json = sr.ReadToEnd();
+                return JsonConvert.DeserializeObject<T>(json);
+            }
+        }
 
+        public T GetCredentials<T>(string profile_id) where T : class
+        {
+            return api_credentials.ContainsKey(profile_id) ? JsonConvert.DeserializeObject<T>(api_credentials[profile_id]) : null;
+        }
 
+        public void AddCredentials<T>(string profile_id, T credentials)
+        {
+            var json = JsonConvert.SerializeObject(credentials, Formatting.Indented);
+            api_credentials[profile_id] = json;
+        }
 
-        // OLD STUFF
-
-        //private const string key = "827A1C31-9CFA-478C-92B9-350126EC8BD3";
-
-        //private GoodreadsSettings _GoodreadsSettings = new GoodreadsSettings();
-        //public GoodreadsSettings GoodreadsSettings
-        //{
-        //    get { return _GoodreadsSettings; }
-        //    set { this.RaiseAndSetIfChanged(ref _GoodreadsSettings, value); }
-        //}
-
-        //private GoogleBooksSettings _GoogleBooksSettings = new GoogleBooksSettings();
-        //public GoogleBooksSettings GoogleBooksSettings
-        //{
-        //    get { return _GoogleBooksSettings; }
-        //    set { this.RaiseAndSetIfChanged(ref _GoogleBooksSettings, value); }
-        //}
-
-        //private static string GetFilename()
-        //{
-        //    var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        //    if (folder == null) 
-        //        throw new InvalidOperationException();
-
-        //    return Path.Combine(folder, "BookCollector.settings");
-        //}
-
-        //private static string GetDefaultFilename()
-        //{
-        //    var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        //    if (folder == null)
-        //        throw new InvalidOperationException();
-
-        //    return Path.Combine(folder, "BookCollector.defaultsettings");
-        //}
-
-        //public void Load()
-        //{
-        //    logger.Trace("Loading");
-
-        //    var filename = GetFilename();
-        //    if (!File.Exists(filename))
-        //    {
-        //        logger.Trace("No settings found - loading default");
-
-        //        filename = GetDefaultFilename();
-        //        if (!File.Exists(filename))
-        //            throw new Exception("Missing settings file");
-        //    }
-
-        //    var json = File.ReadAllText(filename);
-        //    var data_template = new { GoodreadsSettings, GoogleBooksSettings };
-        //    var data = JsonConvert.DeserializeAnonymousType(json, data_template);
-
-        //    GoodreadsSettings = data.GoodreadsSettings.Decrypt(key);
-        //    GoogleBooksSettings = data.GoogleBooksSettings.Decrypt(key);
-        //}
-
-        //public void Save()
-        //{
-        //    logger.Trace("Saving");
-
-        //    var data = new
-        //    {
-        //        GoodreadsSettings = GoodreadsSettings.Encrypt(key),
-        //        GoogleBooksSettings = GoogleBooksSettings.Encrypt(key)
-        //    };
-        //    var json = JsonConvert.SerializeObject(data, Formatting.Indented);
-        //    File.WriteAllText(GetFilename(), json);
-        //}
+        public bool IsApiEnabled(string name)
+        {
+            if (!api_enabled.ContainsKey(name))
+                api_enabled.Add(name, true);
+            return api_enabled[name];
+        }
     }
 }

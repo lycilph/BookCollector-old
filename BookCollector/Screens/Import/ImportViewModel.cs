@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using BookCollector.Apis;
+using BookCollector.Model;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
@@ -14,6 +16,7 @@ namespace BookCollector.Screens.Import
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IEventAggregator event_aggregator;
+        private readonly ProfileController profile_controller;
         private readonly ImportSelectionViewModel selection;
         private readonly ImportInformationViewModel information;
         private readonly ImportResultsViewModel results;
@@ -21,12 +24,13 @@ namespace BookCollector.Screens.Import
         public bool IsCommandsEnabled { get { return true; } }
    
         [ImportingConstructor]
-        public ImportViewModel(ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results, IEventAggregator event_aggregator)
+        public ImportViewModel(ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results, IEventAggregator event_aggregator, ProfileController profile_controller)
         {
             this.selection = selection;
             this.information = information;
             this.results = results;
             this.event_aggregator = event_aggregator;
+            this.profile_controller = profile_controller;
 
             Items.AddRange(new List<IScreen> {selection, information, results});
 
@@ -45,24 +49,26 @@ namespace BookCollector.Screens.Import
             event_aggregator.PublishOnUIThread(ShellMessage.Text(string.Empty));
         }
 
-        private void Select(IImportController controller)
+        private void Select(IImportController import_controller)
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Text("Importing from " + controller.Name));
+            event_aggregator.PublishOnUIThread(ShellMessage.Text("Importing from " + import_controller.ApiName));
 
             ActivateItem(information);
-            controller.Start();
+
+            var profile = profile_controller.CurrentProfile;
+            import_controller.Start(profile);
         }
 
         public void Back()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());            
+            event_aggregator.PublishOnUIThread(ShellMessage.Back());            
         }
 
         public void Handle(ImportMessage message)
         {
             switch (message.Kind)
             {
-                case ImportMessage.MessageKind.Selection:
+                case ImportMessage.MessageKind.Select:
                     Select(message.ImportController);
                     break;
                 case ImportMessage.MessageKind.Results:

@@ -117,7 +117,7 @@ namespace BookCollector.Screens.Profiles
 
         public void Cancel()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());            
+            event_aggregator.PublishOnUIThread(ShellMessage.Back());            
         }
     }
 }

@@ -147,17 +147,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Apis\ApisController.cs" />
+    <Compile Include="Apis\ApiController.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsCredentials.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsSettings.cs" />
+    <Compile Include="Apis\IApi.cs" />
     <Compile Include="ApplicationController.cs" />
     <Compile Include="ApplicationMessage.cs" />
     <Compile Include="Model\ProfileDescription.cs" />
+    <Compile Include="Screens\Import\ImportControllerViewModel.cs" />
     <Compile Include="Screens\IShellScreen.cs" />
     <Compile Include="Screens\Profiles\CollectionDescriptionView.xaml.cs">
       <DependentUpon>CollectionDescriptionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Profiles\CollectionDescriptionViewModel.cs" />
     <Compile Include="Screens\Import\AudibleImportController.cs" />
-    <Compile Include="Screens\Import\GoodreadsImportController.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsImportController.cs" />
     <Compile Include="Screens\Import\ImportMessage.cs" />
     <Compile Include="Screens\Import\ImportResultsView.xaml.cs">
       <DependentUpon>ImportResultsView.xaml</DependentUpon>
@@ -179,7 +183,7 @@
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
     <Compile Include="Services\Browsing\SchemeHandler.cs" />
     <Compile Include="Screens\Import\GoogleBooksImportController.cs" />
-    <Compile Include="Screens\Import\IImportController.cs" />
+    <Compile Include="Apis\IImportController.cs" />
     <Compile Include="Services\Browsing\BrowserView.xaml.cs">
       <DependentUpon>BrowserView.xaml</DependentUpon>
     </Compile>
@@ -187,7 +191,6 @@
     <Compile Include="Screens\Import\ImportControllerView.xaml.cs">
       <DependentUpon>ImportControllerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Import\ImportControllerViewModel.cs" />
     <Compile Include="Screens\Import\ImportInformationView.xaml.cs">
       <DependentUpon>ImportInformationView.xaml</DependentUpon>
     </Compile>
@@ -206,7 +209,7 @@
       <DependentUpon>MainBookView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Main\MainBookViewModel.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsAuthor.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsAuthor.cs" />
     <Compile Include="Model\ImageLink.cs" />
     <Compile Include="Model\ImportedBook.cs" />
     <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
@@ -217,29 +220,25 @@
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Main\MainViewModel.cs" />
-    <Compile Include="Apis\ApiBase.cs" />
     <Compile Include="Apis\Audible\AudibleApi.cs" />
     <Compile Include="Model\ImageDownloader.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsAccessResponse.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsImportResponse.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsAccessResponse.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsImportResponse.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBook.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksAuthorizationResponse.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksCollection.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksImageLinks.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksIndustryIdentifiers.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksVolumeInfo.cs" />
-    <Compile Include="Apis\IApi.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksApi.cs" />
     <Compile Include="Services\Settings\ApplicationSettings.cs" />
     <Compile Include="Model\BookRepository.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsApi.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsAuthorizationResponse.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsBook.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsReview.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsReviewCollection.cs" />
-    <Compile Include="Services\Settings\GoodreadsSettings.cs" />
-    <Compile Include="Apis\Goodreads\GoodreadsUser.cs" />
-    <Compile Include="Services\Settings\IEncryptable.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsApi.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsAuthorizationResponse.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsBook.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsReview.cs" />
+    <Compile Include="Apis\GoodReads\GoodReadsReviewCollection.cs" />
+    <Compile Include="Apis\GoodReads\GoodreadsUser.cs" />
     <Compile Include="Services\Settings\GoogleBooksSettings.cs" />
     <Compile Include="Screens\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -288,12 +287,10 @@
     <Resource Include="Images\appbar.chevron.left.png" />
     <Resource Include="Images\appbar.cancel.png" />
     <Resource Include="Images\appbar.clear.png" />
+    <EmbeddedResource Include="Apis\GoodReads\GoodReadsSettings.txt" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
-    </Content>
-    <Content Include="BookCollector.defaultsettings">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>

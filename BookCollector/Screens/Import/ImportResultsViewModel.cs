@@ -58,7 +58,7 @@ namespace BookCollector.Screens.Import
 
         public void Cancel()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());
+            event_aggregator.PublishOnUIThread(ShellMessage.Back());
         }
 
         public void Handle(ImportMessage message)

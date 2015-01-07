@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Apis.Goodreads
+namespace BookCollector.Apis.GoodReads
 {
-    public class GoodreadsBook
+    public class GoodReadsBook
     {
         public string Title { get; set; }
         public string Isbn { get; set; }
@@ -11,6 +11,6 @@ namespace BookCollector.Apis.Goodreads
         public string ImageUrl { get; set; }
         public string SmallImageUrl { get; set; }
         public string Link { get; set; }
-        public List<GoodreadsAuthor> Authors { get; set; }
+        public List<GoodReadsAuthor> Authors { get; set; }
     }
 }

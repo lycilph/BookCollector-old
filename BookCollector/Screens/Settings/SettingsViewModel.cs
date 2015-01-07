@@ -25,7 +25,7 @@ namespace BookCollector.Screens.Settings
 
         public void Back()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Back());
+            event_aggregator.PublishOnUIThread(ShellMessage.Back());
         }
     }
 }

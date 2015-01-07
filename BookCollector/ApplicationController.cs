@@ -12,27 +12,29 @@ namespace BookCollector
     public class ApplicationController : IHandle<ApplicationMessage>
     {
         private readonly IEventAggregator event_aggregator;
+        private readonly ApplicationSettings application_settings;
         private readonly ProfileController profile_controller;
 
         [ImportingConstructor]
-        public ApplicationController(IEventAggregator event_aggregator, ProfileController profile_controller)
+        public ApplicationController(IEventAggregator event_aggregator, ProfileController profile_controller, ApplicationSettings application_settings)
         {
             this.event_aggregator = event_aggregator;
             this.profile_controller = profile_controller;
+            this.application_settings = application_settings;
 
             event_aggregator.Subscribe(this);
         }
 
         public void Activate()
         {
-            ApplicationSettings.Instance.Load();
-            profile_controller.Load();
+            application_settings.Load();
+            profile_controller.Load(application_settings.DataDir);
         }
 
         public void Deactivate()
         {
-            ApplicationSettings.Instance.Save();
-            profile_controller.Save();
+            application_settings.Save();
+            profile_controller.Save(application_settings.DataDir);
         }
 
         public void Handle(ApplicationMessage message)
@@ -61,7 +63,7 @@ namespace BookCollector
             var main = IoC.Get<IShellScreen>("Main");
             event_aggregator.PublishOnUIThread(ShellMessage.Show(main));
 
-            if (ApplicationSettings.Instance.RememberLastCollection == false || profile_controller.CurrentCollection == null)
+            if (application_settings.RememberLastCollection == false || profile_controller.CurrentCollection == null)
             {
                 var profiles = IoC.Get<IShellScreen>("Profiles");
                 event_aggregator.PublishOnUIThread(ShellMessage.Show(profiles));

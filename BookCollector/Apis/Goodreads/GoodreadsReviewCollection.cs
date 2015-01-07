@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Apis.Goodreads
+namespace BookCollector.Apis.GoodReads
 {
-    public class GoodreadsReviewCollection
+    public class GoodReadsReviewCollection
     {
         public int Start { get; set; }
         public int End { get; set; }
         public int Total { get; set; }
-        public List<GoodreadsReview> Reviews { get; set; }
+        public List<GoodReadsReview> Reviews { get; set; }
     }
 }

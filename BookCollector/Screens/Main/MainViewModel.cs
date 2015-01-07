@@ -54,12 +54,12 @@ namespace BookCollector.Screens.Main
 
         public void Import()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Show("Import"));
+            event_aggregator.PublishOnUIThread(ShellMessage.Show("Import"));
         }
 
         public void Settings()
         {
-            event_aggregator.PublishOnCurrentThread(ShellMessage.Show("Settings"));
+            event_aggregator.PublishOnUIThread(ShellMessage.Show("Settings"));
         }
     }
 }

@@ -219,4 +219,4 @@ pip-log.txt
 ## Project
 #################
 
-*.defaultsettings
+*settings.txt

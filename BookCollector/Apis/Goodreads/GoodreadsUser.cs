@@ -1,6 +1,6 @@
-﻿namespace BookCollector.Apis.Goodreads
+﻿namespace BookCollector.Apis.GoodReads
 {
-    public class GoodreadsUser
+    public class GoodReadsUser
     {
         public string Id { get; set; }
         public string Name { get; set; }

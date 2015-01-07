@@ -10,36 +10,26 @@ using RestSharp;
 using RestSharp.Authenticators;
 using RestSharp.Contrib;
 
-namespace BookCollector.Apis.Goodreads
+namespace BookCollector.Apis.GoodReads
 {
-    [Export(typeof(GoodreadsApi))]
-    public class GoodreadsApi : ApiBase
+    [Export(typeof(IApi))]
+    [Export(typeof(GoodReadsApi))]
+    public class GoodReadsApi : IApi
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private const string base_url = @"https://www.goodreads.com";
 
-        private readonly ApplicationSettings application_settings;
+        private readonly GoodReadsSettings settings;
         private readonly RestClient client;
-
         private DateTime last_execution_time_stamp;
 
-        public override bool IsAuthenticated
-        {
-            get
-            {
-                return false; /*!string.IsNullOrWhiteSpace(application_settings.GoodreadsSettings.OAuthToken);*/ }
-        }
-
-        public GoodreadsSettings Settings
-        {
-            get { return null; /*application_settings.GoodreadsSettings;*/ }
-        }
+        public string Name { get { return "GoodReads"; } }
 
         [ImportingConstructor]
-        public GoodreadsApi(ApplicationSettings application_settings) : base("Goodreads")
+        public GoodReadsApi(ApplicationSettings application_settings)
         {
-            this.application_settings = application_settings;
+            settings = application_settings.GetSettings<GoodReadsSettings>(Name);
 
             client = new RestClient(base_url);
             client.AddHandler("application/xml", new CustomDeserializer());
@@ -55,7 +45,7 @@ namespace BookCollector.Apis.Goodreads
 
             return response;
         }
-        
+
         private T Execute<T>(IRestRequest request) where T : new()
         {
             Delay().Wait();
@@ -77,14 +67,14 @@ namespace BookCollector.Apis.Goodreads
             return Task.Delay(delay);
         }
 
-        public Task<GoodreadsAuthorizationResponse> RequestAuthorizationTokenAsync(string callback_uri)
+        public Task<GoodReadsAuthorizationResponse> RequestAuthorizationTokenAsync(string callback_uri)
         {
             return Task.Factory.StartNew(() => RequestAuthorizationToken(callback_uri));
         }
 
-        public GoodreadsAuthorizationResponse RequestAuthorizationToken(string callback_uri)
+        public GoodReadsAuthorizationResponse RequestAuthorizationToken(string callback_uri)
         {
-            client.Authenticator = OAuth1Authenticator.ForRequestToken(Settings.ConsumerKey, Settings.ConsumerSecret);
+            client.Authenticator = OAuth1Authenticator.ForRequestToken(settings.ConsumerKey, settings.ConsumerSecret);
 
             var request = new RestRequest("oauth/request_token", Method.POST);
             var response = Execute(request);
@@ -101,7 +91,7 @@ namespace BookCollector.Apis.Goodreads
             request.AddParameter("oauth_callback", callback_uri);
             var url = client.BuildUri(request).ToString();
 
-            return new GoodreadsAuthorizationResponse
+            return new GoodReadsAuthorizationResponse
             {
                 OAuthToken = oauth_token,
                 OAuthTokenSecret = oauth_token_secret,
@@ -109,43 +99,43 @@ namespace BookCollector.Apis.Goodreads
             };
         }
 
-        public GoodreadsAccessResponse RequestAccessToken(string token, string secret)
+        public GoodReadsAccessResponse RequestAccessToken(GoodReadsAuthorizationResponse authorization_response)
         {
-            client.Authenticator = OAuth1Authenticator.ForAccessToken(Settings.ConsumerKey, Settings.ConsumerSecret, token, secret);
+            client.Authenticator = OAuth1Authenticator.ForAccessToken(settings.ConsumerKey, settings.ConsumerSecret, authorization_response.OAuthToken, authorization_response.OAuthTokenSecret);
 
             var request = new RestRequest("oauth/access_token", Method.POST);
             var response = client.Execute(request);
 
             var query_string = HttpUtility.ParseQueryString(response.Content);
-            return new GoodreadsAccessResponse
+            return new GoodReadsAccessResponse
             {
                 OAuthToken = query_string["oauth_token"],
                 OAuthTokenSecret = query_string["oauth_token_secret"]
             };
         }
 
-        public string GetUserId()
+        public string GetUserId(GoodReadsCredentials credentials)
         {
-            client.Authenticator = OAuth1Authenticator.ForProtectedResource(Settings.ConsumerKey, Settings.ConsumerSecret, Settings.OAuthToken, Settings.OAuthTokenSecret);
+            client.Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, credentials.OAuthToken, credentials.OAuthTokenSecret);
 
             var request = new RestRequest("api/auth_user") { RequestFormat = DataFormat.Xml };
-            var response = Execute<GoodreadsUser>(request);
+            var response = Execute<GoodReadsUser>(request);
             return response.Id;
         }
 
-        public GoodreadsImportResponse GetBooks(int page, int items_per_page, string shelf)
+        public GoodReadsImportResponse GetBooks(GoodReadsCredentials credentials, int page, int items_per_page, string shelf)
         {
-            client.Authenticator = OAuth1Authenticator.ForProtectedResource(Settings.ConsumerKey, Settings.ConsumerSecret, Settings.OAuthToken, Settings.OAuthTokenSecret);
+            client.Authenticator = OAuth1Authenticator.ForProtectedResource(settings.ConsumerKey, settings.ConsumerSecret, credentials.OAuthToken, credentials.OAuthTokenSecret);
 
             var request = new RestRequest("review/list");
             request.AddParameter("v", "2");
-            request.AddParameter("id", Settings.UserId);
+            request.AddParameter("id", credentials.UserId);
             request.AddParameter("page", page);
             request.AddParameter("per_page", items_per_page);
             request.AddParameter("shelf", shelf);
-            var review_collection = Execute<GoodreadsReviewCollection>(request);
+            var review_collection = Execute<GoodReadsReviewCollection>(request);
 
-            return new GoodreadsImportResponse
+            return new GoodReadsImportResponse
             {
                 Books = review_collection.Reviews.Select(r => r.Book),
                 Total = review_collection.Total,

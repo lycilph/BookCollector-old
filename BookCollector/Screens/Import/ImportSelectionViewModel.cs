@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Linq;
+using BookCollector.Apis;
 using BookCollector.Shell;
 using BookCollector.Utilities;
 using Caliburn.Micro;
@@ -13,6 +13,7 @@ namespace BookCollector.Screens.Import
     public class ImportSelectionViewModel : ReactiveScreen
     {
         private readonly IEventAggregator event_aggregator;
+        private readonly ApiController api_controller;
 
         private ReactiveList<ImportControllerViewModel> _ImportControllers;
         public ReactiveList<ImportControllerViewModel> ImportControllers
@@ -22,16 +23,19 @@ namespace BookCollector.Screens.Import
         }
 
         [ImportingConstructor]
-        public ImportSelectionViewModel([ImportMany] IEnumerable<IImportController> import_controllers, IEventAggregator event_aggregator)
+        public ImportSelectionViewModel(IEventAggregator event_aggregator, ApiController api_controller)
         {
             this.event_aggregator = event_aggregator;
-            ImportControllers = import_controllers.Select(i => new ImportControllerViewModel(i)).ToReactiveList();
+            this.api_controller = api_controller;
         }
 
         protected override void OnActivate()
         {
-            base.OnActivate();
             event_aggregator.PublishOnUIThread(ShellMessage.Text("Select where to import from"));
+
+            ImportControllers = api_controller.GetImportControllers()
+                                              .Select(i => new ImportControllerViewModel(i))
+                                              .ToReactiveList();
         }
     }
 }
