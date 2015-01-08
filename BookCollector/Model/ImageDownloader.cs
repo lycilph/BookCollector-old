@@ -5,9 +5,9 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using BookCollector.Services.Settings;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using NLog;
@@ -20,53 +20,29 @@ namespace BookCollector.Model
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly BookRepository book_repository;
-        private readonly BlockingCollection<ImportedBook> queue = new BlockingCollection<ImportedBook>();
+        private readonly ApplicationSettings application_settings;
+        private BlockingCollection<ImportedBook> queue = new BlockingCollection<ImportedBook>();
         private CancellationTokenSource cts;
         private Task task;
 
         [ImportingConstructor]
-        public ImageDownloader(BookRepository book_repository)
+        public ImageDownloader(ApplicationSettings application_settings)
         {
-            this.book_repository = book_repository;
+            this.application_settings = application_settings;
         }
 
-        private static string GetImageFolder()
-        {
-            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (string.IsNullOrWhiteSpace(folder))
-                throw new ArgumentNullException();
-            return Path.Combine(folder, "Images");
-        }
-
-        private static void EnsureImageFolderExists()
-        {
-            Directory.CreateDirectory(GetImageFolder());
-        }
-
-        private static string GetImageFilename(string url, string name, string postfix)
+        private string GetImageFilename(string url, string name, string postfix)
         {
             var extension = Path.GetExtension(url);
             if (string.IsNullOrWhiteSpace(extension))
                 extension = ".jpg";
             var filename = string.Format("{0}_{1}{2}", name, postfix, extension);
-            return Path.Combine(GetImageFolder(), filename);
-        }
-
-        private static string GetFilename()
-        {
-            var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (string.IsNullOrWhiteSpace(folder))
-                throw new ArgumentNullException();
-            return Path.Combine(folder, "download.txt");
+            return Path.Combine(application_settings.ImageDir, filename);
         }
 
         public void Start()
         {
-            logger.Trace("Starting");
-
-            Load();
-            EnsureImageFolderExists();
+            logger.Trace("Starting image download queue");
 
             cts = new CancellationTokenSource();
             task = Task.Factory.StartNew(() =>
@@ -81,16 +57,14 @@ namespace BookCollector.Model
                         {
                             foreach (var image_link in imported_book.ImageLinks)
                             {
-                               if (!string.IsNullOrWhiteSpace(image_link.Url))
-                               {
-                                   var filename = GetImageFilename(image_link.Url, imported_book.Book.Id, image_link.Property);
-                                   client.DownloadFile(image_link.Url, filename);
+                                if (string.IsNullOrWhiteSpace(image_link.Url))
+                                    continue;
 
-                                   var property = typeof (Book).GetProperty(image_link.Property);
-                                   property.SetValue(imported_book.Book, filename);
+                                var filename = GetImageFilename(image_link.Url, imported_book.Book.Id, image_link.Property);
+                                client.DownloadFile(image_link.Url, filename);
 
-                                   Thread.Sleep(100);
-                               }
+                                var property = typeof (Book).GetProperty(image_link.Property);
+                                property.SetValue(imported_book.Book, filename);
                             }
 
                             logger.Trace("Image(s) for {0} downloaded", imported_book.Book.Title);
@@ -100,9 +74,7 @@ namespace BookCollector.Model
                             logger.Error(e.Message);
                         }
 
-                        //Thread.Sleep(100);
-                        for (var i = 0; i < 100 && !cts.Token.IsCancellationRequested; i++)
-                            Thread.Sleep(50);
+                        Thread.Sleep(100); // Be nice, when downloading images from websites :-)
                     }
                 }
             }, cts.Token);
@@ -120,38 +92,40 @@ namespace BookCollector.Model
             {
                 logger.Trace("Image download queue stopped");
             }
-
-            // Save queue
-            Save();
         }
 
-        private void Save()
+        public void Save(CollectionDescription collection)
         {
-            logger.Trace("Saving image download queue");
+            logger.Trace("Saving image download queue " + collection);
 
-            var path = GetFilename();
+            var path = Path.Combine(application_settings.DataDir, collection.Id + "_queue.txt");
             var items = queue.Select(b => new { BookId = b.Book.Id, b.ImageLinks });
             var json = JsonConvert.SerializeObject(items, Formatting.Indented);
             File.WriteAllText(path, json);
         }
 
-        private void Load()
+        public void Load(CollectionDescription collection, BookRepository repository)
         {
-            logger.Trace("Loading image download queue");
+            // Always clear the queue
+            queue = new BlockingCollection<ImportedBook>();
 
-            var path = GetFilename();
+            var path = Path.Combine(application_settings.DataDir, collection.Id + "_queue.txt");
             if (!File.Exists(path))
+            {
+                logger.Trace("No queue found for " + collection);
                 return;
+            }
 
-            var dummy_links = new [] { new ImageLink() };
-            var dummy = new [] { new {BookId = string.Empty, Imagelinks = dummy_links} };
+            logger.Trace("Loading image download queue " + collection);
+            var dummy_links = new[] { new ImageLink() };
+            var dummy = new[] { new { BookId = string.Empty, Imagelinks = dummy_links } };
 
             var json = File.ReadAllText(path);
             var links = JsonConvert.DeserializeAnonymousType(json, dummy);
 
             links.Select(l => new ImportedBook
             {
-                Book = book_repository.Get(l.BookId),
+                Book = repository.Get(l.BookId),
                 ImageLinks = l.Imagelinks.ToList()
             })
             .Apply(queue.Add);

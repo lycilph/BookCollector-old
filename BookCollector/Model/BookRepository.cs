@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using BookCollector.Services.Settings;
+using BookCollector.Utilities;
 using NLog;
 using ReactiveUI;
 
@@ -11,7 +14,7 @@ namespace BookCollector.Model
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        //private readonly ImageDownloader image_downloader;
+        private readonly ApplicationSettings application_settings;
 
         private List<Book> _Books = new List<Book>();
         public List<Book> Books
@@ -20,22 +23,10 @@ namespace BookCollector.Model
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
 
-        //public BookRepository()
-        //{
-        //    image_downloader = new ImageDownloader(this);
-        //}
-
-        //private static string GetFilename()
-        //{
-        //    var folder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        //    return Path.Combine(folder, "Books.txt");
-        //}
-
-        public void Import(IEnumerable<ImportedBook> imported_books)
+        [ImportingConstructor]
+        public BookRepository(ApplicationSettings application_settings)
         {
-        //    var imported_books_list = imported_books.ToList();
-        //    Books.AddRange(imported_books_list.Select(ib => ib.Book));
-        //    //image_downloader.Add(imported_books_list);
+            this.application_settings = application_settings;
         }
 
         public void Clear()
@@ -43,23 +34,31 @@ namespace BookCollector.Model
             Books.Clear();
         }
 
-        public void Load()
+        public void Add(IEnumerable<Book> books)
         {
-            //logger.Trace("Loading");
-            //var path = GetFilename();
-            //if (File.Exists(path))
-            //{
-            //    var json = File.ReadAllText(path);
-            //    Books = JsonConvert.DeserializeObject<List<Book>>(json);
-            //}
+            Books.AddRange(books);
         }
 
-        public void Save()
+        public void Load(CollectionDescription collection)
         {
-            //logger.Trace("Saving");
-            //var path = GetFilename();
-            //var json = JsonConvert.SerializeObject(Books, Formatting.Indented);
-            //File.WriteAllText(path, json);
+            var path = Path.Combine(application_settings.DataDir, collection.Id + "_collection.txt");
+            if (File.Exists(path))
+            {
+                logger.Trace("Loading collection " + collection);
+                Books = JsonExtensions.DeserializeFromFile<List<Book>>(path);
+            }
+            else
+            {
+                logger.Trace("No collection found for " + collection);
+                Books = new List<Book>();
+            }
+        }
+
+        public void Save(CollectionDescription collection)
+        {
+            logger.Trace("Saving collection " + collection);
+            var path = Path.Combine(application_settings.DataDir, collection.Id + "_collection.txt");
+            JsonExtensions.SerializeToFile(path, Books);
         }
 
         public Book GetDuplicate(Book book)

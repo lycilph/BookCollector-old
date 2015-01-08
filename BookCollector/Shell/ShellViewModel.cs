@@ -59,26 +59,10 @@ namespace BookCollector.Shell
 
         protected override void OnInitialize()
         {
-            base.OnInitialize();
-
             logger.Trace("Shell initializing");
             DisplayName = "Book Collector";
 
             event_aggregator.PublishOnUIThread(ApplicationMessage.ShellInitialized());
-        }
-
-        protected override void OnActivate()
-        {                   
-            base.OnActivate();
-
-            logger.Trace("Shell activating");
-        }
-
-        protected override void OnDeactivate(bool close)
-        {
-            base.OnDeactivate(close);
-
-            logger.Trace(string.Format("Shell deactivating ({0})", close));
         }
 
         protected override void OnActivationProcessed(IShellScreen item, bool success)

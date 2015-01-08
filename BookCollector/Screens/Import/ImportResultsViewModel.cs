@@ -18,6 +18,7 @@ namespace BookCollector.Screens.Import
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly IEventAggregator event_aggregator;
+        private readonly ProfileController profile_controller;
         private readonly BookRepository book_repository;
 
         private ReactiveList<ImportedBookViewModel> _Books = new ReactiveList<ImportedBookViewModel>();
@@ -35,10 +36,11 @@ namespace BookCollector.Screens.Import
         }
 
         [ImportingConstructor]
-        public ImportResultsViewModel(IEventAggregator event_aggregator, BookRepository book_repository)
+        public ImportResultsViewModel(IEventAggregator event_aggregator, BookRepository book_repository, ProfileController profile_controller)
         {
             this.event_aggregator = event_aggregator;
             this.book_repository = book_repository;
+            this.profile_controller = profile_controller;
 
             event_aggregator.Subscribe(this);
 
@@ -51,7 +53,7 @@ namespace BookCollector.Screens.Import
             var selected_books = Books.Where(b => b.IsSelected)
                                       .Select(b => b.AssociatedObject)
                                       .ToList();
-            book_repository.Import(selected_books);
+            profile_controller.Import(selected_books);
 
             Cancel();
         }

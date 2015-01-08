@@ -56,7 +56,7 @@ namespace BookCollector.Apis.GoodReads
                 return credentials;
 
             progress.Report("Requesting authorization token");
-            var authorization_response = await api.RequestAuthorizationTokenAsync(callback_uri.ToString());
+            var authorization_response = await Task.Factory.StartNew(() => api.RequestAuthorizationToken(callback_uri.ToString()));
             logger.Trace("Response url: " + authorization_response.Url);
 
             tcs = BrowserController.ShowAndNavigate(authorization_response.Url);

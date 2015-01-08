@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.IO;
-using BookCollector.Services.Settings;
+using System.Linq;
 using BookCollector.Utilities;
 using Newtonsoft.Json;
 using NLog;
@@ -52,13 +53,30 @@ namespace BookCollector.Model
 
         public void SetCurrent(ProfileDescription profile, CollectionDescription collection)
         {
+            if (CurrentCollection != null)
+            {
+                repository.Save(CurrentCollection);
+                downloader.Stop();
+                downloader.Save(CurrentCollection);
+            }
+
             CurrentProfile = profile;
             CurrentCollection = collection;
 
-            // Load books into repository
-            // Stop and save image queue for old collection
-            // Load and start image queue for new collection
+            if (CurrentCollection != null)
+            {
+                repository.Load(CurrentCollection);
+                downloader.Load(CurrentCollection, repository);
+                downloader.Start();
+            }
+
             // Load search provider
+        }
+
+        public void Import(List<ImportedBook> imported_books)
+        {
+            repository.Add(imported_books.Select(i => i.Book));
+            downloader.Add(imported_books);
         }
 
         public ProfileDescription CreateProfile()
@@ -103,6 +121,8 @@ namespace BookCollector.Model
             var path = Path.Combine(dir, filename);
             logger.Trace("Saving (path = {0})", path);
             JsonExtensions.SerializeToFile(path, this, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
+
+            SetCurrent(null, null); // This forces the repository to save the current collection
         }
     }
 }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Threading.Tasks;
-using BookCollector.Services.Settings;
-using NLog;
-using RestSharp;
+﻿using System.ComponentModel.Composition;
 
 namespace BookCollector.Apis.GoogleBooks
 {
-    //[Export(typeof(GoogleBooksApi))]
-    //public class GoogleBooksApi
-    //{
+    [Export(typeof(IApi))]
+    [Export(typeof(GoogleBooksApi))]
+    public class GoogleBooksApi : IApi
+    {
     //    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     //    private static readonly Uri authorization_url = new Uri(@"https://accounts.google.com");
 
@@ -22,6 +17,7 @@ namespace BookCollector.Apis.GoogleBooks
 
     //    private DateTime last_execution_time_stamp;
 
+        public string Name { get { return "Google Books"; } }
 
     //    [ImportingConstructor]
     //    public GoogleBooksApi(ApplicationSettings application_settings) : base("Google Books")
@@ -127,5 +123,5 @@ namespace BookCollector.Apis.GoogleBooks
     //        var response = Execute<GoogleBooksCollection>(request);
     //        return response.Items;
     //    }
-    //}
+    }
 }

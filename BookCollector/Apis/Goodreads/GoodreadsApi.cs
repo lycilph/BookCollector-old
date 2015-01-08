@@ -67,11 +67,6 @@ namespace BookCollector.Apis.GoodReads
             return Task.Delay(delay);
         }
 
-        public Task<GoodReadsAuthorizationResponse> RequestAuthorizationTokenAsync(string callback_uri)
-        {
-            return Task.Factory.StartNew(() => RequestAuthorizationToken(callback_uri));
-        }
-
         public GoodReadsAuthorizationResponse RequestAuthorizationToken(string callback_uri)
         {
             client.Authenticator = OAuth1Authenticator.ForRequestToken(settings.ConsumerKey, settings.ConsumerSecret);

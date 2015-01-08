@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <BitmapImage x:Key="PlaceHolderImage" UriSource="../Images/noimage.gif"/>
+        <BitmapImage x:Key="PlaceHolderImage" UriSource="../../Images/noimage.gif"/>
     </UserControl.Resources>
     
     <Grid>

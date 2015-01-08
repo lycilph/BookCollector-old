@@ -1,51 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using BookCollector.Apis;
-using BookCollector.Apis.GoogleBooks;
+﻿using System.ComponentModel.Composition;
 using BookCollector.Model;
-using BookCollector.Services.Browsing;
-using Caliburn.Micro;
-using NLog;
-using LogManager = NLog.LogManager;
 
-namespace BookCollector.Screens.Import
+namespace BookCollector.Apis.GoogleBooks
 {
-    //[Export(typeof(IImportController))]
-    //public class GoogleBooksImportController : IImportController
-    //{
+    [Export(typeof(IImportController))]
+    public class GoogleBooksImportController : IImportController
+    {
     //    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     //    private static readonly Uri redirect_uri = new Uri(@"http://localhost:9327");
 
-    //    private readonly GoogleBooksApi api;
+        private readonly GoogleBooksApi api;
     //    private readonly IEventAggregator event_aggregator;
     //    private readonly IProgress<string> progress;
     //    private TaskCompletionSource<bool> tcs;
 
-    //    public string Name { get { return "Google Books"; } }
+        public string ApiName { get { return api.Name; } }
 
-    //    [ImportingConstructor]
-    //    public GoogleBooksImportController(GoogleBooksApi api, IEventAggregator event_aggregator)
-    //    {
-    //        this.api = api;
-    //        this.event_aggregator = event_aggregator;
+        [ImportingConstructor]
+        public GoogleBooksImportController(GoogleBooksApi api) //, IEventAggregator event_aggregator)
+        {
+            this.api = api;
+            //this.event_aggregator = event_aggregator;
 
-    //        progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
-    //    }
+            //progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
+        }
 
-    //    public void Start()
-    //    {
+        public void Start(ProfileDescription profile)
+        {
     //        progress.Report("Authenticating");
     //        if (api.IsAuthenticated)
     //            Finish();
     //        else
     //            Authenticate();
-    //    }
+        }
 
     //    private async void Finish()
     //    {
@@ -142,5 +129,5 @@ namespace BookCollector.Screens.Import
     //        var code = code_element.Substring(code_prefix.Length);
     //        return code;
     //    }
-    //}
+    }
 }

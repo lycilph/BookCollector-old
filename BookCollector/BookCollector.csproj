@@ -182,7 +182,7 @@
     <Compile Include="Services\Browsing\BrowsingMessage.cs" />
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
     <Compile Include="Services\Browsing\SchemeHandler.cs" />
-    <Compile Include="Screens\Import\GoogleBooksImportController.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksImportController.cs" />
     <Compile Include="Apis\IImportController.cs" />
     <Compile Include="Services\Browsing\BrowserView.xaml.cs">
       <DependentUpon>BrowserView.xaml</DependentUpon>
