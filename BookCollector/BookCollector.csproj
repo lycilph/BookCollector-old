@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props')" />
-  <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props')" />
-  <Import Project="..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props" Condition="Exists('..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props')" />
+  <Import Project="..\packages\CefSharp.Wpf.39.0.0-pre01\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.39.0.0-pre01\build\CefSharp.Wpf.props')" />
+  <Import Project="..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.props')" />
+  <Import Project="..\packages\CefSharp.OffScreen.39.0.0-pre01\build\CefSharp.OffScreen.props" Condition="Exists('..\packages\CefSharp.OffScreen.39.0.0-pre01\build\CefSharp.OffScreen.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,7 +16,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <NuGetPackageImportStamp>3eec8f71</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>50adb39d</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -72,7 +72,7 @@
     </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Framework.Core.1.0.9-alpha\lib\net45\Framework.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.Core.1.0.11-alpha\lib\net45\Framework.Core.dll</HintPath>
     </Reference>
     <Reference Include="Framework.UI">
       <HintPath>..\packages\Framework.UI.1.0.0-alpha\lib\net45\Framework.UI.dll</HintPath>
@@ -148,8 +148,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Apis\ApiController.cs" />
+    <Compile Include="Apis\Audible\AudibleCredentials.cs" />
+    <Compile Include="Apis\Audible\AudibleImportController.cs" />
+    <Compile Include="Apis\Audible\AudibleImportHelper.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsCredentials.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsSettings.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksCredentials.cs" />
+    <Compile Include="Apis\GoogleBooks\GoogleBooksSettings.cs" />
     <Compile Include="Apis\IApi.cs" />
     <Compile Include="ApplicationController.cs" />
     <Compile Include="ApplicationMessage.cs" />
@@ -160,7 +165,7 @@
       <DependentUpon>CollectionDescriptionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Profiles\CollectionDescriptionViewModel.cs" />
-    <Compile Include="Screens\Import\AudibleImportController.cs" />
+    <Compile Include="Apis\Audible\AudibleImportControllerOld.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsImportController.cs" />
     <Compile Include="Screens\Import\ImportMessage.cs" />
     <Compile Include="Screens\Import\ImportResultsView.xaml.cs">
@@ -177,6 +182,10 @@
       <DependentUpon>ProfilesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Profiles\ProfilesViewModel.cs" />
+    <Compile Include="Screens\Settings\ApiView.xaml.cs">
+      <DependentUpon>ApiView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Settings\ApiViewModel.cs" />
     <Compile Include="Screens\ShellScreenBase.cs" />
     <Compile Include="Services\Browsing\BrowserController.cs" />
     <Compile Include="Services\Browsing\BrowsingMessage.cs" />
@@ -231,7 +240,7 @@
     <Compile Include="Apis\GoogleBooks\GoogleBooksIndustryIdentifiers.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksVolumeInfo.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksApi.cs" />
-    <Compile Include="Services\Settings\ApplicationSettings.cs" />
+    <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Model\BookRepository.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsApi.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsAuthorizationResponse.cs" />
@@ -239,7 +248,6 @@
     <Compile Include="Apis\GoodReads\GoodReadsReview.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsReviewCollection.cs" />
     <Compile Include="Apis\GoodReads\GoodreadsUser.cs" />
-    <Compile Include="Services\Settings\GoogleBooksSettings.cs" />
     <Compile Include="Screens\Settings\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
@@ -288,6 +296,7 @@
     <Resource Include="Images\appbar.cancel.png" />
     <Resource Include="Images\appbar.clear.png" />
     <EmbeddedResource Include="Apis\GoodReads\GoodReadsSettings.txt" />
+    <EmbeddedResource Include="Apis\GoogleBooks\GoogleBooksSettings.txt" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -321,6 +330,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Profiles\ProfilesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Settings\ApiView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,20 +380,20 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2062.1898\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.OffScreen.37.0.0\build\CefSharp.OffScreen.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.37.0.0\build\CefSharp.Wpf.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.OffScreen.39.0.0-pre01\build\CefSharp.OffScreen.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.OffScreen.39.0.0-pre01\build\CefSharp.OffScreen.props'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2171.1949\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2171.1949\build\cef.redist.x86.targets'))" />
+    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2171.1949\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2171.1949\build\cef.redist.x64.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.props'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.targets'))" />
+    <Error Condition="!Exists('..\packages\CefSharp.Wpf.39.0.0-pre01\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.39.0.0-pre01\build\CefSharp.Wpf.props'))" />
   </Target>
-  <Import Project="..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2062.1898\build\cef.redist.x64.targets')" />
-  <Import Project="..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.37.0.0\build\CefSharp.Common.targets')" />
+  <Import Project="..\packages\cef.redist.x86.3.2171.1949\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2171.1949\build\cef.redist.x86.targets')" />
+  <Import Project="..\packages\cef.redist.x64.3.2171.1949\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2171.1949\build\cef.redist.x64.targets')" />
+  <Import Project="..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.39.0.0-pre01\build\CefSharp.Common.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

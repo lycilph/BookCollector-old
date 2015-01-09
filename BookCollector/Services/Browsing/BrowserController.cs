@@ -45,7 +45,12 @@ namespace BookCollector.Services.Browsing
             offscreen_browser.Execute(script);
         }
 
-        public static async Task<HtmlDocument> GetOffscreenSource()
+        public static async Task<string> GetOffscreenSourceAsText()
+        {
+            return await offscreen_browser.GetSource();
+        }
+
+        public static async Task<HtmlDocument> GetOffscreenSourceAsDocument()
         {
             var source = await offscreen_browser.GetSource();
             var doc = new HtmlDocument();

@@ -5,8 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookCollector.Model;
 using BookCollector.Screens.Import;
+using BookCollector.Services;
 using BookCollector.Services.Browsing;
-using BookCollector.Services.Settings;
 using Caliburn.Micro;
 using NLog;
 using RestSharp.Contrib;
@@ -51,7 +51,7 @@ namespace BookCollector.Apis.GoodReads
 
         private async Task<GoodReadsCredentials> Authenticate(ProfileDescription profile)
         {
-            var credentials = application_settings.GetCredentials<GoodReadsCredentials>(profile.Id);
+            var credentials = application_settings.GetCredentials<GoodReadsCredentials>(profile.Id, api.Name);
             if (credentials != null)
                 return credentials;
 
@@ -70,7 +70,7 @@ namespace BookCollector.Apis.GoodReads
             credentials.UserId = await Task.Factory.StartNew(() => api.GetUserId(credentials));
 
             progress.Report("Authorization done!");
-            application_settings.AddCredentials(profile.Id, credentials);
+            application_settings.AddCredentials(profile.Id, api.Name, credentials);
 
             return credentials;
         }

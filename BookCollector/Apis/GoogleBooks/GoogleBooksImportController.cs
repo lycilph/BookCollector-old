@@ -1,133 +1,135 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading.Tasks;
 using BookCollector.Model;
+using BookCollector.Screens.Import;
+using BookCollector.Services;
+using BookCollector.Services.Browsing;
+using Caliburn.Micro;
+using NLog;
+using LogManager = NLog.LogManager;
 
 namespace BookCollector.Apis.GoogleBooks
 {
     [Export(typeof(IImportController))]
     public class GoogleBooksImportController : IImportController
     {
-    //    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-    //    private static readonly Uri redirect_uri = new Uri(@"http://localhost:9327");
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Uri redirect_uri = new Uri(@"http://localhost:9327");
 
+        private readonly ApplicationSettings application_settings;
         private readonly GoogleBooksApi api;
-    //    private readonly IEventAggregator event_aggregator;
-    //    private readonly IProgress<string> progress;
-    //    private TaskCompletionSource<bool> tcs;
+        private readonly IEventAggregator event_aggregator;
+        private readonly IProgress<string> progress;
 
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public GoogleBooksImportController(GoogleBooksApi api) //, IEventAggregator event_aggregator)
+        public GoogleBooksImportController(GoogleBooksApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator)
         {
             this.api = api;
-            //this.event_aggregator = event_aggregator;
+            this.application_settings = application_settings;
+            this.event_aggregator = event_aggregator;
 
-            //progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
+            progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
 
-        public void Start(ProfileDescription profile)
+        public async void Start(ProfileDescription profile)
         {
-    //        progress.Report("Authenticating");
-    //        if (api.IsAuthenticated)
-    //            Finish();
-    //        else
-    //            Authenticate();
+            var credentials = await Authenticate(profile);
+            var result = await GetBooksAsync(credentials);
+
+            event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
         }
 
-    //    private async void Finish()
-    //    {
-    //        var result = await GetBooksAsync();
-    //        event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
-    //    }
+        private async Task<GoogleBooksCredentials> Authenticate(ProfileDescription profile)
+        {
+            var credentials = application_settings.GetCredentials<GoogleBooksCredentials>(profile.Id, api.Name);
+            if (credentials != null)
+                return credentials;
 
-    //    public Task<List<ImportedBook>> GetBooksAsync()
-    //    {
-    //        return Task.Factory.StartNew(() =>
-    //        {
-    //            progress.Report("Getting books");
-    //            var google_books = api.GetBooks();
+            var authorization_response_task = Task.Factory.StartNew(() => Listen());
+                
+            progress.Report("Requesting authorization url");
+            var uri = await Task.Factory.StartNew(() => api.RequestAuthorizationUrl(redirect_uri.ToString()) );
+            logger.Trace("Response uri: " + uri);
+            
+            var tcs = BrowserController.ShowAndNavigate(uri.ToString());
+            var code = await authorization_response_task;
+            tcs.SetResult(true);
 
-    //            progress.Report(string.Format("Downloaded {0} books", google_books.Count));
-    //            return google_books.Select(Convert).ToList();
-    //        });
-    //    }
+            progress.Report("Requesting access token");
+            var response = await Task.Factory.StartNew(() => api.RequestAccessToken(code, redirect_uri.ToString()));
+            credentials = new GoogleBooksCredentials(response);
 
-    //    private ImportedBook Convert(GoogleBook book)
-    //    {
-    //        var isbn10 = book.VolumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10") ?? new GoogleBooksIndustryIdentifiers();
-    //        var isbn13 = book.VolumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_13") ?? new GoogleBooksIndustryIdentifiers();
+            progress.Report("Authorization done!");
+            application_settings.AddCredentials(profile.Id, api.Name, credentials);
 
-    //        return new ImportedBook
-    //        {
-    //            Book = new Book
-    //            {
-    //                Title = book.VolumeInfo.Title,
-    //                Description = book.VolumeInfo.Description,
-    //                Authors = book.VolumeInfo.Authors,
-    //                ISBN10 = isbn10.Identifier,
-    //                ISBN13 = isbn13.Identifier,
-    //                ImportSource = Name
-    //            },
-    //            ImageLinks = new List<ImageLink>
-    //            {
-    //                new ImageLink(book.VolumeInfo.ImageLinks.Thumbnail, "Image"),
-    //                new ImageLink(book.VolumeInfo.ImageLinks.SmallThumbnail, "SmallImage")
-    //            }
-    //        };
-    //    }
+            return credentials;
+        }
 
-    //    public async void Authenticate()
-    //    {
-    //        var task = Task.Factory.StartNew(() => Listen())
-    //                               .ContinueWith(parent => RequestToken(parent.Result), TaskScheduler.FromCurrentSynchronizationContext());
+        public Task<List<ImportedBook>> GetBooksAsync(GoogleBooksCredentials credentials)
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                progress.Report("Getting books");
+                var google_books = api.GetBooks(credentials);
 
-    //        var uri = await Task.Factory.StartNew(() =>
-    //        {
-    //            progress.Report("Requesting authorization url");
-    //            return api.RequestAuthorizationUrl(redirect_uri.ToString());
-    //        });
-    //        tcs = BrowserController.ShowAndNavigate(uri.ToString());
+                progress.Report(string.Format("Downloaded {0} books", google_books.Count));
+                return google_books.Select(Convert).ToList();
+            });
+        }
 
-    //        await task;
-    //    }
+        private ImportedBook Convert(GoogleBook book)
+        {
+            var isbn10 = book.VolumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_10") ?? new GoogleBooksIndustryIdentifiers();
+            var isbn13 = book.VolumeInfo.IndustryIdentifiers.FirstOrDefault(i => i.Type == "ISBN_13") ?? new GoogleBooksIndustryIdentifiers();
 
-    //    private async void RequestToken(string code)
-    //    {
-    //        tcs.SetResult(true);
+            return new ImportedBook
+            {
+                Book = new Book
+                {
+                    Title = book.VolumeInfo.Title,
+                    Description = book.VolumeInfo.Description,
+                    Authors = book.VolumeInfo.Authors,
+                    ISBN10 = isbn10.Identifier,
+                    ISBN13 = isbn13.Identifier,
+                    ImportSource = api.Name
+                },
+                ImageLinks = new List<ImageLink>
+                {
+                    new ImageLink(book.VolumeInfo.ImageLinks.Thumbnail, "Image"),
+                    new ImageLink(book.VolumeInfo.ImageLinks.SmallThumbnail, "SmallImage")
+                }
+            };
+        }
 
-    //        progress.Report("Requesting access token");
-    //        var response = await Task.Factory.StartNew(() => api.RequestAccessToken(code, redirect_uri.ToString()));
-    //        api.Settings.AccessToken = response.AccessToken;
-    //        api.Settings.RefreshToken = response.RefreshToken;
-    //        api.Settings.ExpiresIn = DateTime.Now.AddSeconds(response.ExpiresIn);
-    //        progress.Report("Authorization done!");
+        private static string Listen()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 9327);
+            listener.Start();
 
-    //        Finish();
-    //    }
+            var tcp_client = listener.AcceptTcpClient();
+            var data = new byte[tcp_client.ReceiveBufferSize];
+            string str;
+            using (var ns = tcp_client.GetStream())
+            {
+                var read_count = ns.Read(data, 0, tcp_client.ReceiveBufferSize);
+                str = Encoding.UTF8.GetString(data, 0, read_count);
+            }
 
-    //    private static string Listen()
-    //    {
-    //        var addr = IPAddress.Loopback;
-    //        var listener = new TcpListener(addr, 9327);
-    //        listener.Start();
+            listener.Stop();
 
-    //        var tcp_client = listener.AcceptTcpClient();
-
-    //        var data = new byte[tcp_client.ReceiveBufferSize];
-    //        string str;
-    //        using (var ns = tcp_client.GetStream())
-    //        {
-    //            var read_count = ns.Read(data, 0, tcp_client.ReceiveBufferSize);
-    //            str = Encoding.UTF8.GetString(data, 0, read_count);
-    //        }
-
-    //        listener.Stop();
-
-    //        var elements = str.Split(' ');
-    //        const string code_prefix = "/?code=";
-    //        var code_element = elements.Single(element => element.StartsWith(code_prefix));
-    //        var code = code_element.Substring(code_prefix.Length);
-    //        return code;
-    //    }
+            var elements = str.Split(' ');
+            const string code_prefix = "/?code=";
+            var code_element = elements.Single(element => element.StartsWith(code_prefix));
+            var code = code_element.Substring(code_prefix.Length);
+            return code;
+        }
     }
 }

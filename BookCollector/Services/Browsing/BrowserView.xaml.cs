@@ -22,13 +22,13 @@ namespace BookCollector.Services.Browsing
 
         private void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
-            logger.Trace("Frame load end (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, e.Url);
+            logger.Info("Frame load end (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, e.Url);
             event_aggregator.PublishOnUIThread(BrowsingMessage.LoadEnd(new Uri(e.Url)));
         }
 
         private void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
-            logger.Trace("Frame load start (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, e.Url);
+            logger.Info("Frame load start (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, e.Url);
             event_aggregator.PublishOnUIThread(BrowsingMessage.LoadStart(new Uri(e.Url)));
         }
     }

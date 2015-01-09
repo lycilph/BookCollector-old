@@ -9,5 +9,10 @@ namespace BookCollector.Apis.GoogleBooks
         public List<string> Authors { get; set; }
         public List<GoogleBooksIndustryIdentifiers> IndustryIdentifiers { get; set; }
         public GoogleBooksImageLinks ImageLinks { get; set; }
+
+        public GoogleBooksVolumeInfo()
+        {
+            IndustryIdentifiers = new List<GoogleBooksIndustryIdentifiers>();
+        }
     }
 }

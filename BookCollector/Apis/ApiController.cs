@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using BookCollector.Services.Settings;
+using BookCollector.Services;
 using BookCollector.Utilities;
 using ReactiveUI;
 

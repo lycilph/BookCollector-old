@@ -27,28 +27,33 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" Grid.Column="0" Margin="0,5" Text="Data Folder" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="2" Margin="0,5" Text="ABC"/>
+            <TextBox x:Name="DataDir" Grid.Row="0" Grid.Column="2" Margin="0,5"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Margin="0,5" Text="Images Folder" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="2" Margin="0,5" Text="ABC"/>
+            <TextBox x:Name="ImageDir" Grid.Row="1" Grid.Column="2" Margin="0,5"/>
 
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="0,5" Text="Options" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <CheckBox Grid.Row="2" Grid.Column="2" Margin="0,5" Content="Remember Last Collection"/>
+            <CheckBox x:Name="RememberLastCollection" Grid.Row="2" Grid.Column="2" Margin="0,5" Content="Remember Last Collection"/>
 
             <TextBlock Grid.Row="3" Grid.Column="0" Margin="0,5" Text="Apis" HorizontalAlignment="Right"/>
-            <ListBox Grid.Row="3" Grid.Column="2" Margin="0,5">
-                <CheckBox Content="Audible" IsChecked="True"/>
-                <CheckBox Content="GoodReads" IsChecked="True"/>
-                <CheckBox Content="Google Books" IsChecked="True"/>
-                <CheckBox Content="OpenLibrary" IsChecked="True"/>
-            </ListBox>
+            <ListBox x:Name="Apis" Grid.Row="3" Grid.Column="2" Margin="0,5"/>
 
             <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,5" Text="Actions" HorizontalAlignment="Right"/>
             <StackPanel Grid.Row="4" Grid.Column="2" Margin="0,5">
-                <Button x:Name="Clear" Content="Clear" HorizontalAlignment="Left"/>
+                <Button x:Name="ClearRepository" Content="Clear Repository" HorizontalAlignment="Left"/>
+            </StackPanel>
+
+            <StackPanel Grid.Row="5" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="Ok" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Image Source="../../Images/appbar.check.png" Width="32"/>
+                </Button>
+                <Button x:Name="Cancel" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Image Source="../../Images/appbar.cancel.png" Width="32"/>
+                </Button>
             </StackPanel>
         </Grid>
     </DockPanel>

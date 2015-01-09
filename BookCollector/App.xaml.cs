@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Windows;
 using BookCollector.Services.Browsing;
 using CefSharp;
 
@@ -21,6 +22,11 @@ namespace BookCollector
             });
 
             Cef.Initialize(settings);
+        }
+
+        private void OnExit(object sender, ExitEventArgs e)
+        {
+            Cef.Shutdown();
         }
     }
 }

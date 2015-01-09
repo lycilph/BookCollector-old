@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
@@ -77,6 +78,14 @@ namespace BookCollector.Model
         {
             repository.Add(imported_books.Select(i => i.Book));
             downloader.Add(imported_books);
+            CurrentCollection.LastModified = DateTime.Now;
+        }
+
+        public void Clear()
+        {
+            repository.Clear();
+            downloader.Clear();
+            CurrentCollection.LastModified = DateTime.Now;
         }
 
         public ProfileDescription CreateProfile()

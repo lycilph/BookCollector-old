@@ -1,7 +1,8 @@
 ﻿<Application x:Class="BookCollector.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:core="clr-namespace:Framework.Core;assembly=Framework.Core">
+             xmlns:core="clr-namespace:Framework.Core;assembly=Framework.Core"
+             Exit="OnExit">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

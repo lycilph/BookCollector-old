@@ -13,32 +13,42 @@ namespace BookCollector.Services.Browsing
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private const string blank_url = "about:blank";
+
         private readonly ChromiumWebBrowser offscreen_browser;
         private readonly IEventAggregator event_aggregator;
+        private readonly TaskCompletionSource<bool> ready_task_completion_source = new TaskCompletionSource<bool>();
 
         public OffscreenBrowser()
         {
             event_aggregator = IoC.Get<IEventAggregator>();
 
-            offscreen_browser = new ChromiumWebBrowser();
+            offscreen_browser = new ChromiumWebBrowser(blank_url);
             offscreen_browser.FrameLoadStart += OffscreenBrowserOnFrameLoadStart;
             offscreen_browser.FrameLoadEnd += OffscreenBrowserOnFrameLoadEnd;
         }
 
         private void OffscreenBrowserOnFrameLoadEnd(object sender, FrameLoadEndEventArgs args)
         {
-            logger.Trace("Frame load end (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, args.Url);
+            logger.Info("Frame load end (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, args.Url);
             event_aggregator.PublishOnUIThread(BrowsingMessage.LoadEnd(new Uri(args.Url)));
+
+            if (args.Url == blank_url && args.IsMainFrame && !ready_task_completion_source.Task.IsCompleted)
+            {
+                logger.Trace("Offscreen browser ready");
+                ready_task_completion_source.SetResult(true);
+            }
         }
 
         private void OffscreenBrowserOnFrameLoadStart(object sender, FrameLoadStartEventArgs args)
         {
-            logger.Trace("Frame load start (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, args.Url);
+            logger.Info("Frame load start (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, args.Url);
             event_aggregator.PublishOnUIThread(BrowsingMessage.LoadStart(new Uri(args.Url)));
         }
 
-        public void Load(string url)
+        public async void Load(string url)
         {
+            await ready_task_completion_source.Task;
             offscreen_browser.Load(url);
         }
 

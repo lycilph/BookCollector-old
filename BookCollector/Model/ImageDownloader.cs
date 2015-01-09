@@ -7,10 +7,11 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using BookCollector.Services.Settings;
+using BookCollector.Services;
 using Caliburn.Micro;
 using Newtonsoft.Json;
 using NLog;
+using NLog.Fluent;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector.Model
@@ -19,6 +20,7 @@ namespace BookCollector.Model
     public class ImageDownloader
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly char[] invalid_filename_chars = Path.GetInvalidFileNameChars();
 
         private readonly ApplicationSettings application_settings;
         private BlockingCollection<ImportedBook> queue = new BlockingCollection<ImportedBook>();
@@ -29,6 +31,19 @@ namespace BookCollector.Model
         public ImageDownloader(ApplicationSettings application_settings)
         {
             this.application_settings = application_settings;
+        }
+
+        private string GetImageName(Book book)
+        {
+            if (!string.IsNullOrWhiteSpace(book.ISBN10))
+                return book.ISBN10.ToUpperInvariant();
+            if (!string.IsNullOrWhiteSpace(book.ISBN13))
+                return book.ISBN13.ToUpperInvariant();
+            if (!string.IsNullOrWhiteSpace(book.Asin))
+                return book.Asin.ToUpperInvariant();
+            if (!string.IsNullOrWhiteSpace(book.Title))
+                return new string(book.Title.Where(ch => !invalid_filename_chars.Contains(ch)).ToArray());
+            return book.Id.ToUpperInvariant();
         }
 
         private string GetImageFilename(string url, string name, string postfix)
@@ -51,7 +66,7 @@ namespace BookCollector.Model
                 {
                     foreach (var imported_book in queue.GetConsumingEnumerable(cts.Token))
                     {
-                        logger.Trace("Processing {0}", imported_book.Book.Title);
+                        logger.Trace("Processing [{0}] ({1} left in queue)", imported_book.Book.Title, queue.Count);
 
                         try
                         {
@@ -60,14 +75,20 @@ namespace BookCollector.Model
                                 if (string.IsNullOrWhiteSpace(image_link.Url))
                                     continue;
 
-                                var filename = GetImageFilename(image_link.Url, imported_book.Book.Id, image_link.Property);
-                                client.DownloadFile(image_link.Url, filename);
+                                var image_name = GetImageName(imported_book.Book);
+                                var filename = GetImageFilename(image_link.Url, image_name, image_link.Property);
+
+                                // Only download image, if it does not already exists
+                                if (File.Exists(filename))
+                                    logger.Trace("Image {0} already exists", filename);
+                                else
+                                    client.DownloadFile(image_link.Url, filename);
 
                                 var property = typeof (Book).GetProperty(image_link.Property);
                                 property.SetValue(imported_book.Book, filename);
                             }
 
-                            logger.Trace("Image(s) for {0} downloaded", imported_book.Book.Title);
+                            logger.Trace("Image(s) for [{0}] downloaded", imported_book.Book.Title);
                         }
                         catch (Exception e)
                         {
@@ -92,6 +113,13 @@ namespace BookCollector.Model
             {
                 logger.Trace("Image download queue stopped");
             }
+        }
+
+        public void Clear()
+        {
+            Stop();
+            queue = new BlockingCollection<ImportedBook>();
+            Start();
         }
 
         public void Save(CollectionDescription collection)

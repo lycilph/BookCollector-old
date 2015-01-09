@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using NLog;
 using ReactiveUI;
 
-namespace BookCollector.Services.Settings
+namespace BookCollector.Services
 {
     [Export(typeof(ApplicationSettings))]
     [JsonObject(MemberSerialization.OptOut)]
@@ -95,7 +95,8 @@ namespace BookCollector.Services.Settings
 
         public T GetSettings<T>(string api_name)
         {
-            var settings_filename = Assembly.GetExecutingAssembly().GetManifestResourceNames().First(n => n.Contains(api_name));
+            var safe_api_name = SafeApiName(api_name);
+            var settings_filename = Assembly.GetExecutingAssembly().GetManifestResourceNames().First(n => n.Contains(safe_api_name));
             using (var s = Assembly.GetExecutingAssembly().GetManifestResourceStream(settings_filename))
             using (var sr = new StreamReader(s))
             {
@@ -104,15 +105,17 @@ namespace BookCollector.Services.Settings
             }
         }
 
-        public T GetCredentials<T>(string profile_id) where T : class
+        public T GetCredentials<T>(string profile_id, string api_name) where T : class
         {
-            return api_credentials.ContainsKey(profile_id) ? JsonConvert.DeserializeObject<T>(api_credentials[profile_id]) : null;
+            var name = GetCredentialName(profile_id, api_name);
+            return api_credentials.ContainsKey(name) ? JsonConvert.DeserializeObject<T>(api_credentials[name]) : null;
         }
 
-        public void AddCredentials<T>(string profile_id, T credentials)
+        public void AddCredentials<T>(string profile_id, string api_name, T credentials)
         {
+            var name = GetCredentialName(profile_id, api_name);
             var json = JsonConvert.SerializeObject(credentials, Formatting.Indented);
-            api_credentials[profile_id] = json;
+            api_credentials[name] = json;
         }
 
         public bool IsApiEnabled(string name)
@@ -120,6 +123,21 @@ namespace BookCollector.Services.Settings
             if (!api_enabled.ContainsKey(name))
                 api_enabled.Add(name, true);
             return api_enabled[name];
+        }
+
+        public void SetApiEnabled(string name, bool enabled)
+        {
+            api_enabled[name] = enabled;
+        }
+
+        private static string GetCredentialName(string profile_id, string api_name)
+        {
+            return string.Format("{0}-{1}", profile_id, api_name);
+        }
+
+        private static string SafeApiName(string name)
+        {
+            return new string(name.Where(c => !Char.IsWhiteSpace(c)).ToArray());
         }
     }
 }

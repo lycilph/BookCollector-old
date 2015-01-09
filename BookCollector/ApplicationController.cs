@@ -2,7 +2,7 @@
 using System.ComponentModel.Composition;
 using BookCollector.Model;
 using BookCollector.Screens;
-using BookCollector.Services.Settings;
+using BookCollector.Services;
 using BookCollector.Shell;
 using Caliburn.Micro;
 

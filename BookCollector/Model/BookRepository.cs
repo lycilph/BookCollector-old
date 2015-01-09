@@ -2,7 +2,7 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
-using BookCollector.Services.Settings;
+using BookCollector.Services;
 using BookCollector.Utilities;
 using NLog;
 using ReactiveUI;

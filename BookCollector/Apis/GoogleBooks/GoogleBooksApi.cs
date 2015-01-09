@@ -1,4 +1,10 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Threading.Tasks;
+using BookCollector.Services;
+using NLog;
+using RestSharp;
 
 namespace BookCollector.Apis.GoogleBooks
 {
@@ -6,122 +12,114 @@ namespace BookCollector.Apis.GoogleBooks
     [Export(typeof(GoogleBooksApi))]
     public class GoogleBooksApi : IApi
     {
-    //    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-    //    private static readonly Uri authorization_url = new Uri(@"https://accounts.google.com");
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Uri authorization_url = new Uri(@"https://accounts.google.com");
+        private static readonly Uri base_url = new Uri(@"https://www.googleapis.com");
+        
+        private const string authorization_scope = @"https://www.googleapis.com/auth/books";
 
-    //    private const string base_url = @"https://www.googleapis.com";
-    //    private const string authorization_scope = @"https://www.googleapis.com/auth/books";
-
-    //    private readonly ApplicationSettings application_settings;
-    //    private readonly RestClient client;
-
-    //    private DateTime last_execution_time_stamp;
+        private readonly GoogleBooksSettings settings;
+        private readonly RestClient client;
+        private DateTime last_execution_time_stamp;
 
         public string Name { get { return "Google Books"; } }
 
-    //    [ImportingConstructor]
-    //    public GoogleBooksApi(ApplicationSettings application_settings) : base("Google Books")
-    //    {
-    //        this.application_settings = application_settings;
+        [ImportingConstructor]
+        public GoogleBooksApi(ApplicationSettings application_settings)
+        {
+            settings = application_settings.GetSettings<GoogleBooksSettings>(Name);
+            client = new RestClient(base_url);
+            last_execution_time_stamp = DateTime.Now.AddSeconds(-1);
+        }
 
-    //        client = new RestClient(base_url);
+        private IRestResponse Execute(IRestRequest request)
+        {
+            Delay().Wait();
+            var response = client.Execute(request);
+            last_execution_time_stamp = DateTime.Now;
 
-    //        last_execution_time_stamp = DateTime.Now.AddSeconds(-1);
-    //    }
+            return response;
+        }
 
-    //    private IRestResponse Execute(IRestRequest request)
-    //    {
-    //        Delay().Wait();
-    //        var response = client.Execute(request);
-    //        last_execution_time_stamp = DateTime.Now;
+        private T Execute<T>(IRestRequest request) where T : new()
+        {
+            Delay().Wait();
+            var response = client.Execute<T>(request);
+            last_execution_time_stamp = DateTime.Now;
 
-    //        return response;
-    //    }
+            return response.Data;
+        }
 
-    //    private T Execute<T>(IRestRequest request) where T : new()
-    //    {
-    //        Delay().Wait();
-    //        var response = client.Execute<T>(request);
-    //        last_execution_time_stamp = DateTime.Now;
+        private Task Delay()
+        {
+            var now = DateTime.Now;
+            var next_execution = last_execution_time_stamp.AddSeconds(1);
+            var difference = next_execution.Subtract(now);
+            var delay = (difference.Milliseconds > 0 ? difference.Milliseconds : 0);
 
-    //        return response.Data;
-    //    }
+            logger.Trace("Waiting for {0} ms", delay);
 
-    //    private Task Delay()
-    //    {
-    //        var now = DateTime.Now;
-    //        var next_execution = last_execution_time_stamp.AddSeconds(1);
-    //        var difference = next_execution.Subtract(now);
-    //        var delay = (difference.Milliseconds > 0 ? difference.Milliseconds : 0);
+            return Task.Delay(delay);
+        }
 
-    //        logger.Trace("Waiting for {0} ms", delay);
+        public Uri RequestAuthorizationUrl(string redirect_uri)
+        {
+            client.BaseUrl = authorization_url;
 
-    //        return Task.Delay(delay);
-    //    }
+            var request = new RestRequest("o/oauth2/auth");
+            request.AddParameter("scope", authorization_scope);
+            request.AddParameter("response_type", "code");
+            request.AddParameter("client_id", settings.ClientId);
+            request.AddParameter("redirect_uri", redirect_uri);
+            var response = Execute(request);
 
-    //    public Uri RequestAuthorizationUrl(string redirect_uri)
-    //    {
-    //        client.BaseUrl = authorization_url;
+            return response.ResponseUri;
+        }
 
-    //        var request = new RestRequest("o/oauth2/auth");
-    //        request.AddParameter("scope", authorization_scope);
-    //        request.AddParameter("response_type", "code");
-    //        request.AddParameter("client_id", Settings.ClientId);
-    //        request.AddParameter("redirect_uri", redirect_uri);
-    //        var response = Execute(request);
+        public GoogleBooksAuthorizationResponse RequestAccessToken(string code, string redirect_uri)
+        {
+            client.BaseUrl = authorization_url;
 
-    //        return response.ResponseUri;
-    //    }
+            var request = new RestRequest("o/oauth2/token", Method.POST);
+            request.AddParameter("code", code);
+            request.AddParameter("client_id", settings.ClientId);
+            request.AddParameter("client_secret", settings.ClientSecret);
+            request.AddParameter("redirect_uri", redirect_uri);
+            request.AddParameter("grant_type", "authorization_code");
+            var response = Execute<GoogleBooksAuthorizationResponse>(request);
 
-    //    public GoogleBooksAuthorizationResponse RequestAccessToken(string code, string redirect_uri)
-    //    {
-    //        client.BaseUrl = authorization_url;
+            return response;
+        }
 
-    //        var request = new RestRequest("o/oauth2/token", Method.POST);
-    //        request.AddParameter("code", code);
-    //        request.AddParameter("client_id", Settings.ClientId);
-    //        request.AddParameter("client_secret", Settings.ClientSecret);
-    //        request.AddParameter("redirect_uri", redirect_uri);
-    //        request.AddParameter("grant_type", "authorization_code");
-    //        var response = Execute<GoogleBooksAuthorizationResponse>(request);
+        private void CheckAccessToken(GoogleBooksCredentials credentials)
+        {
+            // Check if the access token is still valid
+            if (DateTime.Now.CompareTo(credentials.ExpiresIn) < 0)
+                return;
 
-    //        return response;
-    //    }
+            client.BaseUrl = authorization_url;
 
-    //    private void RefreshAccessToken()
-    //    {
-    //        logger.Trace("Refreshing access token");
+            logger.Trace("Refreshing access token");
+            var request = new RestRequest("o/oauth2/token", Method.POST);
+            request.AddParameter("refresh_token", credentials.RefreshToken);
+            request.AddParameter("client_id", settings.ClientId);
+            request.AddParameter("client_secret", settings.ClientSecret);
+            request.AddParameter("grant_type", "refresh_token");
+            var response = Execute<GoogleBooksAuthorizationResponse>(request);
 
-    //        client.BaseUrl = authorization_url;
+            credentials.Update(response);
+        }
 
-    //        var request = new RestRequest("o/oauth2/token", Method.POST);
-    //        request.AddParameter("refresh_token", Settings.RefreshToken);
-    //        request.AddParameter("client_id", Settings.ClientId);
-    //        request.AddParameter("client_secret", Settings.ClientSecret);
-    //        request.AddParameter("grant_type", "refresh_token");
-    //        var response = Execute<GoogleBooksAuthorizationResponse>(request);
+        public List<GoogleBook> GetBooks(GoogleBooksCredentials credentials)
+        {
+            CheckAccessToken(credentials);
 
-    //        Settings.AccessToken = response.AccessToken;
-    //        Settings.ExpiresIn = DateTime.Now.AddSeconds(response.ExpiresIn);
-    //    }
+            client.BaseUrl = base_url;
 
-    //    private void Setup(string url)
-    //    {
-    //        // Refresh access token if necessary
-    //        if (DateTime.Now.CompareTo(Settings.ExpiresIn) > 0)
-    //            RefreshAccessToken();
-
-    //        client.BaseUrl = new Uri(url);
-    //    }
-
-    //    public List<GoogleBook> GetBooks()
-    //    {
-    //        Setup(base_url);
-
-    //        var request = new RestRequest("books/v1/mylibrary/bookshelves/7/volumes", Method.GET);
-    //        request.AddHeader("Authorization", "OAuth " + Settings.AccessToken);
-    //        var response = Execute<GoogleBooksCollection>(request);
-    //        return response.Items;
-    //    }
+            var request = new RestRequest("books/v1/mylibrary/bookshelves/7/volumes", Method.GET);
+            request.AddHeader("Authorization", "OAuth " + credentials.AccessToken);
+            var response = Execute<GoogleBooksCollection>(request);
+            return response.Items;
+        }
     }
 }

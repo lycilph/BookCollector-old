@@ -3,7 +3,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using BookCollector.Services.Settings;
+using BookCollector.Services;
 using BookCollector.Utilities;
 using NLog;
 using RestSharp;
@@ -30,10 +30,8 @@ namespace BookCollector.Apis.GoodReads
         public GoodReadsApi(ApplicationSettings application_settings)
         {
             settings = application_settings.GetSettings<GoodReadsSettings>(Name);
-
             client = new RestClient(base_url);
             client.AddHandler("application/xml", new CustomDeserializer());
-
             last_execution_time_stamp = DateTime.Now.AddSeconds(-1);
         }
 
