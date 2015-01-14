@@ -15,7 +15,7 @@ using LogManager = NLog.LogManager;
 namespace BookCollector.Apis.GoodReads
 {
     [Export(typeof(IImportController))]
-    public class GoodReadsImportController : IImportController, IHandle<BrowsingMessage>
+    public class GoodReadsImportController : IImportController
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Uri callback_uri = new Uri(@"custom://www.bookcollector.com");
@@ -23,29 +23,27 @@ namespace BookCollector.Apis.GoodReads
         private readonly ApplicationSettings application_settings;
         private readonly GoodReadsApi api;
         private readonly IEventAggregator event_aggregator;
+        private readonly Browser browser;
         private readonly IProgress<string> progress;
-        private TaskCompletionSource<bool> tcs;
 
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public GoodReadsImportController(GoodReadsApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator)
+        public GoodReadsImportController(GoodReadsApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator, Browser browser)
         {
             this.api = api;
             this.application_settings = application_settings;
             this.event_aggregator = event_aggregator;
+            this.browser = browser;
 
             progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
 
         public async void Start(ProfileDescription profile)
         {
-            event_aggregator.Subscribe(this);
-
             var credentials = await Authenticate(profile);
             var result = await GetBooksAsync(credentials);
 
-            event_aggregator.Unsubscribe(this);
             event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
         }
 
@@ -59,7 +57,8 @@ namespace BookCollector.Apis.GoodReads
             var authorization_response = await Task.Factory.StartNew(() => api.RequestAuthorizationToken(callback_uri.ToString()));
             logger.Trace("Response url: " + authorization_response.Url);
 
-            tcs = BrowserController.ShowAndNavigate(authorization_response.Url);
+            var tcs = browser.Show();
+            await browser.Load(authorization_response.Url, s => Predicate(s, tcs));
             await tcs.Task;
 
             progress.Report("Requesting access token");
@@ -73,6 +72,20 @@ namespace BookCollector.Apis.GoodReads
             application_settings.AddCredentials(profile.Id, api.Name, credentials);
 
             return credentials;
+        }
+
+        private bool Predicate(string s, TaskCompletionSource<bool> tcs)
+        {
+            var uri = new Uri(s);
+            if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
+                return false;
+
+            var query_string = HttpUtility.ParseQueryString(uri.Query);
+            if (query_string["authorize"] != "1")
+                return false;
+
+            tcs.SetResult(true);
+            return true;
         }
 
         public Task<List<ImportedBook>> GetBooksAsync(GoodReadsCredentials credentials)
@@ -128,32 +141,32 @@ namespace BookCollector.Apis.GoodReads
             };
         }
 
-        private void HandleLoadEnd(Uri uri)
-        {
-            if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
-                return;
+        //private void HandleLoadEnd(Uri uri)
+        //{
+        //    if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
+        //        return;
 
-            var query_string = HttpUtility.ParseQueryString(uri.Query);
-            if (query_string["authorize"] != "1")
-                return;
+        //    var query_string = HttpUtility.ParseQueryString(uri.Query);
+        //    if (query_string["authorize"] != "1")
+        //        return;
 
-            tcs.SetResult(true);
-        }
+        //    tcs.SetResult(true);
+        //}
 
-        public void Handle(BrowsingMessage message)
-        {
-            logger.Trace("{0}: {1}", Enum.GetName(typeof(BrowsingMessage.MessageKind), message.Kind), message.Uri);
+        //public void Handle(BrowsingMessage message)
+        //{
+        //    logger.Trace("{0}: {1}", Enum.GetName(typeof(BrowsingMessage.MessageKind), message.Kind), message.Uri);
 
-            switch (message.Kind)
-            {
-                case BrowsingMessage.MessageKind.LoadStart:
-                    break;
-                case BrowsingMessage.MessageKind.LoadEnd:
-                    HandleLoadEnd(message.Uri);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
+        //    switch (message.Kind)
+        //    {
+        //        case BrowsingMessage.MessageKind.LoadStart:
+        //            break;
+        //        case BrowsingMessage.MessageKind.LoadEnd:
+        //            HandleLoadEnd(message.Uri);
+        //            break;
+        //        default:
+        //            throw new ArgumentOutOfRangeException();
+        //    }
+        //}
     }
 }

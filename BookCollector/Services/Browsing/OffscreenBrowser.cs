@@ -1,14 +1,15 @@
 ﻿using System;
-using System.Threading;
+using System.ComponentModel.Composition;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using CefSharp;
 using CefSharp.OffScreen;
+using HtmlAgilityPack;
 using NLog;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector.Services.Browsing
 {
+    [Export(typeof(OffscreenBrowser))]
     public class OffscreenBrowser
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -16,40 +17,64 @@ namespace BookCollector.Services.Browsing
         private const string blank_url = "about:blank";
 
         private readonly ChromiumWebBrowser offscreen_browser;
-        private readonly IEventAggregator event_aggregator;
+
         private readonly TaskCompletionSource<bool> ready_task_completion_source = new TaskCompletionSource<bool>();
+        public Task Ready
+        {
+            get { return ready_task_completion_source.Task; }
+        }
 
         public OffscreenBrowser()
         {
-            event_aggregator = IoC.Get<IEventAggregator>();
-
             offscreen_browser = new ChromiumWebBrowser(blank_url);
-            offscreen_browser.FrameLoadStart += OffscreenBrowserOnFrameLoadStart;
             offscreen_browser.FrameLoadEnd += OffscreenBrowserOnFrameLoadEnd;
         }
 
         private void OffscreenBrowserOnFrameLoadEnd(object sender, FrameLoadEndEventArgs args)
         {
-            logger.Info("Frame load end (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, args.Url);
-            event_aggregator.PublishOnUIThread(BrowsingMessage.LoadEnd(new Uri(args.Url)));
-
             if (args.Url == blank_url && args.IsMainFrame && !ready_task_completion_source.Task.IsCompleted)
             {
                 logger.Trace("Offscreen browser ready");
+                offscreen_browser.FrameLoadEnd -= OffscreenBrowserOnFrameLoadEnd;
                 ready_task_completion_source.SetResult(true);
             }
         }
 
-        private void OffscreenBrowserOnFrameLoadStart(object sender, FrameLoadStartEventArgs args)
+        public Task<string> Load(string url, Action<string> load_start, Action<string> load_end, Predicate<string> predicate = null)
         {
-            logger.Info("Frame load start (current thread = {0}, url = {1})", Thread.CurrentThread.ManagedThreadId, args.Url);
-            event_aggregator.PublishOnUIThread(BrowsingMessage.LoadStart(new Uri(args.Url)));
+            var tcs = new TaskCompletionSource<string>();
+
+            EventHandler<FrameLoadStartEventArgs> load_start_handler = null;
+            load_start_handler = (obj, args) =>
+            {
+                if (load_start != null)
+                    load_start(args.Url);
+            };
+
+            EventHandler<FrameLoadEndEventArgs> load_end_handler = null;
+            load_end_handler = (obj, args) =>
+            {
+                if (load_end != null)
+                    load_end(args.Url);
+
+                if (predicate == null || predicate(args.Url) && args.IsMainFrame)
+                {
+                    offscreen_browser.FrameLoadStart -= load_start_handler;
+                    offscreen_browser.FrameLoadEnd -= load_end_handler;
+                    tcs.SetResult(args.Url);
+                }
+            };
+
+            offscreen_browser.FrameLoadStart += load_start_handler;
+            offscreen_browser.FrameLoadEnd += load_end_handler;
+            offscreen_browser.Load(url);
+
+            return tcs.Task;
         }
 
-        public async void Load(string url)
+        public Task<string> Load(string url, Predicate<string> predicate = null)
         {
-            await ready_task_completion_source.Task;
-            offscreen_browser.Load(url);
+            return Load(url, s => logger.Trace("Load start: " + s), s => logger.Trace("Load end: " + s), predicate);
         }
 
         public Task<JavascriptResponse> Evaluate(string script)
@@ -57,14 +82,37 @@ namespace BookCollector.Services.Browsing
             return offscreen_browser.EvaluateScriptAsync(script);
         }
 
-        public void Execute(string script)
+        public Task Execute(string script, Predicate<string> predicate = null)
         {
+            var tcs = new TaskCompletionSource<bool>();
+
+            EventHandler<FrameLoadEndEventArgs> load_end_handler = null;
+            load_end_handler = (obj, args) =>
+            {
+                if (predicate == null || predicate(args.Url) && args.IsMainFrame)
+                {
+                    offscreen_browser.FrameLoadEnd -= load_end_handler;
+                    tcs.SetResult(true);
+                }
+            };
+
+            offscreen_browser.FrameLoadEnd += load_end_handler;
             offscreen_browser.ExecuteScriptAsync(script);
+
+            return tcs.Task;
         }
 
         public Task<string> GetSource()
         {
             return offscreen_browser.GetSourceAsync();
+        }
+
+        public async Task<HtmlDocument> GetSourceAsDocument()
+        {
+            var source = await offscreen_browser.GetSourceAsync();
+            var doc = new HtmlDocument();
+            doc.LoadHtml(source);
+            return doc;
         }
     }
 }

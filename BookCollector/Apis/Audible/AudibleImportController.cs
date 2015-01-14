@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BookCollector.Model;
 using BookCollector.Screens.Import;
@@ -13,36 +16,29 @@ using LogManager = NLog.LogManager;
 namespace BookCollector.Apis.Audible
 {
     [Export(typeof(IImportController))]
-    public class AudibleImportController : IImportController, IHandle<BrowsingMessage>
+    public class AudibleImportController : IImportController
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Uri audible_uri = new Uri(@"http://www.audible.com");
         private static readonly Uri amazon_uri = new Uri(@"http://www.amazon.com");
 
-        private enum State
-        {
-            LoadingMainPage,
-            LoadingSignInPage,
-            SigningIn,
-            SigningOut
-        }
-
         private readonly AudibleApi api;
         private readonly ApplicationSettings application_settings;
         private readonly IEventAggregator event_aggregator;
+        private readonly OffscreenBrowser offscreen_browser;
+        private readonly Browser browser;
         private readonly IProgress<string> progress;
-        private State current_state;
-        private ProfileDescription current_profile;
-        private TaskCompletionSource<bool> tcs;
 
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public AudibleImportController(AudibleApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator)
+        public AudibleImportController(AudibleApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator, OffscreenBrowser offscreen_browser, Browser browser)
         {
             this.api = api;
             this.application_settings = application_settings;
             this.event_aggregator = event_aggregator;
+            this.offscreen_browser = offscreen_browser;
+            this.browser = browser;
 
             progress = new Progress<string>(str =>
             {
@@ -51,147 +47,214 @@ namespace BookCollector.Apis.Audible
             });
         }
 
-        public void Start(ProfileDescription profile)
+        public async void Start(ProfileDescription profile)
         {
-            current_profile = profile;
-            event_aggregator.Subscribe(this);
+            progress.Report("Initializing");
+            await offscreen_browser.Ready;
 
-            LoadMainPage();
-        }
-
-        public void Handle(BrowsingMessage message)
-        {
-            switch (message.Kind)
-            {
-                case BrowsingMessage.MessageKind.LoadStart:
-                    LoadStart(message.Uri);
-                    break;
-                case BrowsingMessage.MessageKind.LoadEnd:
-                    if (message.Uri.Host == audible_uri.Host || message.Uri.Host == amazon_uri.Host)
-                        LoadEnd(message.Uri);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void LoadEnd(Uri uri)
-        {
-            switch (current_state)
-            {
-                case State.LoadingMainPage:
-                    HandleLoadingMainPage();
-                    break;
-                case State.LoadingSignInPage:
-                    HandleLoadingSignInPage();
-                    break;
-                case State.SigningIn:
-                    HandleSigningIn();
-                    break;
-                case State.SigningOut:
-                    HandleSigningOut();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void LoadStart(Uri uri)
-        {
-            switch (current_state)
-            {
-                case State.SigningIn:
-                    HandleStartSigningIn();
-                    break;
-            }
-        }
-
-        private void LoadMainPage()
-        {
             progress.Report("Loading main page");
-            
-            current_state = State.LoadingMainPage;
-            BrowserController.NavigateOffscreen(audible_uri.ToString());
+            await offscreen_browser.Load(audible_uri.ToString(), Predicate);
+
+            await Authenticate(profile);
+            var result = await GetBooksAsync();
+
+            event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
         }
 
-        private async void HandleLoadingMainPage()
+        private async Task Authenticate(ProfileDescription profile)
         {
-            progress.Report("Main page loaded");
+            var credentials = application_settings.GetCredentials<AudibleCredentials>(profile.Id, api.Name) ?? new AudibleCredentials();
+            var customer_id = await GetCustomerId();
 
-            var credentials = application_settings.GetCredentials<AudibleCredentials>(current_profile.Id, api.Name);
-            var name = await AudibleImportHelper.GetSignInName();
-
-            logger.Trace("Signed in as: " + name);
-
-            if (string.IsNullOrWhiteSpace(name))
+            // Sign out if necessary
+            if (!string.IsNullOrWhiteSpace(customer_id) && customer_id != credentials.CustomerId)
             {
-                SignIn(); // The user is not is not signed in
+                progress.Report("Signing out");
+                var sign_out_url = await GetSignOutUrl();
+                await offscreen_browser.Load(sign_out_url, Predicate);
+                customer_id = string.Empty;
             }
-            else
+
+            // Sign in if necessary
+            if (string.IsNullOrWhiteSpace(customer_id))
             {
-                if (credentials == null || name != credentials.LoginName)
-                    SignOut(); // Another user is signed in
-                //else
-                //    LoadLibraryPage(); // The User is already signed in
+                progress.Report("Signing in");
+                var sign_in_url = await GetSignInUrl();
+                var sign_in_page_loaded = false;
+                var sign_in_done = false;
+                var tcs = browser.Show();
+                await browser.Load(sign_in_url, s =>
+                {
+                    if (sign_in_page_loaded && !tcs.Task.IsCompleted)
+                    {
+                        sign_in_done = true;
+                        tcs.SetResult(true);
+                    }
+                }, s =>
+                {
+                    if (Predicate(s))
+                        sign_in_page_loaded = true;
+                }, s => Predicate(s) && sign_in_done);
+                await tcs.Task;
+
+                progress.Report("Authentication done");
+
+                // Save customer id if necessary
+                if (string.IsNullOrWhiteSpace(credentials.CustomerId))
+                {
+                    await offscreen_browser.Load(audible_uri.ToString(), Predicate);
+                    credentials.CustomerId= await GetCustomerId();
+                    application_settings.AddCredentials(profile.Id, api.Name, credentials);
+                }
             }
         }
 
-        private async void SignIn()
+        public async Task<List<ImportedBook>> GetBooksAsync()
         {
-            progress.Report("Loading sign in page");
+            progress.Report("Loading library page");
+            var library_page_url = await GetLibraryPageUrl();
+            await offscreen_browser.Load(library_page_url);
 
-            var doc = await BrowserController.GetOffscreenSourceAsDocument();
+            progress.Report("Setting time filter");
+            var time_filter_result = await offscreen_browser.Evaluate("document.getElementsByName('timeFilter')[0].value = 'all'");
+            if (!time_filter_result.Success)
+                throw new Exception();
+            await offscreen_browser.Execute("document.getElementById('myLibraryForm').submit()", Predicate);
+
+            progress.Report("Settings items filter");
+            var items_filter_result = await offscreen_browser.Evaluate("document.getElementsByName('itemsPerPage')[0].value = document.getElementById('totalItems').value");
+            if (!items_filter_result.Success)
+                throw new Exception();
+            await offscreen_browser.Execute("document.getElementById('myLibraryForm').submit()", Predicate);
+
+            var books = await ParseBooks();
+            return books.Select(Convert).ToList();
+        }
+
+        private ImportedBook Convert(AudibleBook book)
+        {
+            return new ImportedBook
+            {
+                Book = new Book
+                {
+                    Title = book.Title,
+                    Description = book.Description,
+                    Asin = book.Asin,
+                    Authors = book.Authors,
+                    Narrators = book.Narrators,
+                    ImportSource = api.Name
+                },
+                ImageLinks = new List<ImageLink>
+                {
+                    new ImageLink(book.ImageUrl, "Image")
+                }
+            };
+        }
+
+        private async Task<List<AudibleBook>> ParseBooks()
+        {
+            progress.Report("Parsing books");
+            var books = new List<AudibleBook>();
+            var doc = await offscreen_browser.GetSourceAsDocument();
+            var content = doc.DocumentNode.SelectSingleNode("//div[@class='adbl-lib-content']");
+            foreach (var node in content.SelectNodes(".//tr"))
+            {
+                if (!node.HasChildNodes) continue;
+
+                var inputs = node.SelectNodes(".//input");
+                if (inputs == null) continue;
+
+                var asin_node = inputs.SingleNodeWithAttributeNameAndValue("name", "asin");
+                if (asin_node == null) continue;
+
+                var parent_asin_node = inputs.SingleNodeWithAttributeNameAndValue("name", "parentasin");
+                if (parent_asin_node == null) continue;
+
+                var title_node = node.SelectSingleNode(".//a[@name='tdTitle']");
+                if (title_node == null) continue;
+
+                var description_node = node.SelectSingleNode(".//p");
+                if (description_node == null) continue;
+
+                var list = node.SelectNodes(".//strong");
+                if (list == null) continue;
+
+                var product_cover_node = node.SelectSingleNode(".//td[@name='productCover']");
+                var image_node = (product_cover_node != null ? product_cover_node.SelectSingleNode(".//img") : null);
+
+                var parent_asin = parent_asin_node.Attributes["value"].Value;
+                var asin = asin_node.Attributes["value"].Value;
+
+                if (string.IsNullOrWhiteSpace(parent_asin))
+                {
+                    var authors = list[0].InnerText;
+                    var authors_list = authors.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(a => a.Trim())
+                        .ToList();
+
+                    var narrators = list[1].InnerText;
+                    var narrators_list = narrators.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(n => n.Trim())
+                        .ToList();
+
+                    var book = new AudibleBook
+                    {
+                        Title = title_node.InnerText,
+                        Asin = asin,
+                        Authors = authors_list,
+                        Narrators = narrators_list,
+                        Description = description_node.InnerText.Trim(),
+                        ImageUrl = (image_node == null ? "" : image_node.Attributes["src"].Value)
+                    };
+                    books.Add(book);
+                }
+                else
+                {
+                    var parent = books.SingleOrDefault(b => b.Asin == parent_asin);
+                    if (parent != null)
+                        parent.PartsAsin.Add(asin);
+                }
+            }
+
+            return books;
+        }
+
+        private static bool Predicate(string url)
+        {
+            logger.Trace("Url: " + url);
+
+            var uri = new Uri(url);
+            return uri.Host == audible_uri.Host || uri.Host == amazon_uri.Host;
+        }
+
+        private async Task<string> GetCustomerId()
+        {
+            var text = await offscreen_browser.GetSource();
+            var match = Regex.Match(text, @"'CustomerID'[,\s]*'(\S*)'");
+            return match.Groups.Count == 2 ? match.Groups[1].Value : null;
+        }
+
+        private async Task<string> GetSignInUrl()
+        {
+            var doc = await offscreen_browser.GetSourceAsDocument();
             var link = doc.ChildLinkById("anon_header_v2_signin");
-            var sign_in_uri = new Uri(audible_uri, link);
-
-            logger.Trace("login page url: " + sign_in_uri);
-
-            current_state = State.LoadingSignInPage;
-            tcs = BrowserController.ShowAndNavigate(sign_in_uri.ToString());
+            var uri = new Uri(audible_uri, link);
+            return uri.ToString();
         }
 
-        private void HandleLoadingSignInPage()
+        private async Task<string> GetSignOutUrl()
         {
-            progress.Report("Sign in page loaded");
-            current_state = State.SigningIn;
+            var link = await offscreen_browser.Evaluate("document.getElementById('barker-sign-out').getAttribute('href')");
+            var uri = new Uri(audible_uri, (string)link.Result);
+            return uri.ToString();
         }
 
-        private void HandleStartSigningIn()
+        private async Task<string> GetLibraryPageUrl()
         {
-            if (tcs.Task.IsCompleted) 
-                return;
-
-            logger.Trace("Hiding browser");
-            tcs.SetResult(true);
-        }
-
-        private async void HandleSigningIn()
-        {
-            progress.Report("Signing in done");
-
-            var name = await AudibleImportHelper.GetSignInName();
-            logger.Trace("Signed in as: " + name);
-        }
-
-        private async void SignOut()
-        {
-            progress.Report("Signing out");
-
-            var link = await BrowserController.EvaluateOffscreen("document.getElementById('barker-sign-out').getAttribute('href')");
-            var sign_out_uri = new Uri(audible_uri, (string)link.Result);
-
-            logger.Trace("Sign out page url: " + sign_out_uri);
-
-            current_state = State.SigningOut;
-            BrowserController.NavigateOffscreen(sign_out_uri.ToString());
-        }
-
-        private async void HandleSigningOut()
-        {
-            progress.Report("Signed out");
-
-            await Task.Delay(5000);
-            LoadMainPage();
+            var doc = await offscreen_browser.GetSourceAsDocument();
+            var link = doc.ChildLinkById("library-menu");
+            var uri = new Uri(audible_uri, link);
+            return uri.ToString();
         }
     }
 }

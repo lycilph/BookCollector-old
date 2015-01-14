@@ -72,7 +72,7 @@
     </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Framework.Core.1.0.11-alpha\lib\net45\Framework.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.Core.1.0.12-alpha\lib\net45\Framework.Core.dll</HintPath>
     </Reference>
     <Reference Include="Framework.UI">
       <HintPath>..\packages\Framework.UI.1.0.0-alpha\lib\net45\Framework.UI.dll</HintPath>
@@ -150,7 +150,6 @@
     <Compile Include="Apis\ApiController.cs" />
     <Compile Include="Apis\Audible\AudibleCredentials.cs" />
     <Compile Include="Apis\Audible\AudibleImportController.cs" />
-    <Compile Include="Apis\Audible\AudibleImportHelper.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsCredentials.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsSettings.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksCredentials.cs" />
@@ -165,7 +164,6 @@
       <DependentUpon>CollectionDescriptionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Profiles\CollectionDescriptionViewModel.cs" />
-    <Compile Include="Apis\Audible\AudibleImportControllerOld.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsImportController.cs" />
     <Compile Include="Screens\Import\ImportMessage.cs" />
     <Compile Include="Screens\Import\ImportResultsView.xaml.cs">
@@ -187,16 +185,13 @@
     </Compile>
     <Compile Include="Screens\Settings\ApiViewModel.cs" />
     <Compile Include="Screens\ShellScreenBase.cs" />
-    <Compile Include="Services\Browsing\BrowserController.cs" />
-    <Compile Include="Services\Browsing\BrowsingMessage.cs" />
+    <Compile Include="Services\Browsing\Browser.xaml.cs">
+      <DependentUpon>Browser.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
     <Compile Include="Services\Browsing\SchemeHandler.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksImportController.cs" />
     <Compile Include="Apis\IImportController.cs" />
-    <Compile Include="Services\Browsing\BrowserView.xaml.cs">
-      <DependentUpon>BrowserView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Services\Browsing\BrowserViewModel.cs" />
     <Compile Include="Screens\Import\ImportControllerView.xaml.cs">
       <DependentUpon>ImportControllerView.xaml</DependentUpon>
     </Compile>
@@ -337,7 +332,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Services\Browsing\BrowserView.xaml">
+    <Page Include="Services\Browsing\Browser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -25,16 +25,18 @@ namespace BookCollector.Apis.GoogleBooks
         private readonly ApplicationSettings application_settings;
         private readonly GoogleBooksApi api;
         private readonly IEventAggregator event_aggregator;
+        private readonly Browser browser;
         private readonly IProgress<string> progress;
 
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public GoogleBooksImportController(GoogleBooksApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator)
+        public GoogleBooksImportController(GoogleBooksApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator, Browser browser)
         {
             this.api = api;
             this.application_settings = application_settings;
             this.event_aggregator = event_aggregator;
+            this.browser = browser;
 
             progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
         }
@@ -54,12 +56,13 @@ namespace BookCollector.Apis.GoogleBooks
                 return credentials;
 
             var authorization_response_task = Task.Factory.StartNew(() => Listen());
-                
+
             progress.Report("Requesting authorization url");
-            var uri = await Task.Factory.StartNew(() => api.RequestAuthorizationUrl(redirect_uri.ToString()) );
+            var uri = await Task.Factory.StartNew(() => api.RequestAuthorizationUrl(redirect_uri.ToString()));
             logger.Trace("Response uri: " + uri);
-            
-            var tcs = BrowserController.ShowAndNavigate(uri.ToString());
+
+            var tcs = browser.Show();
+            await browser.Load(uri.ToString());
             var code = await authorization_response_task;
             tcs.SetResult(true);
 
