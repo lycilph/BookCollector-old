@@ -10,6 +10,7 @@
              d:DataContext="{d:DesignInstance import:ImportControllerViewModel}">
     <Button x:Name="Select"
             Content="{Binding DisplayName}"
-            Width="200"
+            Width="100"
+            Height="50"
             Margin="10"/>
 </UserControl>

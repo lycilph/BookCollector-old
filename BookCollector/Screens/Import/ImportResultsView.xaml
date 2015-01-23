@@ -5,46 +5,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <DockPanel>
+    <DockPanel Margin="20" HorizontalAlignment="Stretch">
         <CheckBox DockPanel.Dock="Top"
                   x:Name="IsAllSelected"
                   Content="Select all"
                   Margin="0,0,0,10"/>
-        
+
         <StackPanel DockPanel.Dock="Bottom"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button x:Name="Ok" Content="Ok"/>
             <Button x:Name="Cancel" Content="Cancel" Margin="10,0,0,0"/>
         </StackPanel>
-        
-        <!--<ScrollViewer>
-            <ItemsControl x:Name="Books">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </ScrollViewer>-->
 
         <ItemsControl x:Name="Books"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
                       VirtualizingStackPanel.IsVirtualizing="True"
                       ScrollViewer.CanContentScroll="True">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
+                    <VirtualizingStackPanel HorizontalAlignment="Stretch"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter Property="Control.HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
             <ItemsControl.Template>
                 <ControlTemplate>
                     <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
                             Padding="{TemplateBinding Control.Padding}"
                             BorderBrush="{TemplateBinding Border.BorderBrush}"
                             Background="{TemplateBinding Panel.Background}"
-                            SnapsToDevicePixels="True"> 
+                            SnapsToDevicePixels="True">
                         <ScrollViewer Padding="{TemplateBinding Control.Padding}" Focusable="False">
-                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" HorizontalAlignment="Stretch"/>
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>

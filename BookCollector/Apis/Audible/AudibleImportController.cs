@@ -9,7 +9,7 @@ using BookCollector.Screens.Import;
 using BookCollector.Services;
 using BookCollector.Services.Browsing;
 using BookCollector.Utilities;
-using Caliburn.Micro;
+using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using LogManager = NLog.LogManager;
 
@@ -24,7 +24,7 @@ namespace BookCollector.Apis.Audible
 
         private readonly AudibleApi api;
         private readonly ApplicationSettings application_settings;
-        private readonly IEventAggregator event_aggregator;
+        private readonly IImportProcessController import_process_controller;
         private readonly OffscreenBrowser offscreen_browser;
         private readonly Browser browser;
         private readonly IProgress<string> progress;
@@ -32,18 +32,18 @@ namespace BookCollector.Apis.Audible
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public AudibleImportController(AudibleApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator, OffscreenBrowser offscreen_browser, Browser browser)
+        public AudibleImportController(AudibleApi api, ApplicationSettings application_settings, IImportProcessController import_process_controller, OffscreenBrowser offscreen_browser, Browser browser)
         {
             this.api = api;
             this.application_settings = application_settings;
-            this.event_aggregator = event_aggregator;
+            this.import_process_controller = import_process_controller;
             this.offscreen_browser = offscreen_browser;
             this.browser = browser;
 
             progress = new Progress<string>(str =>
             {
                 logger.Trace(str);
-                event_aggregator.PublishOnUIThread(ImportMessage.Information(str));
+                import_process_controller.UpdateProgress(str);
             });
         }
 
@@ -58,7 +58,7 @@ namespace BookCollector.Apis.Audible
             await Authenticate(profile);
             var result = await GetBooksAsync();
 
-            event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
+            import_process_controller.ShowResults(result);
         }
 
         private async Task Authenticate(ProfileDescription profile)
@@ -88,7 +88,7 @@ namespace BookCollector.Apis.Audible
                     if (sign_in_page_loaded && !tcs.Task.IsCompleted)
                     {
                         sign_in_done = true;
-                        tcs.SetResult(true);
+                        tcs.SetResult(MessageDialogResult.Affirmative);
                     }
                 }, s =>
                 {
@@ -161,58 +161,18 @@ namespace BookCollector.Apis.Audible
             {
                 if (!node.HasChildNodes) continue;
 
-                var inputs = node.SelectNodes(".//input");
-                if (inputs == null) continue;
+                var book = api.Parse(node);
+                if (book == null) continue;
 
-                var asin_node = inputs.SingleNodeWithAttributeNameAndValue("name", "asin");
-                if (asin_node == null) continue;
-
-                var parent_asin_node = inputs.SingleNodeWithAttributeNameAndValue("name", "parentasin");
-                if (parent_asin_node == null) continue;
-
-                var title_node = node.SelectSingleNode(".//a[@name='tdTitle']");
-                if (title_node == null) continue;
-
-                var description_node = node.SelectSingleNode(".//p");
-                if (description_node == null) continue;
-
-                var list = node.SelectNodes(".//strong");
-                if (list == null) continue;
-
-                var product_cover_node = node.SelectSingleNode(".//td[@name='productCover']");
-                var image_node = (product_cover_node != null ? product_cover_node.SelectSingleNode(".//img") : null);
-
-                var parent_asin = parent_asin_node.Attributes["value"].Value;
-                var asin = asin_node.Attributes["value"].Value;
-
-                if (string.IsNullOrWhiteSpace(parent_asin))
+                if (string.IsNullOrWhiteSpace(book.ParentAsin))
                 {
-                    var authors = list[0].InnerText;
-                    var authors_list = authors.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(a => a.Trim())
-                        .ToList();
-
-                    var narrators = list[1].InnerText;
-                    var narrators_list = narrators.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(n => n.Trim())
-                        .ToList();
-
-                    var book = new AudibleBook
-                    {
-                        Title = title_node.InnerText,
-                        Asin = asin,
-                        Authors = authors_list,
-                        Narrators = narrators_list,
-                        Description = description_node.InnerText.Trim(),
-                        ImageUrl = (image_node == null ? "" : image_node.Attributes["src"].Value)
-                    };
                     books.Add(book);
                 }
                 else
                 {
-                    var parent = books.SingleOrDefault(b => b.Asin == parent_asin);
+                    var parent = books.SingleOrDefault(b => b.Asin == book.ParentAsin);
                     if (parent != null)
-                        parent.PartsAsin.Add(asin);
+                        parent.PartsAsin.Add(book.Asin);
                 }
             }
 

@@ -10,7 +10,7 @@ using BookCollector.Model;
 using BookCollector.Screens.Import;
 using BookCollector.Services;
 using BookCollector.Services.Browsing;
-using Caliburn.Micro;
+using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using LogManager = NLog.LogManager;
 
@@ -22,23 +22,23 @@ namespace BookCollector.Apis.GoogleBooks
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Uri redirect_uri = new Uri(@"http://localhost:9327");
 
-        private readonly ApplicationSettings application_settings;
         private readonly GoogleBooksApi api;
-        private readonly IEventAggregator event_aggregator;
+        private readonly ApplicationSettings application_settings;
+        private readonly IImportProcessController import_process_controller;
         private readonly Browser browser;
         private readonly IProgress<string> progress;
 
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public GoogleBooksImportController(GoogleBooksApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator, Browser browser)
+        public GoogleBooksImportController(GoogleBooksApi api, ApplicationSettings application_settings, IImportProcessController import_process_controller, Browser browser)
         {
             this.api = api;
             this.application_settings = application_settings;
-            this.event_aggregator = event_aggregator;
+            this.import_process_controller = import_process_controller;
             this.browser = browser;
 
-            progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
+            progress = new Progress<string>(import_process_controller.UpdateProgress);
         }
 
         public async void Start(ProfileDescription profile)
@@ -46,7 +46,7 @@ namespace BookCollector.Apis.GoogleBooks
             var credentials = await Authenticate(profile);
             var result = await GetBooksAsync(credentials);
 
-            event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
+            import_process_controller.ShowResults(result);
         }
 
         private async Task<GoogleBooksCredentials> Authenticate(ProfileDescription profile)
@@ -64,7 +64,7 @@ namespace BookCollector.Apis.GoogleBooks
             var tcs = browser.Show();
             await browser.Load(uri.ToString());
             var code = await authorization_response_task;
-            tcs.SetResult(true);
+            tcs.SetResult(MessageDialogResult.Affirmative);
 
             progress.Report("Requesting access token");
             var response = await Task.Factory.StartNew(() => api.RequestAccessToken(code, redirect_uri.ToString()));

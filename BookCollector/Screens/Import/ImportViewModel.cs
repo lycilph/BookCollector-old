@@ -1,80 +1,112 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
+using System.Threading.Tasks;
 using BookCollector.Apis;
 using BookCollector.Model;
 using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using NLog;
-using LogManager = NLog.LogManager;
+using Framework.Core.Dialogs;
+using MahApps.Metro.Controls.Dialogs;
+using ReactiveUI;
 
 namespace BookCollector.Screens.Import
 {
     [Export("Import", typeof(IShellScreen))]
-    public class ImportViewModel : ReactiveConductor<IScreen>.Collection.OneActive, IShellScreen, IHandle<ImportMessage>
+    [Export(typeof(IImportProcessController))]
+    public class ImportViewModel : ReactiveScreen, IShellScreen, IImportProcessController
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const int ProgressPartIndex = 0;
+        private const int ResultsPartIndex = 1;
 
         private readonly IEventAggregator event_aggregator;
         private readonly ProfileController profile_controller;
-        private readonly ImportSelectionViewModel selection;
-        private readonly ImportInformationViewModel information;
-        private readonly ImportResultsViewModel results;
+        private readonly BookRepository book_repository;
 
         public bool IsCommandsEnabled { get { return true; } }
-   
-        [ImportingConstructor]
-        public ImportViewModel(ImportSelectionViewModel selection, ImportInformationViewModel information, ImportResultsViewModel results, IEventAggregator event_aggregator, ProfileController profile_controller)
+
+        public ImportResultsViewModel ResultsPart { get; set; }
+
+        private ReactiveList<string> _Messages = new ReactiveList<string>();
+        public ReactiveList<string> Messages
         {
-            this.selection = selection;
-            this.information = information;
-            this.results = results;
+            get { return _Messages; }
+            set { this.RaiseAndSetIfChanged(ref _Messages, value); }
+        }
+
+        private int _SelectedIndex;
+        public int SelectedIndex
+        {
+            get { return _SelectedIndex; }
+            set { this.RaiseAndSetIfChanged(ref _SelectedIndex, value); }
+        }
+
+        [ImportingConstructor]
+        public ImportViewModel(IEventAggregator event_aggregator, ProfileController profile_controller, BookRepository book_repository)
+        {
             this.event_aggregator = event_aggregator;
             this.profile_controller = profile_controller;
+            this.book_repository = book_repository;
 
-            Items.AddRange(new List<IScreen> {selection, information, results});
-
-            event_aggregator.Subscribe(this);
+            ResultsPart = new ImportResultsViewModel(this);
         }
 
-        protected override void OnActivate()
+        protected override async void OnActivate()
         {
             base.OnActivate();
-            ActivateItem(selection);
+
+            Messages.Clear();
+            event_aggregator.PublishOnUIThread(ShellMessage.Text("Please select the source to import from"));
+            SelectedIndex = ProgressPartIndex;
+
+            var selection = IoC.Get<ImportSelectionViewModel>();
+            var result = await DialogController.ShowViewModel(selection);
+
+            if (result == MessageDialogResult.Negative)
+                Cancel();
         }
 
-        protected override void OnDeactivate(bool close)
+        public void Cancel()
         {
-            base.OnDeactivate(close);
-            event_aggregator.PublishOnUIThread(ShellMessage.Text(string.Empty));
+            event_aggregator.PublishOnUIThread(ShellMessage.Back());
         }
 
-        private void Select(IImportController import_controller)
+        public void SelectController(IImportController import_controller)
         {
             event_aggregator.PublishOnUIThread(ShellMessage.Text("Importing from " + import_controller.ApiName));
 
-            ActivateItem(information);
-
-            var profile = profile_controller.CurrentProfile;
-            import_controller.Start(profile);
+            event_aggregator.PublishOnUIThread(ShellMessage.Busy(true));
+            import_controller.Start(profile_controller.CurrentProfile);
         }
 
-        public void Back()
+        public void UpdateProgress(string message)
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Back());            
+            Messages.Add(message);
         }
 
-        public void Handle(ImportMessage message)
+        public async void ShowResults(List<ImportedBook> books)
         {
-            switch (message.Kind)
+            await Task.Delay(2000);
+            event_aggregator.PublishOnUIThread(ShellMessage.Busy(false));
+            SelectedIndex = ResultsPartIndex;
+
+            var view_models = books.Select(b =>
             {
-                case ImportMessage.MessageKind.Select:
-                    Select(message.ImportController);
-                    break;
-                case ImportMessage.MessageKind.Results:
-                    ActivateItem(results);
-                    break;
-            }
+                var duplicate = book_repository.GetDuplicate(b.Book);
+                return new ImportedBookViewModel(b)
+                {
+                    IsDuplicate = duplicate != null,
+                    ImportSource = (duplicate == null ? "" : duplicate.ImportSource)
+                };
+            }).ToList();
+            ResultsPart.Update(view_models);
+        }
+
+        public void ImportBooks(List<ImportedBook> books)
+        {
+            profile_controller.Import(books);
+            Cancel();
         }
     }
 }

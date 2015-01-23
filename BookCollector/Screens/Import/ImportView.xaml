@@ -3,16 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://LyCilph.com/Framework"
+             xmlns:import="clr-namespace:BookCollector.Screens.Import"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button x:Name="Back" Style="{DynamicResource MetroCircleButtonStyle}" VerticalAlignment="Bottom">
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance import:ImportViewModel}">
+    <ui:FillPanel SelectedIndex="{Binding SelectedIndex}" Duration="0:0:0.2" Margin="20">
+        <ui:FillPanel.EasingFunction>
+            <CubicEase EasingMode="EaseInOut"/>
+        </ui:FillPanel.EasingFunction>
+        
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="Cancel" Style="{DynamicResource MetroCircleButtonStyle}" VerticalAlignment="Bottom">
                 <Image Source="../../Images/appbar.chevron.left.png" Width="40"/>
             </Button>
-            <TextBlock Text="Import" FontSize="{StaticResource HeaderFontSize}" Margin="20,0,0,0"/>
+            <TextBlock Text="Import" FontSize="{StaticResource HeaderFontSize}" Margin="10,0,0,0"/>
         </StackPanel>
+
+        <TextBlock Text="Progress" FontSize="{StaticResource SubHeaderFontSize}"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+                      Margin="20"
+                      ui:FillPanel.Index="0">
+            <ItemsControl x:Name="Messages"/>
+        </ScrollViewer>
         
-        <ContentControl x:Name="ActiveItem" Margin="20"/>
-    </DockPanel>
+        <TextBlock Text="Results" FontSize="{StaticResource SubHeaderFontSize}"/>
+        <ContentControl x:Name="ResultsPart" ui:FillPanel.Index="1"/>
+    </ui:FillPanel>
 </UserControl>

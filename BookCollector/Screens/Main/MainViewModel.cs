@@ -44,10 +44,16 @@ namespace BookCollector.Screens.Main
             logger.Trace("Activating");
 
             Books = book_repository.Books.OrderBy(b => b.Title).Select(b => new MainBookViewModel(b)).ToList();
-            if (!Books.Any()) return;
-
-            SelectedBook = Books.First();
-            event_aggregator.PublishOnUIThread(ShellMessage.Text("Books: " + Books.Count));
+            if (Books.Any())
+            {
+                SelectedBook = Books.First();
+                event_aggregator.PublishOnUIThread(ShellMessage.Text("Books: " + Books.Count));
+            }
+            else
+            {
+                SelectedBook = null;
+                event_aggregator.PublishOnUIThread(ShellMessage.Text("No books"));                
+            }
         }
 
         public void Import()

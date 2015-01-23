@@ -7,7 +7,7 @@ using BookCollector.Model;
 using BookCollector.Screens.Import;
 using BookCollector.Services;
 using BookCollector.Services.Browsing;
-using Caliburn.Micro;
+using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using RestSharp.Contrib;
 using LogManager = NLog.LogManager;
@@ -20,23 +20,23 @@ namespace BookCollector.Apis.GoodReads
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Uri callback_uri = new Uri(@"custom://www.bookcollector.com");
 
-        private readonly ApplicationSettings application_settings;
         private readonly GoodReadsApi api;
-        private readonly IEventAggregator event_aggregator;
+        private readonly ApplicationSettings application_settings;
+        private readonly IImportProcessController import_process_controller;
         private readonly Browser browser;
         private readonly IProgress<string> progress;
 
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public GoodReadsImportController(GoodReadsApi api, ApplicationSettings application_settings, IEventAggregator event_aggregator, Browser browser)
+        public GoodReadsImportController(GoodReadsApi api, ApplicationSettings application_settings, IImportProcessController import_process_controller, Browser browser)
         {
             this.api = api;
             this.application_settings = application_settings;
-            this.event_aggregator = event_aggregator;
+            this.import_process_controller = import_process_controller;
             this.browser = browser;
 
-            progress = new Progress<string>(str => event_aggregator.PublishOnUIThread(ImportMessage.Information(str)));
+            progress = new Progress<string>(import_process_controller.UpdateProgress);
         }
 
         public async void Start(ProfileDescription profile)
@@ -44,7 +44,7 @@ namespace BookCollector.Apis.GoodReads
             var credentials = await Authenticate(profile);
             var result = await GetBooksAsync(credentials);
 
-            event_aggregator.PublishOnUIThread(ImportMessage.Results(result));
+            import_process_controller.ShowResults(result);
         }
 
         private async Task<GoodReadsCredentials> Authenticate(ProfileDescription profile)
@@ -74,7 +74,7 @@ namespace BookCollector.Apis.GoodReads
             return credentials;
         }
 
-        private bool Predicate(string s, TaskCompletionSource<bool> tcs)
+        private bool Predicate(string s, TaskCompletionSource<MessageDialogResult> tcs)
         {
             var uri = new Uri(s);
             if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
@@ -84,7 +84,7 @@ namespace BookCollector.Apis.GoodReads
             if (query_string["authorize"] != "1")
                 return false;
 
-            tcs.SetResult(true);
+            tcs.SetResult(MessageDialogResult.Affirmative);
             return true;
         }
 
@@ -140,33 +140,5 @@ namespace BookCollector.Apis.GoodReads
                 ImageLinks = image_links
             };
         }
-
-        //private void HandleLoadEnd(Uri uri)
-        //{
-        //    if (uri.Host != callback_uri.Host || uri.Scheme != callback_uri.Scheme)
-        //        return;
-
-        //    var query_string = HttpUtility.ParseQueryString(uri.Query);
-        //    if (query_string["authorize"] != "1")
-        //        return;
-
-        //    tcs.SetResult(true);
-        //}
-
-        //public void Handle(BrowsingMessage message)
-        //{
-        //    logger.Trace("{0}: {1}", Enum.GetName(typeof(BrowsingMessage.MessageKind), message.Kind), message.Uri);
-
-        //    switch (message.Kind)
-        //    {
-        //        case BrowsingMessage.MessageKind.LoadStart:
-        //            break;
-        //        case BrowsingMessage.MessageKind.LoadEnd:
-        //            HandleLoadEnd(message.Uri);
-        //            break;
-        //        default:
-        //            throw new ArgumentOutOfRangeException();
-        //    }
-        //}
     }
 }

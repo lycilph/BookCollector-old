@@ -6,11 +6,9 @@ namespace BookCollector.Screens.Import
 {
     public class ImportedBookViewModel : ItemViewModelBase<ImportedBook>
     {
-        private readonly Book duplicate;
-
         public string Title { get { return AssociatedObject.Book.Title; } }
-        public bool IsDuplicate { get { return duplicate != null; } }
-        public string ImportSource { get { return (duplicate == null ? "" : duplicate.ImportSource); } }
+        public bool IsDuplicate { get; set; }
+        public string ImportSource { get; set; }
 
         private bool _IsSelected;
         public bool IsSelected
@@ -19,9 +17,6 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _IsSelected, value); }
         }
 
-        public ImportedBookViewModel(ImportedBook obj, Book duplicate) : base(obj)
-        {
-            this.duplicate = duplicate;
-        }
+        public ImportedBookViewModel(ImportedBook obj) : base(obj) { }
     }
 }

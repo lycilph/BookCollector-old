@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ui="clr-namespace:Framework.UI;assembly=Framework.UI"
+             xmlns:ui="http://LyCilph.com/Framework"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300" 
@@ -12,7 +12,7 @@
         <ui:BooleanToVisibilityConverter x:Key="VisibilityConverter" TrueState="Visible" FalseState="Hidden"/>
     </UserControl.Resources>
     
-    <Grid>
+    <Grid HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -27,6 +27,6 @@
                 </ToolTip>
             </Image.ToolTip>
         </Image>
-        <TextBlock Grid.Column="2" x:Name="Title" Margin="10,0,0,0" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="2" x:Name="Title" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
     </Grid>
 </UserControl>

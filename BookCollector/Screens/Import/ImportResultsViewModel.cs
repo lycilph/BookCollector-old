@@ -1,25 +1,16 @@
 ﻿using System;
-using System.ComponentModel.Composition;
+using System.Collections.Generic;
 using System.Linq;
-using BookCollector.Model;
-using BookCollector.Shell;
 using BookCollector.Utilities;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
-using NLog;
 using ReactiveUI;
-using LogManager = NLog.LogManager;
 
 namespace BookCollector.Screens.Import
 {
-    [Export(typeof(ImportResultsViewModel))]
-    public class ImportResultsViewModel : ReactiveScreen, IHandle<ImportMessage>
+    public class ImportResultsViewModel : ReactiveScreen
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
-        private readonly IEventAggregator event_aggregator;
-        private readonly ProfileController profile_controller;
-        private readonly BookRepository book_repository;
+        private readonly IImportProcessController import_process_controller;
 
         private ReactiveList<ImportedBookViewModel> _Books = new ReactiveList<ImportedBookViewModel>();
         public ReactiveList<ImportedBookViewModel> Books
@@ -35,14 +26,9 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _IsAllSelected, value); }
         }
 
-        [ImportingConstructor]
-        public ImportResultsViewModel(IEventAggregator event_aggregator, BookRepository book_repository, ProfileController profile_controller)
+        public ImportResultsViewModel(IImportProcessController import_process_controller)
         {
-            this.event_aggregator = event_aggregator;
-            this.book_repository = book_repository;
-            this.profile_controller = profile_controller;
-
-            event_aggregator.Subscribe(this);
+            this.import_process_controller = import_process_controller;
 
             this.WhenAnyValue(x => x.IsAllSelected)
                 .Subscribe(selected => Books.Apply(b => b.IsSelected = selected));
@@ -50,34 +36,23 @@ namespace BookCollector.Screens.Import
 
         public void Ok()
         {
-            var selected_books = Books.Where(b => b.IsSelected)
-                                      .Select(b => b.AssociatedObject)
-                                      .ToList();
-            profile_controller.Import(selected_books);
-
-            Cancel();
+            var books_to_import = Books.Where(b => b.IsSelected).Select(b => b.AssociatedObject).ToList();
+            import_process_controller.ImportBooks(books_to_import);
         }
 
         public void Cancel()
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Back());
+            import_process_controller.Cancel();
         }
 
-        public void Handle(ImportMessage message)
+        public void Update(List<ImportedBookViewModel> view_models)
         {
-            if (message.Kind != ImportMessage.MessageKind.Results)
-                return;
-
-            // Reset selections
+            Books.Clear();
             IsAllSelected = false;
 
-            logger.Trace("Got {0} books", message.ImportedBooks.Count);
-            var duplicates = message.ImportedBooks.Select(b => book_repository.GetDuplicate(b.Book));
-            Books = message.ImportedBooks.Zip(duplicates, (book, duplicate) => new ImportedBookViewModel(book, duplicate)).ToReactiveList();
-
+            Books = view_models.ToReactiveList();
             Books.Apply(b => b.IsSelected = !b.IsDuplicate);
-            if (Books.All(b => b.IsSelected))
-                IsAllSelected = true;
+            IsAllSelected = Books.All(b => b.IsSelected);
         }
     }
 }

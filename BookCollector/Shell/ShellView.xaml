@@ -78,7 +78,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <controls:MetroContentControl Grid.Row="0" x:Name="ActiveItem"/>
+        <controls:TransitioningContentControl Grid.Row="0" x:Name="ActiveItem"/>
         
         <StatusBar Grid.Row="1">
             <StatusBarItem DockPanel.Dock="Right">

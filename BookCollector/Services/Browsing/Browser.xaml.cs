@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CefSharp;
 using Framework.Core.Dialogs;
+using MahApps.Metro.Controls.Dialogs;
 using NLog;
 
 namespace BookCollector.Services.Browsing
@@ -17,8 +18,8 @@ namespace BookCollector.Services.Browsing
 
         private readonly TaskCompletionSource<bool> ready_task_completion_source = new TaskCompletionSource<bool>();
 
-        private TaskCompletionSource<bool> dialog_task_completion_source;
-        public Task Done
+        private TaskCompletionSource<MessageDialogResult> dialog_task_completion_source;
+        public Task<MessageDialogResult> Done
         {
             get { return dialog_task_completion_source.Task; }
         }
@@ -40,9 +41,9 @@ namespace BookCollector.Services.Browsing
             }
         }
 
-        public TaskCompletionSource<bool> Show()
+        public TaskCompletionSource<MessageDialogResult> Show()
         {
-            dialog_task_completion_source = new TaskCompletionSource<bool>();
+            dialog_task_completion_source = new TaskCompletionSource<MessageDialogResult>();
             DialogController.ShowView(this);
             return dialog_task_completion_source;
         }

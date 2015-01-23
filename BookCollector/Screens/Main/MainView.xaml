@@ -9,7 +9,7 @@
         <BitmapImage x:Key="PlaceHolderImage" UriSource="../../Images/noimage.gif"/>
     </UserControl.Resources>
     
-    <Grid>
+    <Grid Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="3*" MinWidth="100"/>
@@ -17,20 +17,21 @@
             <ColumnDefinition Width="1*" MinWidth="100"/>
         </Grid.ColumnDefinitions>
         
-        <StackPanel Grid.Column="0" Margin="20">
-            <TextBlock Text="Actions"/>
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Actions" FontSize="{StaticResource SubHeaderFontSize}" Margin="0,0,0,10"/>
             <Button x:Name="Import" Content="Import"/>
+            <Separator Margin="5,7"/>
             <Button Content="Search"/>
+            <Separator Margin="5,7"/>
             <Button x:Name="Settings" Content="Settings"/>
         </StackPanel>
         
-        <ListBox Grid.Column="1" x:Name="Books" Margin="0,20,10,20"/>
+        <ListBox Grid.Column="1" x:Name="Books" Margin="10,0,5,0"/>
 
         <GridSplitter Grid.Column="2" Width="5" HorizontalAlignment="Stretch" />
         
-        <StackPanel Grid.Column="3" Margin="10,20,20,20" >
+        <StackPanel Grid.Column="3" Margin="5,0,0,0" >
             <TextBlock Text="Details"/>
-            <!--<Image x:Name="SelectedBook_Image"/>-->
             <Image Source="{Binding SelectedBook.Image, TargetNullValue={StaticResource PlaceHolderImage}}"/>
             <TextBlock x:Name="SelectedBook_Description" TextWrapping="Wrap"/>
         </StackPanel>
