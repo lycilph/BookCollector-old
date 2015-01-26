@@ -87,11 +87,8 @@ namespace BookCollector.Screens.Import
 
         public async void ShowResults(List<ImportedBook> books)
         {
-            await Task.Delay(2000);
             event_aggregator.PublishOnUIThread(ShellMessage.Busy(false));
-            SelectedIndex = ResultsPartIndex;
-
-            var view_models = books.Select(b =>
+            var view_models = await Task.Factory.StartNew(() => books.Select(b =>
             {
                 var duplicate = book_repository.GetDuplicate(b.Book);
                 return new ImportedBookViewModel(b)
@@ -99,8 +96,11 @@ namespace BookCollector.Screens.Import
                     IsDuplicate = duplicate != null,
                     ImportSource = (duplicate == null ? "" : duplicate.ImportSource)
                 };
-            }).ToList();
+            }).ToList());
             ResultsPart.Update(view_models);
+
+            await Task.Delay(2000);
+            SelectedIndex = ResultsPartIndex;
         }
 
         public void ImportBooks(List<ImportedBook> books)

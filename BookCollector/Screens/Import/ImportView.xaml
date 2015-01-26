@@ -9,7 +9,7 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance import:ImportViewModel}">
-    <ui:FillPanel SelectedIndex="{Binding SelectedIndex}" Duration="0:0:0.2" Margin="20">
+    <ui:FillPanel SelectedIndex="{Binding SelectedIndex}" Duration="0:0:0.5" Margin="20">
         <ui:FillPanel.EasingFunction>
             <CubicEase EasingMode="EaseInOut"/>
         </ui:FillPanel.EasingFunction>
