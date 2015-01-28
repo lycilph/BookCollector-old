@@ -3,8 +3,8 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using BookCollector.Apis;
+using BookCollector.Controllers;
 using BookCollector.Model;
-using BookCollector.Shell;
 using Caliburn.Micro;
 using Caliburn.Micro.ReactiveUI;
 using Framework.Core.Dialogs;
@@ -20,7 +20,7 @@ namespace BookCollector.Screens.Import
         private const int ProgressPartIndex = 0;
         private const int ResultsPartIndex = 1;
 
-        private readonly IEventAggregator event_aggregator;
+        private readonly ApplicationController application_controller;
         private readonly ProfileController profile_controller;
         private readonly BookRepository book_repository;
 
@@ -43,11 +43,12 @@ namespace BookCollector.Screens.Import
         }
 
         [ImportingConstructor]
-        public ImportViewModel(IEventAggregator event_aggregator, ProfileController profile_controller, BookRepository book_repository)
+        public ImportViewModel(ApplicationController application_controller)
         {
-            this.event_aggregator = event_aggregator;
-            this.profile_controller = profile_controller;
-            this.book_repository = book_repository;
+            this.application_controller = application_controller;
+
+            profile_controller = application_controller.ProfileController;
+            book_repository = application_controller.BookRepository;
 
             ResultsPart = new ImportResultsViewModel(this);
         }
@@ -57,7 +58,7 @@ namespace BookCollector.Screens.Import
             base.OnActivate();
 
             Messages.Clear();
-            event_aggregator.PublishOnUIThread(ShellMessage.Text("Please select the source to import from"));
+            application_controller.SetStatusText("Please select the source to import from");
             SelectedIndex = ProgressPartIndex;
 
             var selection = IoC.Get<ImportSelectionViewModel>();
@@ -69,14 +70,13 @@ namespace BookCollector.Screens.Import
 
         public void Cancel()
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Back());
+            application_controller.NavigateBack();
         }
 
         public void SelectController(IImportController import_controller)
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Text("Importing from " + import_controller.ApiName));
-
-            event_aggregator.PublishOnUIThread(ShellMessage.Busy(true));
+            application_controller.SetStatusText("Importing from " + import_controller.ApiName);
+            application_controller.SetBusy(true);
             import_controller.Start(profile_controller.CurrentProfile);
         }
 
@@ -87,7 +87,7 @@ namespace BookCollector.Screens.Import
 
         public async void ShowResults(List<ImportedBook> books)
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Busy(false));
+            application_controller.SetBusy(false);
             var view_models = await Task.Factory.StartNew(() => books.Select(b =>
             {
                 var duplicate = book_repository.GetDuplicate(b.Book);
@@ -105,7 +105,7 @@ namespace BookCollector.Screens.Import
 
         public void ImportBooks(List<ImportedBook> books)
         {
-            profile_controller.Import(books);
+            application_controller.Import(books);
             Cancel();
         }
     }

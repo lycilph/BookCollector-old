@@ -4,13 +4,13 @@ using Framework.Core;
 using NLog;
 using LogManager = NLog.LogManager;
 
-namespace BookCollector
+namespace BookCollector.Controllers
 {
     public class ApplicationTasks
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        [Export(ApplicationBootstrapper.STARTUP_TASK_NAME, typeof (BootstrapperTask))]
+        [Export(ApplicationBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
         public void ActivateApplicationController()
         {
             logger.Trace("Activating application controller");

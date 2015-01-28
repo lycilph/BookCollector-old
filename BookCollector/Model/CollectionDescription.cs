@@ -11,6 +11,8 @@ namespace BookCollector.Model
         [JsonProperty]
         public string Id { get; private set; }
 
+        public ProfileDescription Profile { get; set; }
+
         private string _DisplayName = "None";
         public string DisplayName
         {

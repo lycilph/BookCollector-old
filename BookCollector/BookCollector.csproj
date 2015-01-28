@@ -72,7 +72,7 @@
     </Reference>
     <Reference Include="Framework.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Framework.Core.1.0.14-alpha\lib\net45\Framework.Core.dll</HintPath>
+      <HintPath>..\packages\Framework.Core.1.0.15-alpha\lib\net45\Framework.Core.dll</HintPath>
     </Reference>
     <Reference Include="Framework.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -108,7 +108,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
@@ -136,7 +135,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -157,9 +155,10 @@
     <Compile Include="Apis\GoogleBooks\GoogleBooksCredentials.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksSettings.cs" />
     <Compile Include="Apis\IApi.cs" />
-    <Compile Include="ApplicationController.cs" />
-    <Compile Include="ApplicationMessage.cs" />
+    <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Model\DownloadQueueItem.cs" />
     <Compile Include="Model\ProfileDescription.cs" />
+    <Compile Include="Controllers\RepositorySearchProvider.cs" />
     <Compile Include="Screens\Import\ImportControllerViewModel.cs" />
     <Compile Include="Screens\Import\IImportProcessController.cs" />
     <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
@@ -185,7 +184,7 @@
     <Compile Include="Screens\Profiles\CollectionDescriptionViewModel.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsImportController.cs" />
     <Compile Include="Apis\Audible\AudibleBook.cs" />
-    <Compile Include="Model\ProfileController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Model\CollectionDescription.cs" />
     <Compile Include="Screens\Profiles\ProfileDescriptionView.xaml.cs">
       <DependentUpon>ProfileDescriptionView.xaml</DependentUpon>
@@ -223,7 +222,7 @@
     </Compile>
     <Compile Include="Screens\Main\MainViewModel.cs" />
     <Compile Include="Apis\Audible\AudibleApi.cs" />
-    <Compile Include="Model\ImageDownloader.cs" />
+    <Compile Include="Controllers\ImageDownloader.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsAccessResponse.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsImportResponse.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBook.cs" />
@@ -234,7 +233,7 @@
     <Compile Include="Apis\GoogleBooks\GoogleBooksVolumeInfo.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksApi.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />
-    <Compile Include="Model\BookRepository.cs" />
+    <Compile Include="Controllers\BookRepository.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsApi.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsAuthorizationResponse.cs" />
     <Compile Include="Apis\GoodReads\GoodReadsBook.cs" />
@@ -258,7 +257,7 @@
     <Compile Include="Utilities\HtmlExtensions.cs" />
     <Compile Include="Utilities\JsonExtensions.cs" />
     <Compile Include="Utilities\ReactiveListExtensions.cs" />
-    <Compile Include="ApplicationTasks.cs" />
+    <Compile Include="Controllers\ApplicationTasks.cs" />
     <Compile Include="Utilities\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +366,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

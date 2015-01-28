@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using BookCollector.Model;
-using BookCollector.Shell;
-using Caliburn.Micro;
+using BookCollector.Controllers;
 using NLog;
 using ReactiveUI;
 using LogManager = NLog.LogManager;
@@ -15,7 +13,7 @@ namespace BookCollector.Screens.Main
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly IEventAggregator event_aggregator;
+        private readonly ApplicationController application_controller;
         private readonly BookRepository book_repository;
 
         private List<MainBookViewModel> _Books;
@@ -33,10 +31,11 @@ namespace BookCollector.Screens.Main
         }
         
         [ImportingConstructor]
-        public MainViewModel(IEventAggregator event_aggregator, BookRepository book_repository)
+        public MainViewModel(ApplicationController application_controller)
         {
-            this.event_aggregator = event_aggregator;
-            this.book_repository = book_repository;
+            this.application_controller = application_controller;
+
+            book_repository = application_controller.BookRepository;
         }
 
         protected override void OnActivate()
@@ -47,23 +46,23 @@ namespace BookCollector.Screens.Main
             if (Books.Any())
             {
                 SelectedBook = Books.First();
-                event_aggregator.PublishOnUIThread(ShellMessage.Text("Books: " + Books.Count));
+                application_controller.SetStatusText("Books: " + Books.Count);
             }
             else
             {
                 SelectedBook = null;
-                event_aggregator.PublishOnUIThread(ShellMessage.Text("No books"));                
+                application_controller.SetStatusText("No books");
             }
         }
 
         public void Import()
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Show("Import"));
+            application_controller.NavigateToImport();
         }
 
         public void Settings()
         {
-            event_aggregator.PublishOnUIThread(ShellMessage.Show("Settings"));
+            application_controller.NavigateToSettings();
         }
     }
 }

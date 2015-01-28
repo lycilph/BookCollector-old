@@ -132,7 +132,7 @@ namespace BookCollector.Services
 
         private static string GetCredentialName(string profile_id, string api_name)
         {
-            return string.Format("{0}-{1}", profile_id, api_name);
+            return string.Format("{0}-{1}", api_name, profile_id);
         }
 
         private static string SafeApiName(string name)

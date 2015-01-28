@@ -2,17 +2,19 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using BookCollector.Model;
 using BookCollector.Services;
 using BookCollector.Utilities;
 using NLog;
 using ReactiveUI;
 
-namespace BookCollector.Model
+namespace BookCollector.Controllers
 {
     [Export(typeof(BookRepository))]
     public class BookRepository : ReactiveObject
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private const string filename = "collection.txt";
 
         private readonly ApplicationSettings application_settings;
 
@@ -29,6 +31,13 @@ namespace BookCollector.Model
             this.application_settings = application_settings;
         }
 
+        private string GetPath(CollectionDescription collection)
+        {
+            var dir = Path.Combine(application_settings.DataDir, collection.Id);
+            Directory.CreateDirectory(dir);
+            return Path.Combine(dir, filename);
+        }
+
         public void Clear()
         {
             Books.Clear();
@@ -41,23 +50,23 @@ namespace BookCollector.Model
 
         public void Load(CollectionDescription collection)
         {
-            var path = Path.Combine(application_settings.DataDir, collection.Id + "_collection.txt");
-            if (File.Exists(path))
+            var path = GetPath(collection);
+            if (!File.Exists(path))
             {
-                logger.Trace("Loading collection " + collection);
-                Books = JsonExtensions.DeserializeFromFile<List<Book>>(path);
-            }
-            else
-            {
-                logger.Trace("No collection found for " + collection);
+                logger.Trace("No collection found");
                 Books = new List<Book>();
+                return;
             }
+
+            logger.Trace("Loading (path = {0})", path);
+            Books = JsonExtensions.DeserializeFromFile<List<Book>>(path);
         }
+
 
         public void Save(CollectionDescription collection)
         {
-            logger.Trace("Saving collection " + collection);
-            var path = Path.Combine(application_settings.DataDir, collection.Id + "_collection.txt");
+            var path = GetPath(collection);
+            logger.Trace("Saving (path = {0})", path);
             JsonExtensions.SerializeToFile(path, Books);
         }
 

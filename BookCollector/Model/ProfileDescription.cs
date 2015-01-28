@@ -29,5 +29,17 @@ namespace BookCollector.Model
         {
             Id = Guid.NewGuid().ToString().ToUpperInvariant();
         }
+
+        public void Add(CollectionDescription collection)
+        {
+            collection.Profile = this;
+            Collections.Add(collection);
+        }
+
+        public void Remove(CollectionDescription collection)
+        {
+            collection.Profile = null;
+            Collections.Remove(collection);
+        }
     }
 }
