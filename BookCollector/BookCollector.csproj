@@ -57,6 +57,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\books_collection.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro, Version=2.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -202,6 +205,7 @@
     <Compile Include="Services\Browsing\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\Browsing\BrowserService.cs" />
     <Compile Include="Services\Browsing\OffscreenBrowser.cs" />
     <Compile Include="Services\Browsing\SchemeHandler.cs" />
     <Compile Include="Apis\GoogleBooks\GoogleBooksImportController.cs" />
@@ -289,6 +293,8 @@
     <Resource Include="Images\appbar.clear.png" />
     <EmbeddedResource Include="Apis\GoodReads\GoodReadsSettings.txt" />
     <EmbeddedResource Include="Apis\GoogleBooks\GoogleBooksSettings.txt" />
+    <Resource Include="Images\books_collection.ico" />
+    <Resource Include="Images\books_collection.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

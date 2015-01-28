@@ -32,13 +32,14 @@ namespace BookCollector.Apis.Audible
         public string ApiName { get { return api.Name; } }
 
         [ImportingConstructor]
-        public AudibleImportController(AudibleApi api, ApplicationSettings application_settings, IImportProcessController import_process_controller, OffscreenBrowser offscreen_browser, Browser browser)
+        public AudibleImportController(AudibleApi api, ApplicationSettings application_settings, IImportProcessController import_process_controller, BrowserService browser_service)
         {
             this.api = api;
             this.application_settings = application_settings;
             this.import_process_controller = import_process_controller;
-            this.offscreen_browser = offscreen_browser;
-            this.browser = browser;
+
+            browser = browser_service.Browser;
+            offscreen_browser = browser_service.OffscreenBrowser;
 
             progress = new Progress<string>(str =>
             {

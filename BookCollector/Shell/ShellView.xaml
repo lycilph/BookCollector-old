@@ -11,7 +11,8 @@
                       Title="Book Collector" 
                       Height="600" 
                       Width="800" 
-                      d:DataContext="{d:DesignData ShellViewModel}">
+                      d:DataContext="{d:DesignData ShellViewModel}"
+                      Icon="../Images/books_collection.png">
     <controls:MetroWindow.Resources>
         <ui:BooleanToVisibilityConverter x:Key="HiddenVisibilityConverter" TrueState="Visible" FalseState="Hidden"/>
         <ui:BooleanToVisibilityConverter x:Key="CollapsedVisibilityConverter" TrueState="Visible" FalseState="Collapsed"/>
