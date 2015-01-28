@@ -74,6 +74,11 @@ namespace BookCollector.Screens.Settings
                 application_controller.Clear();
         }
 
+        public void ReindexRepository()
+        {
+            application_controller.Reindex();
+        }
+
         public void Ok()
         {
             application_settings.DataDir = DataDir;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using BookCollector.Model;
 using BookCollector.Services;
 using BookCollector.Shell;
@@ -21,23 +22,28 @@ namespace BookCollector.Controllers
         private readonly ProfileController profile_controller;
         private readonly BookRepository book_repository;
         private readonly ImageDownloader image_downloader;
+        private readonly RepositorySearchProvider search_provider;
 
         public ProfileController ProfileController { get { return profile_controller; } }
 
         public BookRepository BookRepository { get { return book_repository; } }
+
+        public RepositorySearchProvider RepositorySearchProvider { get { return search_provider; } }
 
         [ImportingConstructor]
         public ApplicationController(IEventAggregator event_aggregator,
                                      ProfileController profile_controller, 
                                      ApplicationSettings application_settings, 
                                      BookRepository book_repository, 
-                                     ImageDownloader image_downloader)
+                                     ImageDownloader image_downloader, 
+                                     RepositorySearchProvider search_provider)
         {
             this.event_aggregator = event_aggregator;
             this.profile_controller = profile_controller;
             this.application_settings = application_settings;
             this.book_repository = book_repository;
             this.image_downloader = image_downloader;
+            this.search_provider = search_provider;
 
             event_aggregator.Subscribe(this);
         }
@@ -107,18 +113,28 @@ namespace BookCollector.Controllers
                 event_aggregator.PublishOnUIThread(ShellMessage.Show("Profiles"));
         }
 
-        public void Import(List<ImportedBook> imported_books)
+        public async void Import(List<ImportedBook> imported_books)
         {
+            SetBusy(true);
             book_repository.Add(imported_books.Select(i => i.Book));
             image_downloader.Add(imported_books.Select(i => new DownloadQueueItem(i.Book, i.ImageLinks)));
+            await Task.Factory.StartNew(() => search_provider.Add(imported_books.Select(i => i.Book)));
             profile_controller.CurrentCollection.LastModified = DateTime.Now;
+            SetBusy(false);
         }
 
         public void Clear()
         {
             book_repository.Clear();
             image_downloader.Clear();
+            search_provider.Clear();
             profile_controller.CurrentCollection.LastModified = DateTime.Now;
+        }
+
+        public void Reindex()
+        {
+            search_provider.Clear();
+            search_provider.Add(book_repository.Books);
         }
 
         public void SetCurrent(CollectionDescription collection)
@@ -152,7 +168,7 @@ namespace BookCollector.Controllers
             book_repository.Save(profile_controller.CurrentCollection);
             image_downloader.Stop();
             image_downloader.Save(profile_controller.CurrentCollection);
-            // Close search index ???
+            search_provider.Close();
         }
 
         private void LoadCollection()
@@ -162,7 +178,7 @@ namespace BookCollector.Controllers
             book_repository.Load(profile_controller.CurrentCollection);
             image_downloader.Load(profile_controller.CurrentCollection, book_repository.Get);
             image_downloader.Start();
-            // Load search index
+            search_provider.Open(profile_controller.CurrentCollection);
         }
     }
 }

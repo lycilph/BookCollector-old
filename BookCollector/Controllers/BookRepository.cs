@@ -17,6 +17,7 @@ namespace BookCollector.Controllers
         private const string filename = "collection.txt";
 
         private readonly ApplicationSettings application_settings;
+        private Dictionary<string, Book> id_to_books;
 
         private List<Book> _Books = new List<Book>();
         public List<Book> Books
@@ -55,11 +56,13 @@ namespace BookCollector.Controllers
             {
                 logger.Trace("No collection found");
                 Books = new List<Book>();
+                id_to_books = new Dictionary<string, Book>();
                 return;
             }
 
             logger.Trace("Loading (path = {0})", path);
             Books = JsonExtensions.DeserializeFromFile<List<Book>>(path);
+            id_to_books = Books.ToDictionary(b => b.Id);
         }
 
 
@@ -77,7 +80,7 @@ namespace BookCollector.Controllers
 
         public Book Get(string book_id)
         {
-            return Books.SingleOrDefault(b => b.Id == book_id);
+            return id_to_books.ContainsKey(book_id) ? id_to_books[book_id] : null;
         }
     }
 }

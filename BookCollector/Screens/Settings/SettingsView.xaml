@@ -43,8 +43,10 @@
             <ListBox x:Name="Apis" Grid.Row="3" Grid.Column="2" Margin="0,5"/>
 
             <TextBlock Grid.Row="4" Grid.Column="0" Margin="0,5" Text="Actions" HorizontalAlignment="Right"/>
-            <StackPanel Grid.Row="4" Grid.Column="2" Margin="0,5">
-                <Button x:Name="ClearRepository" Content="Clear Repository" HorizontalAlignment="Left"/>
+            <StackPanel Grid.Row="4" Grid.Column="2" Margin="0,5" HorizontalAlignment="Left">
+                <Button x:Name="ClearRepository" Content="Clear Repository" Width="150"/>
+                <Separator Margin="5,7"/>
+                <Button x:Name="ReindexRepository" Content="Reindex repository" Width="150"/>
             </StackPanel>
 
             <StackPanel Grid.Row="5" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
