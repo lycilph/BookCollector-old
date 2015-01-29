@@ -157,6 +157,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Apis\Amazon\AmazonApi.cs" />
+    <Compile Include="Apis\Amazon\AmazonSettings.cs" />
     <Compile Include="Apis\ApiController.cs" />
     <Compile Include="Apis\Audible\AudibleCredentials.cs" />
     <Compile Include="Apis\Audible\AudibleImportController.cs" />
@@ -188,6 +190,10 @@
     </Compile>
     <Compile Include="Screens\Import\ImportViewModel.cs" />
     <Compile Include="Screens\IShellScreen.cs" />
+    <Compile Include="Screens\MissingImages\MissingImagesView.xaml.cs">
+      <DependentUpon>MissingImagesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MissingImages\MissingImagesViewModel.cs" />
     <Compile Include="Screens\Profiles\CollectionDescriptionView.xaml.cs">
       <DependentUpon>CollectionDescriptionView.xaml</DependentUpon>
     </Compile>
@@ -302,6 +308,7 @@
     <EmbeddedResource Include="Apis\GoogleBooks\GoogleBooksSettings.txt" />
     <Resource Include="Images\books_collection.ico" />
     <Resource Include="Images\books_collection.png" />
+    <EmbeddedResource Include="Apis\Amazon\AmazonSettings.txt" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -335,6 +342,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Import\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\MissingImages\MissingImagesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

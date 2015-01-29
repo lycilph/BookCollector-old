@@ -28,6 +28,9 @@
             <Button Content="Search"/>
             <Separator Margin="5,7"/>
             <Button x:Name="Settings" Content="Settings"/>
+            
+            <TextBlock Text="Tools" FontSize="{StaticResource SubHeaderFontSize}" Margin="0,20,0,10"/>
+            <Button x:Name="MissingImages" Content="Missing Images"/>
         </StackPanel>
 
         <DockPanel Grid.Column="1" Margin="10,0,5,0">

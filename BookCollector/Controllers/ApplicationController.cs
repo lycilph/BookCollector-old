@@ -90,6 +90,12 @@ namespace BookCollector.Controllers
             event_aggregator.PublishOnUIThread(ShellMessage.Show("Settings"));
         }
 
+        public void NavigateToMissingImages()
+        {
+            logger.Trace("NavigateToMissingImages");
+            event_aggregator.PublishOnUIThread(ShellMessage.Show("MissingImages"));
+        }
+
         public void SetStatusText(string message)
         {
             event_aggregator.PublishOnUIThread(ShellMessage.StatusText(message));

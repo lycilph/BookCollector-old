@@ -121,5 +121,10 @@ namespace BookCollector.Screens.Main
         {
             application_controller.NavigateToSettings();
         }
+
+        public void MissingImages()
+        {
+            application_controller.NavigateToMissingImages();
+        }
     }
 }
