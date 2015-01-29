@@ -5,5 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <TextBlock x:Name="Title"/>
+    <UserControl.Resources>
+        <BitmapImage x:Key="PlaceHolderImage" UriSource="../../Images/noimage.gif"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <Image Grid.Column="0"
+               Source="{Binding SmallImage, TargetNullValue={StaticResource PlaceHolderImage}}"
+               Width="50"/>
+        
+        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+            <TextBlock x:Name="Title" FontSize="{StaticResource NormalFontSize}"/>
+            <TextBlock x:Name="Authors" FontSize="{StaticResource ContentFontSize}"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

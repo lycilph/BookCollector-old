@@ -17,8 +17,8 @@ namespace BookCollector.Apis.GoodReads
     public class GoodReadsApi : IApi
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
         private const string base_url = @"https://www.goodreads.com";
+        private const int request_delay = 1; // corresponds to 1 request/user/second
 
         private readonly GoodReadsSettings settings;
         private readonly RestClient client;
@@ -56,7 +56,7 @@ namespace BookCollector.Apis.GoodReads
         private Task Delay()
         {
             var now = DateTime.Now;
-            var next_execution = last_execution_time_stamp.AddSeconds(1);
+            var next_execution = last_execution_time_stamp.AddSeconds(request_delay);
             var difference = next_execution.Subtract(now);
             var delay = (difference.Milliseconds > 0 ? difference.Milliseconds : 0);
 

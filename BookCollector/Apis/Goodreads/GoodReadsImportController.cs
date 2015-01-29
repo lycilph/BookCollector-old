@@ -7,6 +7,7 @@ using BookCollector.Model;
 using BookCollector.Screens.Import;
 using BookCollector.Services;
 using BookCollector.Services.Browsing;
+using BookCollector.Utilities;
 using MahApps.Metro.Controls.Dialogs;
 using NLog;
 using RestSharp.Contrib;
@@ -131,7 +132,7 @@ namespace BookCollector.Apis.GoodReads
                 Book = new Book
                 {
                     Title = book.Title,
-                    Description = book.Description,
+                    Description = HtmlExtensions.ConvertHtml(book.Description),
                     Authors = book.Authors.Select(a => a.Name).ToList(),
                     ISBN10 = book.Isbn,
                     ISBN13 = book.Isbn13,

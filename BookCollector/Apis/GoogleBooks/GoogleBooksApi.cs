@@ -15,8 +15,8 @@ namespace BookCollector.Apis.GoogleBooks
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Uri authorization_url = new Uri(@"https://accounts.google.com");
         private static readonly Uri base_url = new Uri(@"https://www.googleapis.com");
-        
         private const string authorization_scope = @"https://www.googleapis.com/auth/books";
+        private const int request_delay = 1; // corresponds to 1 request/user/second
 
         private readonly GoogleBooksSettings settings;
         private readonly RestClient client;
@@ -53,7 +53,7 @@ namespace BookCollector.Apis.GoogleBooks
         private Task Delay()
         {
             var now = DateTime.Now;
-            var next_execution = last_execution_time_stamp.AddSeconds(1);
+            var next_execution = last_execution_time_stamp.AddSeconds(request_delay);
             var difference = next_execution.Subtract(now);
             var delay = (difference.Milliseconds > 0 ? difference.Milliseconds : 0);
 

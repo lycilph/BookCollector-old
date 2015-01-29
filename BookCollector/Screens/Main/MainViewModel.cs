@@ -63,8 +63,8 @@ namespace BookCollector.Screens.Main
 
             if (string.IsNullOrWhiteSpace(query))
             {
-                filter_list.Clear();
                 collection_view.Filter = null;
+                filter_list.Clear();
                 UpdateStatusText();
             }
             else

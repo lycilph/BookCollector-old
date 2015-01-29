@@ -116,25 +116,35 @@ namespace BookCollector.Controllers
         public async void Import(List<ImportedBook> imported_books)
         {
             SetBusy(true);
-            book_repository.Add(imported_books.Select(i => i.Book));
-            image_downloader.Add(imported_books.Select(i => new DownloadQueueItem(i.Book, i.ImageLinks)));
-            await Task.Factory.StartNew(() => search_provider.Add(imported_books.Select(i => i.Book)));
+            
+            await Task.Factory.StartNew(() =>
+            {
+                book_repository.Add(imported_books.Select(i => i.Book));
+                image_downloader.Add(imported_books.Select(i => new DownloadQueueItem(i.Book, i.ImageLinks)));
+                search_provider.Add(imported_books.Select(i => i.Book));
+            });
             profile_controller.CurrentCollection.LastModified = DateTime.Now;
             SetBusy(false);
         }
 
-        public void Clear()
+        public async void Clear()
         {
-            book_repository.Clear();
-            image_downloader.Clear();
-            search_provider.Clear();
+            await Task.Factory.StartNew(() =>
+            {
+                book_repository.Clear();
+                image_downloader.Clear();
+                search_provider.Clear();                
+            });
             profile_controller.CurrentCollection.LastModified = DateTime.Now;
         }
 
         public void Reindex()
         {
-            search_provider.Clear();
-            search_provider.Add(book_repository.Books);
+            Task.Factory.StartNew(() =>
+            {
+                search_provider.Clear();
+                search_provider.Add(book_repository.Books);
+            });
         }
 
         public void SetCurrent(CollectionDescription collection)
