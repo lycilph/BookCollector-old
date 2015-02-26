@@ -138,6 +138,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Rx-Xaml.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.0.1-ALPHA027\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -158,7 +160,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Apis\Amazon\AmazonApi.cs" />
+    <Compile Include="Apis\Amazon\AmazonHeader.cs" />
     <Compile Include="Apis\Amazon\AmazonSettings.cs" />
+    <Compile Include="Apis\Amazon\AmazonSigningEndpointBehavior.cs" />
+    <Compile Include="Apis\Amazon\AmazonSigningMessageInspector.cs" />
     <Compile Include="Apis\ApiController.cs" />
     <Compile Include="Apis\Audible\AudibleCredentials.cs" />
     <Compile Include="Apis\Audible\AudibleImportController.cs" />
@@ -190,6 +195,10 @@
     </Compile>
     <Compile Include="Screens\Import\ImportViewModel.cs" />
     <Compile Include="Screens\IShellScreen.cs" />
+    <Compile Include="Screens\MissingImages\MissingImagesBookView.xaml.cs">
+      <DependentUpon>MissingImagesBookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\MissingImages\MissingImagesBookViewModel.cs" />
     <Compile Include="Screens\MissingImages\MissingImagesView.xaml.cs">
       <DependentUpon>MissingImagesView.xaml</DependentUpon>
     </Compile>
@@ -215,6 +224,11 @@
     </Compile>
     <Compile Include="Screens\Settings\ApiViewModel.cs" />
     <Compile Include="Screens\ShellScreenBase.cs" />
+    <Compile Include="Service References\AmazonService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Services\Browsing\Browser.xaml.cs">
       <DependentUpon>Browser.xaml</DependentUpon>
     </Compile>
@@ -292,10 +306,71 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.BrowseNodeLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.BrowseNodeLookupResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartAddResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartAddResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartClearResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartClearResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartCreateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartCreateResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartGetResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartGetResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartModifyResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.CartModifyResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.ItemLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.ItemLookupResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.ItemSearchResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.ItemSearchResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.SimilarityLookupResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\BookCollector.AmazonService.SimilarityLookupResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\AmazonService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\AmazonService\configuration.svcinfo" />
+    <None Include="Service References\AmazonService\configuration91.svcinfo" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Service References\AmazonService\AWSECommerceService.wsdl" />
     <Resource Include="Images\appbar.page.copy.png" />
     <Resource Include="Images\noimage.gif" />
     <Resource Include="Images\appbar.add.png" />
@@ -345,6 +420,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\MissingImages\MissingImagesBookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\MissingImages\MissingImagesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -390,7 +469,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\AmazonService\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

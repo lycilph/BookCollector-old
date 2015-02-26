@@ -136,7 +136,8 @@ namespace BookCollector.Apis.GoodReads
                     Authors = book.Authors.Select(a => a.Name).ToList(),
                     ISBN10 = book.Isbn,
                     ISBN13 = book.Isbn13,
-                    ImportSource = ApiName
+                    ImportSource = ApiName,
+                    ImageSource = ApiName
                 },
                 ImageLinks = image_links
             };

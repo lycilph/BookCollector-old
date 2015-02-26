@@ -1,6 +1,9 @@
 ﻿using System.ComponentModel.Composition;
+using System.Linq;
 using BookCollector.Apis.Amazon;
 using BookCollector.Controllers;
+using BookCollector.Utilities;
+using ReactiveUI;
 
 namespace BookCollector.Screens.MissingImages
 {
@@ -9,6 +12,13 @@ namespace BookCollector.Screens.MissingImages
     {
         private readonly ApplicationController application_controller;
         private readonly AmazonApi api;
+
+        private ReactiveList<MissingImagesBookViewModel> _Books;
+        public ReactiveList<MissingImagesBookViewModel> Books
+        {
+            get { return _Books; }
+            set { this.RaiseAndSetIfChanged(ref _Books, value); }
+        }
 
         [ImportingConstructor]
         public MissingImagesViewModel(ApplicationController application_controller, AmazonApi api)
@@ -21,7 +31,7 @@ namespace BookCollector.Screens.MissingImages
         {
             base.OnActivate();
 
-            api.Search("1857237471");
+            Books = application_controller.BookRepository.Books.Where(b => !b.HasImages()).Select(b => new MissingImagesBookViewModel(b)).ToReactiveList();
         }
 
         public void Back()

@@ -9,26 +9,28 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance import:ImportViewModel}">
-    <ui:FillPanel SelectedIndex="{Binding SelectedIndex}" Duration="0:0:0.5" Margin="20">
-        <ui:FillPanel.EasingFunction>
-            <CubicEase EasingMode="EaseInOut"/>
-        </ui:FillPanel.EasingFunction>
-        
-        <StackPanel Orientation="Horizontal">
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Button x:Name="Cancel" Style="{DynamicResource MetroCircleButtonStyle}" VerticalAlignment="Bottom">
                 <Image Source="../../Images/appbar.chevron.left.png" Width="40"/>
             </Button>
             <TextBlock Text="Import" FontSize="{StaticResource HeaderFontSize}" Margin="10,0,0,0"/>
         </StackPanel>
 
-        <TextBlock Text="Progress" FontSize="{StaticResource SubHeaderFontSize}"/>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" 
+        <ui:FillPanel SelectedIndex="{Binding SelectedIndex}" Duration="0:0:0.5">
+            <ui:FillPanel.EasingFunction>
+                <CubicEase EasingMode="EaseInOut"/>
+            </ui:FillPanel.EasingFunction>
+
+            <TextBlock Text="Progress" FontSize="{StaticResource SubHeaderFontSize}"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" 
                       Margin="20"
                       ui:FillPanel.Index="0">
-            <ItemsControl x:Name="Messages"/>
-        </ScrollViewer>
-        
-        <TextBlock Text="Results" FontSize="{StaticResource SubHeaderFontSize}"/>
-        <ContentControl x:Name="ResultsPart" ui:FillPanel.Index="1"/>
-    </ui:FillPanel>
+                <ItemsControl x:Name="Messages"/>
+            </ScrollViewer>
+
+            <TextBlock Text="Results" FontSize="{StaticResource SubHeaderFontSize}"/>
+            <ContentControl x:Name="ResultsPart" ui:FillPanel.Index="1"/>
+        </ui:FillPanel>
+    </DockPanel>
 </UserControl>

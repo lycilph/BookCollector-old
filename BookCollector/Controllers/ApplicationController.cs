@@ -116,7 +116,10 @@ namespace BookCollector.Controllers
             event_aggregator.PublishOnUIThread(ShellMessage.Show("Main"));
 
             if (application_settings.RememberLastCollection == false || profile_controller.CurrentCollection == null)
-                event_aggregator.PublishOnUIThread(ShellMessage.Show("Profiles"));
+                NavigateToProfiles();
+
+            // Debug
+            NavigateToMissingImages();
         }
 
         public async void Import(List<ImportedBook> imported_books)

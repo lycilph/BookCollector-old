@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using BookCollector.AmazonService;
 using BookCollector.Services;
 
 namespace BookCollector.Apis.Amazon
@@ -19,7 +20,24 @@ namespace BookCollector.Apis.Amazon
 
         public void Search(string isbn)
         {
-            
+            var client = new AWSECommerceServicePortTypeClient("AWSECommerceServicePort");
+            client.ChannelFactory.Endpoint.Behaviors.Add(new AmazonSigningEndpointBehavior(settings.AccessKeyId, settings.SecretKey));
+
+            var item_search = new ItemSearch
+            {
+                Request = new[]
+                {
+                    new ItemSearchRequest
+                    {
+                        SearchIndex = "Books",
+                        Title = "Orbus",
+                        ResponseGroup = new[] { "ItemAttributes", "Images" }
+                    }
+                },
+                AWSAccessKeyId = settings.AccessKeyId,
+                AssociateTag = settings.AssociateTag
+            };
+            var response = client.ItemSearch(item_search);
         }
     }
 }

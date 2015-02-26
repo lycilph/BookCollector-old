@@ -102,7 +102,8 @@ namespace BookCollector.Apis.GoogleBooks
                     Authors = book.VolumeInfo.Authors,
                     ISBN10 = isbn10.Identifier,
                     ISBN13 = isbn13.Identifier,
-                    ImportSource = api.Name
+                    ImportSource = api.Name,
+                    ImageSource = api.Name
                 },
                 ImageLinks = new List<ImageLink>
                 {

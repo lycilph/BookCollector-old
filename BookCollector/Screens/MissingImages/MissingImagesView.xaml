@@ -12,7 +12,13 @@
             </Button>
             <TextBlock Text="Missing Images" FontSize="{StaticResource HeaderFontSize}" Margin="10,0,0,0"/>
         </StackPanel>
-        
-        
+
+        <ListBox x:Name="Books">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Margin" Value="0, 2"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </DockPanel>
 </UserControl>

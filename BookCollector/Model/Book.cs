@@ -19,6 +19,7 @@ namespace BookCollector.Model
         public string ISBN10 { get; set; }
         public string ISBN13 { get; set; }
         public string ImportSource { get; set; }
+        public string ImageSource { get; set; }
 
         // The image properties is updated by the ImageDownloader
         private string _Image;
@@ -46,6 +47,11 @@ namespace BookCollector.Model
                    (!string.IsNullOrWhiteSpace(ISBN13) && !string.IsNullOrWhiteSpace(book.ISBN13) && String.Equals(ISBN13, book.ISBN13, StringComparison.InvariantCultureIgnoreCase)) ||
                    (!string.IsNullOrWhiteSpace(Asin) && !string.IsNullOrWhiteSpace(book.Asin) && String.Equals(Asin, book.Asin, StringComparison.InvariantCultureIgnoreCase)) ||
                    (!string.IsNullOrWhiteSpace(Title) && !string.IsNullOrWhiteSpace(book.Title) && String.Equals(Title, book.Title, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public bool HasImages()
+        {
+            return !string.IsNullOrWhiteSpace(Image) || !string.IsNullOrWhiteSpace(SmallImage);
         }
     }
 }

@@ -143,7 +143,8 @@ namespace BookCollector.Apis.Audible
                     Asin = book.Asin,
                     Authors = book.Authors,
                     Narrators = book.Narrators,
-                    ImportSource = api.Name
+                    ImportSource = api.Name,
+                    ImageSource = api.Name
                 },
                 ImageLinks = new List<ImageLink>
                 {
