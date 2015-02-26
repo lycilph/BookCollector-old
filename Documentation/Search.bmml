@@ -10,5 +10,20 @@
         <text>Search</text>
       </controlProperties>
     </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::DataGrid" x="186" y="166" w="380" h="348" measuredW="335" measuredH="179" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Image%20%5E%2C%20Title%20%5Ev%2C%20ISBN%2C%20Provider%20v%0AGiacomo%20Guilizzoni%5CrFounder%20%26%20CEO%2C%2037%2C%20Peldi%2C%20%28o%29%0AMarco%20Botton%5CrTuttofare%2C%2034%2C%20%2C%20%5Bx%5D%0AMariah%20Maclachlan%5CrBetter%20Half%2C%2037%2C%20Patata%2C%20%5B-%5D%0AValerie%20Liberty%5CrHead%20Chef%2C%20%3A%29%2C%20Val%2C%20%5Bx%5D%0AGuido%20Jack%20Guilizzoni%2C%206%2C%20The%20Guids%2C%20%5B%5D%0A%7B65L%2C%200R%2C%2035%2C%200C%7D</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Image" x="599" y="167" w="157" h="137" measuredW="77" measuredH="79" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Details%20image</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="600" y="325" w="282" h="-1" measuredW="129" measuredH="21" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Selected%20book%20details</text>
+      </controlProperties>
+    </control>
   </controls>
 </mockup>
