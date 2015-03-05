@@ -17,7 +17,15 @@
 
         <!-- Shelfs and actions -->
         <StackPanel Grid.Column="0" Margin="{StaticResource ScreenColumnMargin}">
-            <TextBlock Text="Shelfs" FontSize="{StaticResource SubHeaderFontSize}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="ShelfTextblock" Text="Shelfs" FontSize="{StaticResource SubHeaderFontSize}"/>
+                <Button x:Name="AddShelf"
+                        Style="{StaticResource MetroCircleButtonStyle}" 
+                        Height="{Binding ElementName=ShelfTextblock, Path=ActualHeight}"
+                        Margin="20,0,0,0">
+                    <Image Source="../../Images/appbar.add.png"/>
+                </Button>
+            </StackPanel>
             <Separator Margin="{StaticResource SeparatorMargin}"/>
             <ListBox x:Name="Shelfs"/>
             

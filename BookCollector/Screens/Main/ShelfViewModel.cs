@@ -8,8 +8,11 @@ namespace BookCollector.Screens.Main
 {
     public class ShelfViewModel : ItemViewModelBase<Shelf>
     {
-        public string DisplayName { get { return AssociatedObject.Name; } }
-        public List<BookViewModel> Books { get; set; }
+        public string DisplayName
+        {
+            get { return AssociatedObject.Name; }
+            set { AssociatedObject.Name = value; }
+        }
 
         private BookViewModel _SelectedBook;
         public BookViewModel SelectedBook
@@ -17,6 +20,8 @@ namespace BookCollector.Screens.Main
             get { return _SelectedBook; }
             set { this.RaiseAndSetIfChanged(ref _SelectedBook, value); }
         }
+
+        public List<BookViewModel> Books { get; set; }
 
         public ShelfViewModel(Shelf obj) : base(obj)
         {

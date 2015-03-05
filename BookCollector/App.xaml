@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="Resources/Margins.xaml"/>
                 <ResourceDictionary Source="Resources/FontSizes.xaml"/>
+                <ResourceDictionary Source="Resources/ImageStyles.xaml"/>
                 <ResourceDictionary>
                     <panda:ApplicationBootstrapper x:Key="Bootstrapper"/>
                 </ResourceDictionary>

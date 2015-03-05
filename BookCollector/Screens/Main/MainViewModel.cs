@@ -34,5 +34,10 @@ namespace BookCollector.Screens.Main
             };
             Shelfs = new ReactiveList<ShelfViewModel> { new ShelfViewModel(shelf) };
         }
+
+        public void AddShelf()
+        {
+            Shelfs.Add(new ShelfViewModel(new Shelf {Name = "[Name]"}));
+        }
     }
 }

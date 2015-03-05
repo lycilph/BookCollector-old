@@ -10,6 +10,9 @@
         <TextBlock x:Name="Title" FontSize="{StaticResource BookTitleFontSize}"/>
         <TextBlock Text="{Binding Authors, StringFormat=By: {0}}"/>
         <Separator Margin="{StaticResource SeparatorMargin}"/>
+        
+        <!-- add description and image here -->
+        
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

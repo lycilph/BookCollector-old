@@ -6,7 +6,6 @@ using BookCollector.Data;
 using Caliburn.Micro;
 using CsvHelper;
 using CsvHelper.Configuration;
-using CsvHelper.TypeConversion;
 
 namespace BookCollector.Services
 {
@@ -14,9 +13,7 @@ namespace BookCollector.Services
     {
         private class CustomCsvReader : CsvReader
         {
-            public CustomCsvReader(TextReader reader) : base(reader) { }
             public CustomCsvReader(TextReader reader, CsvConfiguration configuration) : base(reader, configuration) { }
-            public CustomCsvReader(ICsvParser parser) : base(parser) { }
 
             public override string GetField(int index)
             {
@@ -62,7 +59,7 @@ namespace BookCollector.Services
             using (var csv = new CustomCsvReader(sr, configuration))
             {
                 var books = csv.GetRecords<Book>().ToList();
-                books.Apply(b => b.ImportSource = "Goodreads CSV");
+                books.Apply(b => b.Source = new Source("Goodreads CSV"));
                 return books;
             }
         }

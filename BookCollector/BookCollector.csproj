@@ -121,6 +121,7 @@
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\Shelf.cs" />
+    <Compile Include="Data\Source.cs" />
     <Compile Include="Screens\Main\BookDetailView.xaml.cs">
       <DependentUpon>BookDetailView.xaml</DependentUpon>
     </Compile>
@@ -162,6 +163,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Images\appbar.add.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -180,6 +182,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Resources\FontSizes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ImageStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

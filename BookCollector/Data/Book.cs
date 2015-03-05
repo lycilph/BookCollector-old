@@ -11,7 +11,6 @@ namespace BookCollector.Data
         public string Asin { get; set; }
         public string ISBN10 { get; set; }
         public string ISBN13 { get; set; }
-        public string ImportSource { get; set; }
-        public string ImageSource { get; set; }
+        public Source Source { get; set; }
     }
 }
