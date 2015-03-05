@@ -25,37 +25,27 @@ namespace BookCollector.Services
             }
         }
 
-        private class ListTypeConverter : ITypeConverter
-        {
-            public string ConvertToString(TypeConverterOptions options, object value)
-            {
-                throw new NotImplementedException();
-            }
-
-            public object ConvertFromString(TypeConverterOptions options, string text)
-            {
-                return new List<string> {text};
-            }
-
-            public bool CanConvertFrom(Type type)
-            {
-                return type == typeof (string);
-            }
-
-            public bool CanConvertTo(Type type)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private sealed class BookMap : CsvClassMap<Book>
         {
             public BookMap()
             {
                 Map(m => m.Title);
-                Map(m => m.Authors).Name("Author").TypeConverter(new ListTypeConverter());
+                Map(m => m.Authors).ConvertUsing(GetAuthors);
                 Map(m => m.ISBN10).Name("isbn");
                 Map(m => m.ISBN13);
+            }
+
+            private static object GetAuthors(ICsvReaderRow row)
+            {
+                var result = new List<string> {row.GetField("Author")};
+
+                var additional_authors = row.GetField("Additional Authors");
+                if (string.IsNullOrWhiteSpace(additional_authors)) 
+                    return result;
+
+                var authors = additional_authors.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim());
+                result.AddRange(authors);
+                return result.Distinct().ToList();
             }
         }
 

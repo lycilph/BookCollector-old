@@ -4,27 +4,30 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid Margin="{StaticResource ScreenMargin}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Shelfs and actions -->
         <StackPanel Grid.Column="0" Margin="{StaticResource ScreenColumnMargin}">
             <TextBlock Text="Shelfs" FontSize="{StaticResource SubHeaderFontSize}"/>
-            <Separator Margin="5"/>
+            <Separator Margin="{StaticResource SeparatorMargin}"/>
+            <ListBox x:Name="Shelfs"/>
             
             <TextBlock Text="Actions" FontSize="{StaticResource SubHeaderFontSize}" Margin="0,20,0,0"/>
-            <Separator Margin="5"/>
+            <Separator Margin="{StaticResource SeparatorMargin}"/>
+            <TextBlock Text=""/>
         </StackPanel>
         
         <!-- Books -->
-        <ListBox Grid.Column="1" Margin="{StaticResource ScreenColumnMargin}"/>
+        <ListBox Grid.Column="1" x:Name="SelectedShelf_Books" Margin="{StaticResource ScreenColumnMargin}"/>
         
         <GridSplitter Grid.Column="2"
                       HorizontalAlignment="Center"
@@ -32,6 +35,9 @@
                       Width="5"/>
         
         <!-- Book details -->
-        <controls:TransitioningContentControl Grid.Column="3" Margin="{StaticResource ScreenColumnMargin}"/>
+        <controls:TransitioningContentControl Grid.Column="3" 
+                                              x:Name="SelectedShelf_SelectedBook"
+                                              cal:View.Context="Detail"
+                                              Margin="{StaticResource ScreenColumnMargin}"/>
     </Grid>
 </UserControl>

@@ -120,10 +120,22 @@
     <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Data\Book.cs" />
+    <Compile Include="Data\Shelf.cs" />
+    <Compile Include="Screens\Main\BookDetailView.xaml.cs">
+      <DependentUpon>BookDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Main\BookView.xaml.cs">
+      <DependentUpon>BookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Main\BookViewModel.cs" />
     <Compile Include="Screens\Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Main\MainViewModel.cs" />
+    <Compile Include="Screens\Main\ShelfView.xaml.cs">
+      <DependentUpon>ShelfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Main\ShelfViewModel.cs" />
     <Compile Include="Services\Importer.cs" />
     <Compile Include="Shell\IBookCollectorShell.cs" />
     <Compile Include="Shell\ShellMessage.cs" />
@@ -167,11 +179,27 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Resources\FontSizes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\Margins.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Main\BookDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Main\BookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Main\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Main\ShelfView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
