@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="BookCollector.Screens.Main.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="{StaticResource ScreenMargin}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Shelfs and actions -->
+        <StackPanel Grid.Column="0" Margin="{StaticResource ScreenColumnMargin}">
+            <TextBlock Text="Shelfs" FontSize="{StaticResource SubHeaderFontSize}"/>
+            <Separator Margin="5"/>
+            
+            <TextBlock Text="Actions" FontSize="{StaticResource SubHeaderFontSize}" Margin="0,20,0,0"/>
+            <Separator Margin="5"/>
+        </StackPanel>
+        
+        <!-- Books -->
+        <ListBox Grid.Column="1" Margin="{StaticResource ScreenColumnMargin}"/>
+        
+        <GridSplitter Grid.Column="2"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      Width="5"/>
+        
+        <!-- Book details -->
+        <controls:TransitioningContentControl Grid.Column="3" Margin="{StaticResource ScreenColumnMargin}"/>
+    </Grid>
+</UserControl>

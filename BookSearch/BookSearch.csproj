@@ -174,11 +174,14 @@
     </Compile>
     <Compile Include="ApplicationTasks.cs" />
     <Compile Include="Data\Book.cs" />
+    <Compile Include="Screens\Main\DocumentDetailView.xaml.cs">
+      <DependentUpon>DocumentDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Main\DocumentView.xaml.cs">
       <DependentUpon>DocumentView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Main\DocumentViewModel.cs" />
-    <Compile Include="Screens\Main\IsBusyOpacityConverter.cs" />
+    <Compile Include="Resources\IsBusyOpacityConverter.cs" />
     <Compile Include="Screens\Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -300,6 +303,10 @@
     <Resource Include="Images\Amazon-icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Screens\Main\DocumentDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Main\DocumentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -327,13 +334,13 @@
     <EmbeddedResource Include="Services\Scoring\stopwords_en.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SettingsData\AmazonSettings.txt" />
+    <EmbeddedResource Include="Api\Data\AmazonSettings.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SettingsData\GoodreadsSettings.txt" />
+    <EmbeddedResource Include="Api\Data\GoodreadsSettings.txt" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SettingsData\GoogleBooksSettings.txt" />
+    <EmbeddedResource Include="Api\Data\GoogleBooksSettings.txt" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

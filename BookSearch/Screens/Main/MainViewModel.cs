@@ -31,6 +31,13 @@ namespace BookSearch.Screens.Main
             set { this.RaiseAndSetIfChanged(ref _SearchText, value); }
         }
 
+        private DocumentViewModel _CurrentDocument;
+        public DocumentViewModel CurrentDocument
+        {
+            get { return _CurrentDocument; }
+            set { this.RaiseAndSetIfChanged(ref _CurrentDocument, value); }
+        }
+
         private ReactiveList<DocumentViewModel> _Documents;
         public ReactiveList<DocumentViewModel> Documents
         {

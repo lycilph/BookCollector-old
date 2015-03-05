@@ -3,11 +3,11 @@
 namespace BookSearch.Screens.Main
 {
     /// <summary>
-    /// Interaction logic for DocumentView.xaml
+    /// Interaction logic for DocumentDetailView.xaml
     /// </summary>
-    public partial class DocumentView : UserControl
+    public partial class DocumentDetailView : UserControl
     {
-        public DocumentView()
+        public DocumentDetailView()
         {
             InitializeComponent();
         }

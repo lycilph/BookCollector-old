@@ -1,5 +1,4 @@
-﻿using BookSearch.Data;
-using BookSearch.Services.Scoring;
+﻿using BookSearch.Services.Scoring;
 using Panda.ApplicationCore.MVVM;
 
 namespace BookSearch.Screens.Main

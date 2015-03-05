@@ -5,12 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:main="clr-namespace:BookSearch.Screens.Main"
+             xmlns:resources="clr-namespace:BookSearch.Resources"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300" 
              d:DataContext="{d:DesignInstance main:SearchProviderViewModel}">
     <UserControl.Resources>
-        <main:IsBusyOpacityConverter x:Key="IsBusyOpacityConverter" BusyOpacity="0.5"/>
+        <resources:IsBusyOpacityConverter x:Key="IsBusyOpacityConverter" BusyOpacity="0.5"/>
     </UserControl.Resources>
     
     <Grid Margin="5">

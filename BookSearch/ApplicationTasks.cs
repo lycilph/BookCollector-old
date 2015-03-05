@@ -1,7 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Windows.Input;
-using BookSearch.Amazon;
 using Caliburn.Micro;
 using NLog;
 using Panda.ApplicationCore;
@@ -48,6 +47,19 @@ namespace BookSearch
                 }
 
                 aps(binding, convention, property_info);
+            };
+
+            var default_locator = ViewLocator.LocateTypeForModelType;
+            ViewLocator.LocateTypeForModelType = (model_type, display_location, context) =>
+            {
+                var view_type = default_locator(model_type, display_location, context);
+                if (view_type == null && context != null)
+                {
+                    var base_name = model_type.FullName.Replace("ViewModel", "");
+                    var view_name = base_name + context + "View";
+                    view_type = AssemblySource.FindTypeByNames(new List<string> {view_name});
+                }
+                return view_type;
             };
         }
     }

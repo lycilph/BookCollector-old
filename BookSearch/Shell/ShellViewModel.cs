@@ -10,7 +10,7 @@ using IScreen = Caliburn.Micro.IScreen;
 namespace BookSearch.Shell
 {
     [Export(typeof(IShell))]
-    public sealed class ShellViewModel : ConductorShell<IScreen>
+    public sealed class ShellViewModel : ConductorShellBase<IScreen>
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
