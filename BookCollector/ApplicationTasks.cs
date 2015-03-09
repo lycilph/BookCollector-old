@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Windows.Input;
 using BookCollector.Controllers;
+using BookCollector.Services;
 using Caliburn.Micro;
 using NLog;
 using Panda.ApplicationCore;
@@ -18,8 +19,18 @@ namespace BookCollector
         {
             logger.Trace("Application Startup");
 
+            var settings = IoC.Get<Settings>();
+            settings.Load();
+
+            var data_controller = IoC.Get<IDataController>();
+            data_controller.Initialize();
+
             var navigation_controller = IoC.Get<INavigationController>();
             navigation_controller.NavigateToMain();
+
+            // This is needed to initialize the statusbar correctly
+            var status_controller = IoC.Get<IStatusController>();
+            status_controller.ClearStatusText();
         }
 
         [Export(ApplicationBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
@@ -52,6 +63,16 @@ namespace BookCollector
                 }
                 return view_type;
             };
+        }
+
+
+        [Export(ApplicationBootstrapper.SHUTDOWN_TASK_NAME, typeof(BootstrapperTask))]
+        public void ApplicationShutdown()
+        {
+            logger.Trace("Application Shutdown");
+
+            var settings = IoC.Get<Settings>();
+            settings.Save();
         }
     }
 }

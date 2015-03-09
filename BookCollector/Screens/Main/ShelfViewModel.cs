@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using BookCollector.Data;
+using Panda.ApplicationCore.Extensions;
 using Panda.ApplicationCore.MVVM;
 using ReactiveUI;
 
@@ -21,11 +21,23 @@ namespace BookCollector.Screens.Main
             set { this.RaiseAndSetIfChanged(ref _SelectedBook, value); }
         }
 
-        public List<BookViewModel> Books { get; set; }
+        public ReactiveList<BookViewModel> Books { get; set; }
 
         public ShelfViewModel(Shelf obj) : base(obj)
         {
-            Books = obj.Books.Select(b => new BookViewModel(b)).ToList();
+            Books = obj.Books.Select(b => new BookViewModel(b)).ToReactiveList();
+        }
+
+        public void Add(BookViewModel book_view_model)
+        {
+            AssociatedObject.Books.Add(book_view_model.AssociatedObject);
+            Books.Add(book_view_model);
+        }
+
+        public void Remove(BookViewModel book_view_model)
+        {
+            AssociatedObject.Books.Remove(book_view_model.AssociatedObject);
+            Books.Remove(book_view_model);
         }
     }
 }

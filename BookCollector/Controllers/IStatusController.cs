@@ -5,5 +5,6 @@
         string MainStatusText { set; }
         string AuxiliaryStatusText { set; }
         bool IsBusy { get; set; }
+        void ClearStatusText();
     }
 }

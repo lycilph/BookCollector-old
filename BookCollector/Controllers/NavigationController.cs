@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Composition;
 using BookCollector.Screens.Main;
+using BookCollector.Screens.Search;
 using BookCollector.Shell;
+using Caliburn.Micro;
 
 namespace BookCollector.Controllers
 {
@@ -8,18 +10,21 @@ namespace BookCollector.Controllers
     public class NavigationController : INavigationController
     {
         private readonly IBookCollectorShell shell;
-        private readonly MainViewModel main;
 
         [ImportingConstructor]
-        public NavigationController(IBookCollectorShell shell, MainViewModel main)
+        public NavigationController(IBookCollectorShell shell)
         {
             this.shell = shell;
-            this.main = main;
         }
 
         public void NavigateToMain()
         {
-            shell.Show(main);
+            shell.Show(IoC.Get<MainViewModel>());
+        }
+
+        public void NavigateToSearch()
+        {
+            shell.Show(IoC.Get<SearchViewModel>());
         }
     }
 }

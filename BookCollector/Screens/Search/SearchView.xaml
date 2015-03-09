@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="BookCollector.Screens.Search.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:cal="http://www.caliburnproject.org"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" 
+             d:DesignWidth="600">
+    <Grid Margin="{StaticResource ScreenMargin}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <ItemsControl Grid.Column="0" 
+                      x:Name="SearchProviders"/>
+
+        <DockPanel Grid.Column="1" Margin="{StaticResource ScreenColumnMargin}">
+            <TextBox DockPanel.Dock="Top" 
+                     x:Name="SearchText"
+                     controls:TextBoxHelper.Watermark="Search" 
+                     controls:TextBoxHelper.ClearTextButton="True"
+                     cal:Message.Attach="[PreviewKeyUp] = [Search($pressedkey)]"/>
+            
+            <ListBox x:Name="ResultDocuments"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     Margin="0,5,0,0">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="Margin" Value="0,5,20,5"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </DockPanel>
+        
+        <GridSplitter Grid.Column="2"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      Width="{StaticResource GridSplitterSize}"/>
+        
+        <controls:TransitioningContentControl Grid.Column="3"
+                                              x:Name="CurrentResultDocument"
+                                              cal:View.Context="Detail"
+                                              Margin="{StaticResource ScreenColumnMargin}"/>
+    </Grid>
+</UserControl>

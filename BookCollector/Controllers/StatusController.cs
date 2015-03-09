@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using System.Windows;
 using BookCollector.Shell;
 using Caliburn.Micro;
-using Panda.ApplicationCore.Shell;
 using Panda.ApplicationCore.StatusBar.ViewModels;
 using ReactiveUI;
 
@@ -38,12 +37,12 @@ namespace BookCollector.Controllers
         }
 
         [ImportingConstructor]
-        public StatusController(IShell shell)
+        public StatusController(IBookCollectorShell shell)
         {
             shell.StatusBar.Add(main_status_text, aux_status_text, progress_status);
         }
 
-        private void ClearStatusText()
+        public void ClearStatusText()
         {
             MainStatusText = string.Empty;
             AuxiliaryStatusText = string.Empty;
