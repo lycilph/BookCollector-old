@@ -7,6 +7,7 @@ using BookCollector.Data;
 using BookCollector.Utilities;
 using Google.Apis.Books.v1;
 using Google.Apis.Services;
+using ReactiveUI;
 
 namespace BookCollector.Api.SearchProvider
 {
@@ -35,9 +36,9 @@ namespace BookCollector.Api.SearchProvider
                                .Select(volume => new Book
                                {
                                    Title = volume.VolumeInfo.Title,
-                                   Authors = new List<string> { volume.VolumeInfo.Authors != null && volume.VolumeInfo.Authors.Any() ? 
-                                                                volume.VolumeInfo.Authors.First() : 
-                                                                string.Empty },
+                                   Authors = new ReactiveList<string> { volume.VolumeInfo.Authors != null && volume.VolumeInfo.Authors.Any() ? 
+                                                                        volume.VolumeInfo.Authors.First() : 
+                                                                        string.Empty },
                                    Source = "Google Books"
                                })
                                .ToList();

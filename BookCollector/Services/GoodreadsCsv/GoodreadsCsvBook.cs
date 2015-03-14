@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BookCollector.Data;
+using Panda.ApplicationCore.Utilities;
 
 namespace BookCollector.Services.GoodreadsCsv
 {
@@ -33,7 +34,7 @@ namespace BookCollector.Services.GoodreadsCsv
             return new Book
             {
                 Title = Title,
-                Authors = authors.Distinct().ToList(),
+                Authors = authors.Distinct().ToReactiveList(),
                 ISBN10 = ISBN,
                 ISBN13 = ISBN13,
             };

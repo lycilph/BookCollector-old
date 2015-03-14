@@ -1,6 +1,5 @@
-﻿using System.Linq;
-using BookCollector.Data;
-using Panda.ApplicationCore.MVVM;
+﻿using BookCollector.Data;
+using Panda.ApplicationCore.Utilities;
 
 namespace BookCollector.Screens.Main
 {

@@ -19,7 +19,7 @@
         <!-- Shelfs and actions -->
         <StackPanel Grid.Column="0" Margin="{StaticResource ScreenColumnMargin}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="ShelfTextblock" Text="Shelfs" FontSize="{StaticResource SubHeaderFontSize}"/>
+                <TextBlock x:Name="ShelfTextblock" Text="Shelves" FontSize="{StaticResource SidebarHeaderFontSize}"/>
                 <Button x:Name="AddShelf"
                         Style="{StaticResource MetroCircleButtonStyle}" 
                         Height="{Binding ElementName=ShelfTextblock, Path=ActualHeight}"
@@ -28,18 +28,29 @@
                 </Button>
             </StackPanel>
             <Separator Margin="{StaticResource SeparatorMargin}"/>
-            <ListBox x:Name="Shelfs"
+            <ListBox x:Name="Shelves"
+                     FontSize="{StaticResource SidebarItemFontSize}"
                      gong:DragDrop.IsDropTarget="True"
                      gong:DragDrop.DropHandler="{Binding}"/>
             
-            <TextBlock Text="Actions" FontSize="{StaticResource SubHeaderFontSize}" Margin="0,20,0,0"/>
+            <TextBlock Text="Actions" FontSize="{StaticResource SidebarHeaderFontSize}" Margin="0,20,0,0"/>
             <Separator Margin="{StaticResource SeparatorMargin}"/>
-            <Button x:Name="Search" Content="Search" Style="{StaticResource ChromelessButtonStyle}" HorizontalAlignment="Left"/>
+            <Button x:Name="Search" 
+                    Content="Search" 
+                    Style="{StaticResource ChromelessButtonStyle}" 
+                    FontSize="{StaticResource SidebarItemFontSize}" 
+                    HorizontalAlignment="Left"/>
+            <Button x:Name="Import" 
+                    Content="Import" 
+                    Style="{StaticResource ChromelessButtonStyle}" 
+                    FontSize="{StaticResource SidebarItemFontSize}" 
+                    HorizontalAlignment="Left"/>
         </StackPanel>
         
         <!-- Books -->
         <ListBox Grid.Column="1" 
                  x:Name="SelectedShelf_Books" 
+                 Style="{StaticResource VirtualisedMetroListBox}"
                  Margin="{StaticResource ScreenColumnMargin}"
                  gong:DragDrop.IsDragSource="True"/>
         

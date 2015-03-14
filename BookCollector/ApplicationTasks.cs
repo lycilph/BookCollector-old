@@ -5,7 +5,7 @@ using BookCollector.Controllers;
 using BookCollector.Services;
 using Caliburn.Micro;
 using NLog;
-using Panda.ApplicationCore;
+using Panda.ApplicationCore.Bootstrapper;
 using LogManager = NLog.LogManager;
 
 namespace BookCollector
@@ -14,35 +14,42 @@ namespace BookCollector
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        [Export(ApplicationBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
+        [Export(PandaBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
         public void ApplicationStartup()
         {
             logger.Trace("Application Startup");
 
-            var settings = IoC.Get<Settings>();
+            var settings = IoC.Get<ISettings>();
             settings.Load();
 
             var data_controller = IoC.Get<IDataController>();
-            data_controller.Initialize();
-
-            var navigation_controller = IoC.Get<INavigationController>();
-            navigation_controller.NavigateToMain();
+            data_controller.Load();
 
             // This is needed to initialize the statusbar correctly
             var status_controller = IoC.Get<IStatusController>();
             status_controller.ClearStatusText();
+
+            var navigation_controller = IoC.Get<INavigationController>();
+            navigation_controller.NavigateToMain();
+            navigation_controller.NavigateToSelection();
         }
 
-        [Export(ApplicationBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
+        [Export(PandaBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
         public void ApplyCaliburnOverrides()
         {
             logger.Trace("Apply Caliburn Overrides");
 
-            MessageBinder.SpecialValues.Add("$pressedkey", (context) =>
+            var irregular_nouns = new Dictionary<string, string>
+            {
+                {"Shelves", "Shelf"}
+            };
+            var default_singularize = ConventionManager.Singularize;
+            ConventionManager.Singularize = str => irregular_nouns.ContainsKey(str) ? irregular_nouns[str] : default_singularize(str);
+
+            MessageBinder.SpecialValues.Add("$pressedkey", context =>
             {
                 // NOTE: IMPORTANT - you MUST add the dictionary key as lowercase as CM
-                // does a ToLower on the param string you add in the action message, in fact ideally
-                // all your param messages should be lowercase just in case.
+                // does a ToLower on the param string you add in the action message
                 var key_args = context.EventArgs as KeyEventArgs;
 
                 if (key_args != null)
@@ -66,13 +73,16 @@ namespace BookCollector
         }
 
 
-        [Export(ApplicationBootstrapper.SHUTDOWN_TASK_NAME, typeof(BootstrapperTask))]
+        [Export(PandaBootstrapper.SHUTDOWN_TASK_NAME, typeof(BootstrapperTask))]
         public void ApplicationShutdown()
         {
             logger.Trace("Application Shutdown");
 
-            var settings = IoC.Get<Settings>();
+            var settings = IoC.Get<ISettings>();
             settings.Save();
+
+            var data_controller = IoC.Get<IDataController>();
+            data_controller.Save();
         }
     }
 }

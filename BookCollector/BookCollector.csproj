@@ -190,6 +190,12 @@
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\Collection.cs" />
     <Compile Include="Resources\IsBusyOpacityConverter.cs" />
+    <Compile Include="Screens\BookCollectorScreenBase.cs" />
+    <Compile Include="Screens\IBookCollectorScreen.cs" />
+    <Compile Include="Screens\Import\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ImportViewModel.cs" />
     <Compile Include="Screens\Search\DocumentDetailView.xaml.cs">
       <DependentUpon>DocumentDetailView.xaml</DependentUpon>
     </Compile>
@@ -201,6 +207,18 @@
       <DependentUpon>SearchProviderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Search\SearchProviderViewModel.cs" />
+    <Compile Include="Screens\Selection\CollectionView.xaml.cs">
+      <DependentUpon>CollectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Selection\CollectionViewModel.cs" />
+    <Compile Include="Screens\Selection\SelectionView.xaml.cs">
+      <DependentUpon>SelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Selection\SelectionViewModel.cs" />
+    <Compile Include="Screens\Selection\UserView.xaml.cs">
+      <DependentUpon>UserView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Selection\UserViewModel.cs" />
     <Compile Include="Service References\Amazon\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -213,6 +231,7 @@
     <Compile Include="Services\DocumentScoring\PorterStemmer.cs" />
     <Compile Include="Services\DocumentScoring\Similarity.cs" />
     <Compile Include="Services\DocumentScoring\StopWordHandler.cs" />
+    <Compile Include="Services\ISettings.cs" />
     <Compile Include="Services\Settings.cs" />
     <Compile Include="Data\Shelf.cs" />
     <Compile Include="Data\User.cs" />
@@ -331,6 +350,10 @@
     <Resource Include="Images\Amazon-icon.png" />
     <Resource Include="Images\Goodreads-icon.png" />
     <Resource Include="Images\Google-Play-Books-icon.png" />
+    <Resource Include="Images\appbar.arrow.left.png" />
+    <Resource Include="Images\appbar.minus.png" />
+    <Resource Include="Images\appbar.check.png" />
+    <Resource Include="Images\appbar.cancel.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -357,6 +380,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources\MarginsAndSizes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\ImportView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -392,6 +419,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Selection\CollectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Selection\SelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Selection\UserView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Shell\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -402,6 +441,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Amazon\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Api\ImportProvider\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

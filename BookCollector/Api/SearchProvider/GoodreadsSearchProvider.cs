@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BookCollector.Api.Goodreads;
 using BookCollector.Data;
 using BookCollector.Utilities;
+using ReactiveUI;
 using RestSharp;
 
 namespace BookCollector.Api.SearchProvider
@@ -34,7 +35,7 @@ namespace BookCollector.Api.SearchProvider
                                 .Select(work => new Book
                                 {
                                     Title = work.Title,
-                                    Authors = new List<string> { work.Author.Name },
+                                    Authors = new ReactiveList<string> { work.Author.Name },
                                     Source = "Goodreads"
                                 })
                                 .ToList();

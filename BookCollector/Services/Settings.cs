@@ -6,8 +6,8 @@ using Panda.Utilities.Extensions;
 
 namespace BookCollector.Services
 {
-    [Export(typeof(Settings))]
-    public class Settings
+    [Export(typeof(ISettings))]
+    public class Settings : ISettings
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const string Filename = "settings.txt";
@@ -18,23 +18,22 @@ namespace BookCollector.Services
             get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
         }
 
-        private string _DataFolder;
-        public string DataFolder
-        {
-            get
-            {
-                Directory.CreateDirectory(_DataFolder);
-                return _DataFolder;
-            }
-            set { _DataFolder = value; }
-        }
-
+        public string DataFolder { get; set; }
         public bool LoadLastCollection { get; set; }
+        public string LastUserId { get; set; }
+        public string LastCollectionId { get; set; }
 
         public Settings()
         {
             DataFolder = Path.Combine(ApplicationFolder, DefaultDataFolder);
             LoadLastCollection = true;
+        }
+
+        public string GetPathFor(string filename)
+        {
+            if (!Directory.Exists(DataFolder))
+                Directory.CreateDirectory(DataFolder);
+            return Path.Combine(DataFolder, filename);
         }
 
         public void Load()

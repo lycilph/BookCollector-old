@@ -1,5 +1,7 @@
-﻿using BookCollector.Services.DocumentScoring;
-using Panda.ApplicationCore.MVVM;
+﻿using BookCollector.Data;
+using BookCollector.Services.DocumentScoring;
+using Panda.ApplicationCore.Utilities;
+using ReactiveUI;
 
 namespace BookCollector.Screens.Search
 {
@@ -9,9 +11,8 @@ namespace BookCollector.Screens.Search
         public string Author { get { return string.Join(", ", AssociatedObject.Book.Authors); } }
         public string Source { get { return AssociatedObject.Book.Source; } }
         public double Score { get { return AssociatedObject.Score; } }
+        public ReactiveList<Shelf> Shelves { get; set; }
 
-        public DocumentViewModel(Document obj) : base(obj)
-        {
-        }
+        public DocumentViewModel(Document obj) : base(obj) { }
     }
 }

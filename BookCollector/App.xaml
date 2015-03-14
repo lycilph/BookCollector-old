@@ -15,7 +15,7 @@
                 <ResourceDictionary Source="Resources/FontSizes.xaml"/>
                 <ResourceDictionary Source="Resources/ImageStyles.xaml"/>
                 <ResourceDictionary>
-                    <panda:ApplicationBootstrapper x:Key="Bootstrapper"/>
+                    <panda:PandaBootstrapper x:Key="Bootstrapper"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

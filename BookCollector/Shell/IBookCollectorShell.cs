@@ -1,11 +1,12 @@
-﻿using Caliburn.Micro;
+﻿using BookCollector.Screens;
+using Caliburn.Micro;
 using Panda.ApplicationCore.Shell;
 
 namespace BookCollector.Shell
 {
-    public interface IBookCollectorShell : IShell, IHaveDisplayName
+    public interface IBookCollectorShell : IShell, IHaveDisplayName, IHaveActiveItem
     {
         void Back();
-        void Show(IScreen screen);
+        void Show(IBookCollectorScreen screen);
     }
 }

@@ -9,17 +9,18 @@ using BookCollector.Api.SearchProvider;
 using BookCollector.Controllers;
 using BookCollector.Data;
 using BookCollector.Services.DocumentScoring;
-using Caliburn.Micro.ReactiveUI;
-using Panda.ApplicationCore.Extensions;
+using Panda.ApplicationCore.Utilities;
 using Panda.Utilities.Extensions;
 using ReactiveUI;
 
 namespace BookCollector.Screens.Search
 {
     [Export(typeof(SearchViewModel))]
-    public class SearchViewModel : ReactiveScreen
+    public class SearchViewModel : BookCollectorScreenBase
     {
         private readonly IStatusController status_controller;
+        private readonly INavigationController navigation_controller;
+        private readonly IDataController data_controller;
         private readonly List<Book> books = new List<Book>();
         private Similarity similarity;
 
@@ -52,9 +53,11 @@ namespace BookCollector.Screens.Search
         }
 
         [ImportingConstructor]
-        public SearchViewModel(IStatusController status_controller)
+        public SearchViewModel(IStatusController status_controller, INavigationController navigation_controller, IDataController data_controller)
         {
             this.status_controller = status_controller;
+            this.navigation_controller = navigation_controller;
+            this.data_controller = data_controller;
 
             var results = new Progress<List<Book>>(Update);
             SearchProviders = new ReactiveList<SearchProviderViewModel>
@@ -63,6 +66,23 @@ namespace BookCollector.Screens.Search
                 new SearchProviderViewModel(new GoodreadsSearchProvider(results), "Goodreads-icon.png"),
                 new SearchProviderViewModel(new GoogleBooksSearchProvider(results), "Google-Play-Books-icon.png"),
             };
+        }
+
+        private void Update(IEnumerable<Book> search_results)
+        {
+            var sw = Stopwatch.StartNew();
+
+            books.AddRange(search_results);
+            var documents = similarity.Score(books);
+            ResultDocuments = documents.OrderByDescending(d => d.Score)
+                                       .Select(d => new DocumentViewModel(d) { Shelves = data_controller.Collection.Shelves })
+                                       .ToReactiveList();
+
+            if (CurrentResultDocument == null && ResultDocuments != null && ResultDocuments.Any())
+                CurrentResultDocument = ResultDocuments.First();
+
+            var elapsed = sw.StopAndGetElapsedMilliseconds();
+            status_controller.AuxiliaryStatusText = string.Format("Scored in {0} ms", elapsed);
         }
 
         public async void Search(Key key)
@@ -86,21 +106,9 @@ namespace BookCollector.Screens.Search
             status_controller.MainStatusText = string.Format("Found {0} books in {1} ms", books.Count, elapsed);
         }
 
-        private void Update(IEnumerable<Book> search_results)
+        public void Back()
         {
-            var sw = Stopwatch.StartNew();
-
-            books.AddRange(search_results);
-            var documents = similarity.Score(books);
-            ResultDocuments = documents.OrderByDescending(d => d.Score)
-                                       .Select(d => new DocumentViewModel(d))
-                                       .ToReactiveList();
-
-            if (CurrentResultDocument == null && ResultDocuments != null && ResultDocuments.Any())
-                CurrentResultDocument = ResultDocuments.First();
-
-            var elapsed = sw.StopAndGetElapsedMilliseconds();
-            status_controller.AuxiliaryStatusText = string.Format("Scored in {0} ms", elapsed);
+            navigation_controller.Back();
         }
     }
 }

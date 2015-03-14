@@ -11,12 +11,12 @@
                       WindowStartupLocation="CenterScreen"
                       Height="800"
                       Width="1000"
+                      SaveWindowPosition="True"
                       IsEnabled="{Binding IsEnabled}"
                       d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <controls:MetroWindow.Resources>
         <panda:BooleanToVisibilityConverter x:Key="CollapsedVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed"/>
     </controls:MetroWindow.Resources>
-
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>

@@ -10,6 +10,12 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        
+        <Grid.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Add To Shelf" ItemsSource="{Binding Shelves}" DisplayMemberPath="Name"/>
+            </ContextMenu>
+        </Grid.ContextMenu>
 
         <StackPanel Grid.Column="0">
             <TextBlock x:Name="Title" TextWrapping="Wrap"/>

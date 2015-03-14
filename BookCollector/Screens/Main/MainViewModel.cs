@@ -3,15 +3,13 @@ using System.Linq;
 using System.Windows;
 using BookCollector.Controllers;
 using GongSolutions.Wpf.DragDrop;
-using Panda.ApplicationCore.Extensions;
 using ReactiveUI;
 using BookCollector.Data;
-using Caliburn.Micro.ReactiveUI;
 
 namespace BookCollector.Screens.Main
 {
     [Export(typeof(MainViewModel))]
-    public class MainViewModel : ReactiveScreen, IDropTarget
+    public class MainViewModel : BookCollectorScreenBase, IDropTarget
     {
         private readonly INavigationController navigation_controller;
         private readonly IDataController data_controller;
@@ -23,11 +21,11 @@ namespace BookCollector.Screens.Main
             set { this.RaiseAndSetIfChanged(ref _SelectedShelf, value); }
         }
 
-        private ReactiveList<ShelfViewModel> _Shelfs;
-        public ReactiveList<ShelfViewModel> Shelfs
+        private IReactiveDerivedList<ShelfViewModel> _Shelves;
+        public IReactiveDerivedList<ShelfViewModel> Shelves
         {
-            get { return _Shelfs; }
-            set { this.RaiseAndSetIfChanged(ref _Shelfs, value); }
+            get { return _Shelves; }
+            set { this.RaiseAndSetIfChanged(ref _Shelves, value); }
         }
 
         [ImportingConstructor]
@@ -41,10 +39,10 @@ namespace BookCollector.Screens.Main
         {
             base.OnActivate();
 
-            Shelfs = data_controller.Collection.Shelfs.Select(s => new ShelfViewModel(s)).ToReactiveList();
-            if (Shelfs != null && Shelfs.Any())
+            Shelves = data_controller.Collection.Shelves.CreateDerivedCollection(s => new ShelfViewModel(s));
+            if (Shelves != null && Shelves.Any())
             {
-                SelectedShelf = Shelfs.First();
+                SelectedShelf = Shelves.First();
                 if (SelectedShelf.Books != null && SelectedShelf.Books.Any())
                     SelectedShelf.SelectedBook = SelectedShelf.Books.First();
             }
@@ -52,12 +50,17 @@ namespace BookCollector.Screens.Main
 
         public void AddShelf()
         {
-            Shelfs.Add(new ShelfViewModel(new Shelf {Name = "[Name]"}));
+            data_controller.Collection.Add(new Shelf {Name = "[Name]"});
         }
 
         public void Search()
         {
             navigation_controller.NavigateToSearch();
+        }
+
+        public void Import()
+        {
+            navigation_controller.NavigateToImport();
         }
 
         public void DragOver(IDropInfo drop_info)

@@ -4,5 +4,8 @@
     {
         void NavigateToMain();
         void NavigateToSearch();
+        void Back();
+        void NavigateToImport();
+        void NavigateToSelection();
     }
 }

@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 
 namespace BookCollector.Controllers
 {
@@ -6,6 +7,10 @@ namespace BookCollector.Controllers
     {
         User User { get; set; }
         Collection Collection { get; set; }
-        void Initialize();
+        void Load();
+        void Save();
+        void Save(List<User> users);
+        List<User> GetAllUsers();
+        void Delete(User user);
     }
 }

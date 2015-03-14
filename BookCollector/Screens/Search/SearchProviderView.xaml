@@ -14,7 +14,7 @@
         <resources:IsBusyOpacityConverter x:Key="IsBusyOpacityConverter" BusyOpacity="0.5"/>
     </UserControl.Resources>
     
-    <Grid Margin="5">
+    <Grid>
         <Image x:Name="Image" Opacity="{Binding IsBusy, Converter={StaticResource IsBusyOpacityConverter}}"/>
         <controls:ProgressRing IsActive="{Binding IsBusy}"
                                Width="{Binding ElementName=Image, Path=ActualWidth}"

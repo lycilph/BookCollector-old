@@ -9,17 +9,50 @@
              d:DesignHeight="600" 
              d:DesignWidth="600">
     <Grid Margin="{StaticResource ScreenMargin}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
+        
+        <!-- Title and Back button -->
+        <DockPanel Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="4">
+            <Button DockPanel.Dock="Left"
+                    x:Name="Back"
+                    Style="{StaticResource MetroCircleButtonStyle}"
+                    Height="{Binding ElementName=ScreenTitle, Path=ActualHeight}">
+                <Image Source="../../Images/appbar.arrow.left.png"/>
+            </Button>
+            <TextBlock x:Name="ScreenTitle"
+                       Text="Search" 
+                       FontSize="{StaticResource ScreenTitleFontSize}"
+                       Margin="20,0,0,0"/>
+        </DockPanel>
 
+        <!-- Search providers -->
         <ItemsControl Grid.Column="0" 
-                      x:Name="SearchProviders"/>
+                      Grid.Row="1"
+                      x:Name="SearchProviders"
+                      Margin="{StaticResource ScreenColumnMargin}">
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="FrameworkElement">
+                    <Setter Property="Margin" Value="0,0,0,10"/>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
 
-        <DockPanel Grid.Column="1" Margin="{StaticResource ScreenColumnMargin}">
+        <!-- Results (ranked search documents) -->
+        <DockPanel Grid.Column="1"
+                   Grid.Row="1"
+                   Margin="{StaticResource ScreenColumnMargin}">
             <TextBox DockPanel.Dock="Top" 
                      x:Name="SearchText"
                      controls:TextBoxHelper.Watermark="Search" 
@@ -36,13 +69,16 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
         </DockPanel>
-        
+
         <GridSplitter Grid.Column="2"
+                      Grid.Row="1"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Stretch"
                       Width="{StaticResource GridSplitterSize}"/>
-        
+
+        <!-- Details for selected result -->
         <controls:TransitioningContentControl Grid.Column="3"
+                                              Grid.Row="1"
                                               x:Name="CurrentResultDocument"
                                               cal:View.Context="Detail"
                                               Margin="{StaticResource ScreenColumnMargin}"/>

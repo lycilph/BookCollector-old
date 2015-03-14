@@ -6,6 +6,7 @@ using BookCollector.Amazon;
 using BookCollector.Api.Amazon;
 using BookCollector.Data;
 using BookCollector.Utilities;
+using ReactiveUI;
 
 namespace BookCollector.Api.SearchProvider
 {
@@ -47,7 +48,7 @@ namespace BookCollector.Api.SearchProvider
                                 .Select(item => new Book
                                 {
                                     Title = item.ItemAttributes.Title,
-                                    Authors = new List<string> { item.ItemAttributes.Author.First() },
+                                    Authors = new ReactiveList<string> { item.ItemAttributes.Author.First() },
                                     Source = "Amazon"
                                 })
                                 .ToList();
