@@ -73,5 +73,10 @@ namespace BookCollector.Data
         {
             Shelves.Add(shelf);
         }
+
+        public void Remove(Shelf shelf)
+        {
+            Shelves.Remove(shelf);
+        }
     }
 }

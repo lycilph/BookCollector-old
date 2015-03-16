@@ -1,18 +1,28 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.ComponentModel;
+using System.ComponentModel.Composition;
+using System;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Data;
 using BookCollector.Controllers;
 using GongSolutions.Wpf.DragDrop;
+using NLog;
+using Panda.ApplicationCore.Dialogs;
 using ReactiveUI;
 using BookCollector.Data;
+using LogManager = NLog.LogManager;
 
 namespace BookCollector.Screens.Main
 {
     [Export(typeof(MainViewModel))]
     public class MainViewModel : BookCollectorScreenBase, IDropTarget
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly INavigationController navigation_controller;
         private readonly IDataController data_controller;
+        private IDisposable view_source_subscription;
 
         private ShelfViewModel _SelectedShelf;
         public ShelfViewModel SelectedShelf
@@ -46,11 +56,35 @@ namespace BookCollector.Screens.Main
                 if (SelectedShelf.Books != null && SelectedShelf.Books.Any())
                     SelectedShelf.SelectedBook = SelectedShelf.Books.First();
             }
+
+            var view_source = CollectionViewSource.GetDefaultView(Shelves);
+            view_source.SortDescriptions.Add(new SortDescription("DisplayName", ListSortDirection.Ascending));
+
+            Shelves.ChangeTrackingEnabled = true;
+            view_source_subscription = Shelves.ItemChanged.Where(x => x.PropertyName == "Name").Subscribe(x => view_source.Refresh());
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+
+            view_source_subscription.Dispose();
+            view_source_subscription = null;
         }
 
         public void AddShelf()
         {
-            data_controller.Collection.Add(new Shelf {Name = "[Name]"});
+            data_controller.Collection.Add(new Shelf());
+        }
+
+        public void RemoveShelf()
+        {
+            data_controller.Collection.Remove(SelectedShelf.AssociatedObject);
+        }
+
+        public void EditShelf(ShelfViewModel shelf)
+        {
+            shelf.IsEditing = true;
         }
 
         public void Search()
@@ -61,6 +95,11 @@ namespace BookCollector.Screens.Main
         public void Import()
         {
             navigation_controller.NavigateToImport();
+        }
+
+        public async void Export()
+        {
+            await DialogController.ShowMessageAsync("Not implemented yet", "The export feature is not implemented yet");
         }
 
         public void DragOver(IDropInfo drop_info)

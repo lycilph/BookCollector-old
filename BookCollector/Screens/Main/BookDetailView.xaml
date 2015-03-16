@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance local:BookViewModel}">
     <StackPanel>
-        <TextBlock x:Name="Title" FontSize="{StaticResource BookTitleFontSize}"/>
+        <TextBlock x:Name="Title" FontSize="{StaticResource BookTitleFontSize}" TextWrapping="Wrap"/>
         <TextBlock Text="{Binding Authors, StringFormat=By: {0}}"/>
         <Separator Margin="{StaticResource SeparatorMargin}"/>
         

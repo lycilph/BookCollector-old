@@ -68,6 +68,9 @@ namespace BookCollector.Screens.Selection
         {
             base.OnActivate();
 
+            // Save current user
+            data_controller.Save();
+
             Users = data_controller.GetAllUsers()
                                    .Select(u => new UserViewModel(u))
                                    .ToReactiveList();
@@ -113,9 +116,21 @@ namespace BookCollector.Screens.Selection
         }
 
         public void AddCollection()
-        { }
+        {
+            var user = CurrentUser.AssociatedObject;
+            user.Add(new Collection());
+        }
 
-        public void RemoveCollection()
-        { }
+        public async void RemoveCollection()
+        {
+            var msg = string.Format("This will delete the collection {0}", CurrentUser.CurrentCollection.Name);
+            var answer = await DialogController.ShowMessageAsync("Deleting Collection", msg, MessageDialogStyle.AffirmativeAndNegative);
+            if (answer == MessageDialogResult.Affirmative)
+            {
+                var user = CurrentUser.AssociatedObject;
+                var collection = CurrentUser.CurrentCollection.AssociatedObject;
+                user.Remove(collection);
+            }
+        }
     }
 }

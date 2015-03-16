@@ -20,8 +20,8 @@ namespace BookCollector.Screens.Selection
             set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
-        private ReactiveList<CollectionViewModel> _Collections;
-        public ReactiveList<CollectionViewModel> Collections
+        private IReactiveDerivedList<CollectionViewModel> _Collections;
+        public IReactiveDerivedList<CollectionViewModel> Collections
         {
             get { return _Collections; }
             set { this.RaiseAndSetIfChanged(ref _Collections, value); }
@@ -29,7 +29,7 @@ namespace BookCollector.Screens.Selection
 
         public UserViewModel(User user) : base(user)
         {
-            Collections = AssociatedObject.Collections.Select(c => new CollectionViewModel(c)).ToReactiveList();
+            Collections = AssociatedObject.Collections.CreateDerivedCollection(c => new CollectionViewModel(c));
 
             if (Collections != null && Collections.Any())
                 CurrentCollection = Collections.First();

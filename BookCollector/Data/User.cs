@@ -40,5 +40,10 @@ namespace BookCollector.Data
         {
             Collections.Add(collection);
         }
+
+        public void Remove(Collection collection)
+        {
+            Collections.Remove(collection);
+        }
     }
 }

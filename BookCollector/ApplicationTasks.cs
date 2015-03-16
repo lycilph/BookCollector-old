@@ -25,13 +25,12 @@ namespace BookCollector
             var data_controller = IoC.Get<IDataController>();
             data_controller.Load();
 
-            // This is needed to initialize the statusbar correctly
+            // This is needed to initialize the statusbar and window commands correctly
             var status_controller = IoC.Get<IStatusController>();
             status_controller.ClearStatusText();
 
             var navigation_controller = IoC.Get<INavigationController>();
             navigation_controller.NavigateToMain();
-            navigation_controller.NavigateToSelection();
         }
 
         [Export(PandaBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]

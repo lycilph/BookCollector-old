@@ -21,6 +21,13 @@ namespace BookCollector.Screens.Main
 
         public IReactiveDerivedList<BookViewModel> Books { get; set; }
 
+        private bool _IsEditing;
+        public bool IsEditing
+        {
+            get { return _IsEditing; }
+            set { this.RaiseAndSetIfChanged(ref _IsEditing, value); }
+        }
+
         public ShelfViewModel(Shelf obj) : base(obj)
         {
             Books = obj.Books.CreateDerivedCollection(b => new BookViewModel(b));
