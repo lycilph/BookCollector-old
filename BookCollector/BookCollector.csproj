@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=4.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoMapper.4.0.0-ci1034\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -169,11 +173,16 @@
     <Compile Include="Api\Amazon\AmazonSettings.cs" />
     <Compile Include="Api\Amazon\AmazonSigningEndpointBehavior.cs" />
     <Compile Include="Api\Amazon\AmazonSigningMessageInspector.cs" />
+    <Compile Include="Api\Goodreads\AuthorResolver.cs" />
     <Compile Include="Api\Goodreads\GoodreadsAuthor.cs" />
     <Compile Include="Api\Goodreads\GoodreadsResponse.cs" />
     <Compile Include="Api\Goodreads\GoodreadsSettings.cs" />
     <Compile Include="Api\Goodreads\GoodreadsWork.cs" />
+    <Compile Include="Api\Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Api\GoogleBooks\GoogleBooksSettings.cs" />
+    <Compile Include="Api\ImportProvider\GoodreadsCSVImporter.cs" />
+    <Compile Include="Api\ImportProvider\IImportProvider.cs" />
+    <Compile Include="Api\ImportProvider\ImportedBook.cs" />
     <Compile Include="Api\SearchProvider\AmazonSearchProvider.cs" />
     <Compile Include="Api\SearchProvider\GoodreadsSearchProvider.cs" />
     <Compile Include="Api\SearchProvider\GoogleBooksSearchProvider.cs" />
@@ -187,6 +196,7 @@
     <Compile Include="Controllers\IDataController.cs" />
     <Compile Include="Controllers\INavigationController.cs" />
     <Compile Include="Controllers\IStatusController.cs" />
+    <Compile Include="Controllers\Misc\BusyWithMessage.cs" />
     <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Data\Book.cs" />
@@ -194,10 +204,24 @@
     <Compile Include="Resources\IsBusyOpacityConverter.cs" />
     <Compile Include="Screens\BookCollectorScreenBase.cs" />
     <Compile Include="Screens\IBookCollectorScreen.cs" />
+    <Compile Include="Screens\Import\ColumnViewModel.cs" />
+    <Compile Include="Screens\Import\Dialog\ImportProviderSelectionViewModel.cs" />
+    <Compile Include="Screens\Import\Dialog\ImportProviderSelectionView.xaml.cs">
+      <DependentUpon>ImportProviderSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\Dialog\ImportProviderView.xaml.cs">
+      <DependentUpon>ImportProviderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\Dialog\ImportProviderViewModel.cs" />
+    <Compile Include="Screens\Import\ImportBookViewModel.cs" />
     <Compile Include="Screens\Import\ImportView.xaml.cs">
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Import\ImportViewModel.cs" />
+    <Compile Include="Screens\Import\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\SettingsViewModel.cs" />
     <Compile Include="Screens\Search\DocumentDetailView.xaml.cs">
       <DependentUpon>DocumentDetailView.xaml</DependentUpon>
     </Compile>
@@ -226,7 +250,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
-    <Compile Include="Services\GoodreadsCsv\GoodreadsCsvBook.cs" />
+    <Compile Include="Api\Goodreads\GoodreadsCsvBook.cs" />
     <Compile Include="Services\DocumentScoring\Document.cs" />
     <Compile Include="Services\DocumentScoring\IStemmer.cs" />
     <Compile Include="Services\DocumentScoring\Normalizer.cs" />
@@ -256,14 +280,12 @@
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Search\SearchViewModel.cs" />
-    <Compile Include="Services\GoodreadsCsv\Importer.cs" />
     <Compile Include="Shell\IBookCollectorShell.cs" />
     <Compile Include="Shell\ShellMessage.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shell\ShellViewModel.cs" />
-    <Compile Include="Utilities\ResourceHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -356,6 +378,7 @@
     <Resource Include="Images\appbar.minus.png" />
     <Resource Include="Images\appbar.check.png" />
     <Resource Include="Images\appbar.cancel.png" />
+    <Resource Include="Images\appbar.page.copy.png" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -385,7 +408,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Import\Dialog\ImportProviderSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\Dialog\ImportProviderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Import\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -444,9 +479,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\Amazon\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\ImportProvider\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

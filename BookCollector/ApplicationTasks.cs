@@ -1,7 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Windows.Input;
+using AutoMapper;
+using BookCollector.Api.Goodreads;
+using BookCollector.Api.ImportProvider;
 using BookCollector.Controllers;
+using BookCollector.Data;
 using BookCollector.Services;
 using Caliburn.Micro;
 using NLog;
@@ -31,6 +37,17 @@ namespace BookCollector
 
             var navigation_controller = IoC.Get<INavigationController>();
             navigation_controller.NavigateToMain();
+        }
+
+        [Export(PandaBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]
+        public void RegisterAutomapperMappings()
+        {
+            logger.Trace("Registering Automapper mappings");
+
+            Mapper.CreateMap<GoodreadsCsvBook, ImportedBook>()
+                  .ForMember(destination => destination.Authors, opt => opt.ResolveUsing<AuthorResolver>());
+
+            Mapper.CreateMap<ImportedBook, Book>();
         }
 
         [Export(PandaBootstrapper.STARTUP_TASK_NAME, typeof(BootstrapperTask))]

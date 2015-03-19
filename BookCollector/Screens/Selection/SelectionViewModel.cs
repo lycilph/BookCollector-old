@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.Linq;
-using System.Xml.Linq;
 using BookCollector.Controllers;
 using BookCollector.Data;
 using MahApps.Metro.Controls.Dialogs;
@@ -90,7 +89,7 @@ namespace BookCollector.Screens.Selection
             data_controller.User = CurrentUser.AssociatedObject;
             data_controller.Collection = CurrentUser.CurrentCollection.AssociatedObject;
 
-            navigation_controller.Back();
+            navigation_controller.ResetToMain();
         }
 
         public void Cancel()

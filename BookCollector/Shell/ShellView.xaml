@@ -12,6 +12,9 @@
                       Height="800"
                       Width="1000"
                       SaveWindowPosition="True"
+                      WindowButtonCommandsOverlayBehavior="Never"
+                      RightWindowCommandsOverlayBehavior="Never"
+                      LeftWindowCommandsOverlayBehavior="Never"
                       IsEnabled="{Binding IsEnabled}"
                       d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <controls:MetroWindow.Resources>
@@ -38,6 +41,19 @@
             </ItemsControl>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
+    
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl x:Name="ShellFlyouts" d:DataContext="{d:DesignInstance panda:FlyoutBase}">
+            <controls:FlyoutsControl.ItemContainerStyle>
+                <Style TargetType="{x:Type controls:Flyout}" BasedOn="{StaticResource {x:Type controls:Flyout}}">
+                    <Setter Property="Header" Value="{Binding DisplayName}" />
+                    <Setter Property="IsOpen" Value="{Binding IsOpen}" />
+                    <Setter Property="IsPinned" Value="{Binding IsPinned}"/>
+                    <Setter Property="Position" Value="{Binding Position}" />
+                </Style>
+            </controls:FlyoutsControl.ItemContainerStyle>
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
     
     <Grid>
         <Grid.RowDefinitions>

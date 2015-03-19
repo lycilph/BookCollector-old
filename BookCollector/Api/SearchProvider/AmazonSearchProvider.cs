@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using BookCollector.Amazon;
 using BookCollector.Api.Amazon;
 using BookCollector.Data;
-using BookCollector.Utilities;
+using Newtonsoft.Json;
+using Panda.Utilities.Extensions;
 using ReactiveUI;
 
 namespace BookCollector.Api.SearchProvider
@@ -20,7 +21,8 @@ namespace BookCollector.Api.SearchProvider
         public AmazonSearchProvider(IProgress<List<Book>> results)
         {
             Results = results;
-            settings = ResourceHelper.GetAndDeserialize<AmazonSettings>("Amazon");
+            var json = ResourceExtensions.GetResource("Amazon");
+            settings = JsonConvert.DeserializeObject<AmazonSettings>(json);
             client = new AWSECommerceServicePortTypeClient("AWSECommerceServicePort");
             client.ChannelFactory.Endpoint.Behaviors.Add(new AmazonSigningEndpointBehavior(settings.AccessKeyId, settings.SecretKey));
         }

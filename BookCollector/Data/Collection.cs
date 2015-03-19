@@ -9,7 +9,7 @@ namespace BookCollector.Data
     [JsonObject(MemberSerialization.OptOut)]
     public class Collection : ReactiveObject
     {
-        private Shelf all_shelf;
+        private const string AllShelfName = "All";
 
         private string _Id = Guid.NewGuid().ToString().ToUpperInvariant();
         public string Id
@@ -33,30 +33,28 @@ namespace BookCollector.Data
         }
 
         [JsonIgnore]
-        public Shelf All
-        {
-            get
-            {
-                if (all_shelf != null)
-                    return all_shelf;
-
-                if (Shelves != null && Shelves.Any())
-                    all_shelf = Shelves.FirstOrDefault(s => s.Name == "All");
-
-                if (all_shelf == null)
-                {
-                    all_shelf = new Shelf("All");
-                    Add(all_shelf);
-                }
-
-                return all_shelf;
-            }
-        }
+        public Shelf All { get { return GetOrCreate(AllShelfName); } }
 
         public Collection() : this("[Collection]") { }
         public Collection(string name)
         {
             Name = name;
+        }
+
+        public Shelf GetOrCreate(string name)
+        {
+            Shelf result = null;
+
+            if (Shelves != null && Shelves.Any())
+                result = Shelves.FirstOrDefault(s => s.Name == name);
+
+            if (result == null)
+            {
+                result = new Shelf(name);
+                Add(result);
+            }
+
+            return result;
         }
 
         public void AddRange(IEnumerable<Book> books)

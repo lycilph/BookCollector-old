@@ -6,6 +6,7 @@ namespace BookCollector.Shell
 {
     public interface IBookCollectorShell : IShell, IHaveDisplayName, IHaveActiveItem
     {
+        void Clear();
         void Back();
         void Show(IBookCollectorScreen screen);
     }

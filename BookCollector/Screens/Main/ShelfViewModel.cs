@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Linq;
+using BookCollector.Data;
 using Panda.ApplicationCore.Utilities;
 using ReactiveUI;
 
@@ -31,6 +32,9 @@ namespace BookCollector.Screens.Main
         public ShelfViewModel(Shelf obj) : base(obj)
         {
             Books = obj.Books.CreateDerivedCollection(b => new BookViewModel(b));
+
+            if (Books != null && Books.Any())
+                SelectedBook = Books.First();
         }
 
         public void Add(BookViewModel book_view_model)

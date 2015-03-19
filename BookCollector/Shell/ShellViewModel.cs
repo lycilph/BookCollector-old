@@ -40,6 +40,11 @@ namespace BookCollector.Shell
             event_aggregator.PublishOnUIThread(ShellMessage.ActiveItemChanged);
         }
 
+        public void Clear()
+        {
+            screens.Clear();
+        }
+
         public void Back()
         {
             screens.Pop();

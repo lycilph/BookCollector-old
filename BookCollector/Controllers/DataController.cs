@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
@@ -107,6 +108,15 @@ namespace BookCollector.Controllers
                             .Concat(new List<User> { User })                          // Add current user (if it has not been saved yet, we need to add it here)
                             .DistinctBy(u => u.Id)                                    // Make sure current user is not present twice
                             .ToList();
+        }
+
+        public bool IsDuplicate(Book book)
+        {
+            return Collection.Shelves.SelectMany(s => s.Books).Any(b =>
+                (!string.IsNullOrWhiteSpace(b.ISBN10) && !string.IsNullOrWhiteSpace(book.ISBN10) && string.Equals(b.ISBN10, book.ISBN10, StringComparison.InvariantCultureIgnoreCase)) ||
+                (!string.IsNullOrWhiteSpace(b.ISBN13) && !string.IsNullOrWhiteSpace(book.ISBN13) && string.Equals(b.ISBN13, book.ISBN13, StringComparison.InvariantCultureIgnoreCase)) ||
+                (!string.IsNullOrWhiteSpace(b.Asin) && !string.IsNullOrWhiteSpace(book.Asin) && string.Equals(b.Asin, book.Asin, StringComparison.InvariantCultureIgnoreCase)) ||
+                (!string.IsNullOrWhiteSpace(b.Title) && !string.IsNullOrWhiteSpace(book.Title) && string.Equals(b.Title, book.Title, StringComparison.InvariantCultureIgnoreCase)));
         }
     }
 }

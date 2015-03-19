@@ -4,7 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookCollector.Api.Goodreads;
 using BookCollector.Data;
-using BookCollector.Utilities;
+using Newtonsoft.Json;
+using Panda.Utilities.Extensions;
 using ReactiveUI;
 using RestSharp;
 
@@ -20,7 +21,8 @@ namespace BookCollector.Api.SearchProvider
         public GoodreadsSearchProvider(IProgress<List<Book>> results)
         {
             Results = results;
-            settings = ResourceHelper.GetAndDeserialize<GoodreadsSettings>("Goodreads");
+            var json = ResourceExtensions.GetResource("Goodreads");
+            settings = JsonConvert.DeserializeObject<GoodreadsSettings>(json);
             client = new RestClient("https://www.goodreads.com");
         }
 

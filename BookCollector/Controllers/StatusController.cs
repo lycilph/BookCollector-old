@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Reactive.Linq;
 using System.Windows;
+using BookCollector.Controllers.Misc;
 using BookCollector.Screens;
 using BookCollector.Shell;
 using Caliburn.Micro;
@@ -58,19 +59,34 @@ namespace BookCollector.Controllers
             event_aggregator.Subscribe(this);
         }
 
-        public void ClearStatusText()
-        {
-            MainStatusText = string.Empty;
-            AuxiliaryStatusText = string.Empty;
-        }
-
-        public void UpdateShowCurrentUser()
+        private void UpdateShowCurrentUser()
         {
             var screen = shell.ActiveItem as IBookCollectorScreen;
             if (screen == null)
                 return;
 
             selection_command.IsVisible = screen.ShowCurrentUser;
+        }
+
+        public void ClearStatusText()
+        {
+            MainStatusText = string.Empty;
+            AuxiliaryStatusText = string.Empty;
+        }
+
+        public BusyWithMessage BusyWithMessage(string message)
+        {
+            return new BusyWithMessage(this, message);
+        }
+
+        public void AddFlyout(IFlyout flyout)
+        {
+            shell.ShellFlyouts.Add(flyout);
+        }
+
+        public void RemoveFlyout(IFlyout flyout)
+        {
+            shell.ShellFlyouts.Remove(flyout);
         }
 
         public void Handle(ShellMessage message)

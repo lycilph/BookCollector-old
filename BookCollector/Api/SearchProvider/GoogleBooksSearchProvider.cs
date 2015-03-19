@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BookCollector.Api.GoogleBooks;
+using BookCollector.Api.Goodreads;
 using BookCollector.Data;
-using BookCollector.Utilities;
 using Google.Apis.Books.v1;
 using Google.Apis.Services;
+using Newtonsoft.Json;
+using Panda.Utilities.Extensions;
 using ReactiveUI;
 
 namespace BookCollector.Api.SearchProvider
@@ -20,7 +21,8 @@ namespace BookCollector.Api.SearchProvider
         public GoogleBooksSearchProvider(IProgress<List<Book>> results)
         {
             Results = results;
-            var settings = ResourceHelper.GetAndDeserialize<GoogleBooksSettings>("GoogleBooks");
+            var json = ResourceExtensions.GetResource("GoogleBooks");
+            var settings = JsonConvert.DeserializeObject<GoodreadsSettings>(json);
             service = new BooksService(new BaseClientService.Initializer
             {
                 ApplicationName = "BookCollector",

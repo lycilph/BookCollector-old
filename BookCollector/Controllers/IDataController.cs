@@ -12,5 +12,6 @@ namespace BookCollector.Controllers
         void Save(List<User> users);
         List<User> GetAllUsers();
         void Delete(User user);
+        bool IsDuplicate(Book book);
     }
 }

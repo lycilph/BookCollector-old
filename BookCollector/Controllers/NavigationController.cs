@@ -24,6 +24,12 @@ namespace BookCollector.Controllers
             shell.Back();
         }
 
+        public void ResetToMain()
+        {
+            shell.Clear();
+            NavigateToMain();
+        }
+
         public void NavigateToMain()
         {
             shell.Show(IoC.Get<MainViewModel>());
