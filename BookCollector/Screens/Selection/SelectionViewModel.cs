@@ -99,7 +99,9 @@ namespace BookCollector.Screens.Selection
 
         public void AddUser()
         {
-            Users.Add(new UserViewModel(new User()));
+            var user = new UserViewModel(new User());
+            Users.Add(user);
+            CurrentUser = user;
         }
 
         public async void RemoveUser()
@@ -117,7 +119,9 @@ namespace BookCollector.Screens.Selection
         public void AddCollection()
         {
             var user = CurrentUser.AssociatedObject;
-            user.Add(new Collection());
+            var collection = new Collection();
+            collection.Initialize();
+            user.Add(collection);
         }
 
         public async void RemoveCollection()

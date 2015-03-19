@@ -33,12 +33,17 @@ namespace BookCollector.Data
         }
 
         [JsonIgnore]
-        public Shelf All { get { return GetOrCreate(AllShelfName); } }
+        public Shelf All { get; private set; }
 
         public Collection() : this("[Collection]") { }
         public Collection(string name)
         {
             Name = name;
+        }
+
+        public void Initialize()
+        {
+            All = GetOrCreate(AllShelfName);
         }
 
         public Shelf GetOrCreate(string name)

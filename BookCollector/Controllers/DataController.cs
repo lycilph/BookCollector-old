@@ -49,6 +49,7 @@ namespace BookCollector.Controllers
         {
             User = new User();
             Collection = new Collection();
+            Collection.Initialize();
             User.Add(Collection);
         }
 

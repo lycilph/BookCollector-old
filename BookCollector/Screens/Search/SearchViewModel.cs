@@ -110,5 +110,10 @@ namespace BookCollector.Screens.Search
         {
             navigation_controller.Back();
         }
+
+        public void Test()
+        {
+            
+        }
     }
 }

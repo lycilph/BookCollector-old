@@ -14,5 +14,11 @@ namespace BookCollector.Screens.Search
         public ReactiveList<Shelf> Shelves { get; set; }
 
         public DocumentViewModel(Document obj) : base(obj) { }
+
+        public void Test(Shelf shelf)
+        {
+            var book = AssociatedObject.Book;
+            shelf.Add(book);
+        }
     }
 }

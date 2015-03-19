@@ -36,11 +36,11 @@
         </StackPanel>
 
         <TextBlock Grid.Row="2" Grid.Column="2" Text="Users" HorizontalAlignment="Center" FontSize="{StaticResource SubHeaderFontSize}"/>
-        <ListBox x:Name="Users" Grid.Row="3" Grid.Column="2"/>
+        <ListBox x:Name="Users" Grid.Row="3" Grid.Column="2" Margin="{StaticResource ScreenColumnMargin}"/>
 
         <TextBlock Grid.Row="2" Grid.Column="3" Text="Collections" HorizontalAlignment="Center" FontSize="{StaticResource SubHeaderFontSize}"/>
         <!-- ReSharper disable once InconsistentNaming -->
-        <ListBox x:Name="CurrentUser_Collections" Grid.Row="3" Grid.Column="3"/>
+        <ListBox x:Name="CurrentUser_Collections" Grid.Row="3" Grid.Column="3" Margin="{StaticResource ScreenColumnMargin}"/>
 
         <StackPanel Grid.Row="3" Grid.Column="4">
             <Button x:Name="AddCollection" Style="{DynamicResource MetroCircleButtonStyle}">
