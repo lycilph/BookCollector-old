@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookCollector.Data;
 
@@ -7,8 +6,8 @@ namespace BookCollector.Api.SearchProvider
 {
     public interface ISearchProvider
     {
-        IProgress<List<Book>> Results { get; }
+        string Image { get; }
 
-        Task Search(string text);
+        Task<List<Book>> Search(string text);
     }
 }

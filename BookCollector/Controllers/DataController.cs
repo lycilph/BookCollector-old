@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Text;
+using BookCollector.Controllers.Misc;
 using BookCollector.Data;
 using BookCollector.Services;
+using Newtonsoft.Json;
 using Panda.Utilities.Extensions;
 using ReactiveUI;
 
@@ -113,11 +116,32 @@ namespace BookCollector.Controllers
 
         public bool IsDuplicate(Book book)
         {
-            return Collection.Shelves.SelectMany(s => s.Books).Any(b =>
-                (!string.IsNullOrWhiteSpace(b.ISBN10) && !string.IsNullOrWhiteSpace(book.ISBN10) && string.Equals(b.ISBN10, book.ISBN10, StringComparison.InvariantCultureIgnoreCase)) ||
-                (!string.IsNullOrWhiteSpace(b.ISBN13) && !string.IsNullOrWhiteSpace(book.ISBN13) && string.Equals(b.ISBN13, book.ISBN13, StringComparison.InvariantCultureIgnoreCase)) ||
-                (!string.IsNullOrWhiteSpace(b.Asin) && !string.IsNullOrWhiteSpace(book.Asin) && string.Equals(b.Asin, book.Asin, StringComparison.InvariantCultureIgnoreCase)) ||
-                (!string.IsNullOrWhiteSpace(b.Title) && !string.IsNullOrWhiteSpace(book.Title) && string.Equals(b.Title, book.Title, StringComparison.InvariantCultureIgnoreCase)));
+            return Collection
+                .Shelves
+                .SelectMany(s => s.Books)
+                .Any(b => StringExtensions.IsNotNullAndEqual(b.ISBN10, book.ISBN10) ||
+                          StringExtensions.IsNotNullAndEqual(b.ISBN13, book.ISBN13) ||
+                          StringExtensions.IsNotNullAndEqual(b.Asin, book.Asin) ||
+                          StringExtensions.IsNotNullAndEqual(b.Title, book.Title));
+        }
+
+        public T GetApiCredential<T>(string api) where T : class
+        {
+            if (!User.Credentials.ContainsKey(api))
+                return default(T);
+
+            var text = User.Credentials[api];
+            var bytes = Convert.FromBase64String(text);
+            var json = Encoding.UTF8.GetString(bytes);
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        public void AddApiCredential<T>(string api, T credential)
+        {
+            var json = JsonConvert.SerializeObject(credential);
+            var bytes = Encoding.UTF8.GetBytes(json);
+            var text = Convert.ToBase64String(bytes);
+            User.Credentials.Add(api, text);
         }
     }
 }

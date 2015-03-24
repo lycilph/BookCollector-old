@@ -19,7 +19,7 @@
                           DisplayMemberPath="Name">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
-                            <Setter Property="cal:Message.Attach" Value="[Click] = [Test($dataContext)]"/>
+                            <Setter Property="cal:Message.Attach" Value="[Click] = [AddToShelf($dataContext)]"/>
                             <Setter Property="cal:Action.TargetWithoutContext" 
                                     Value="{Binding Path=PlacementTarget.DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
                         </Style>

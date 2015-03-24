@@ -8,6 +8,6 @@ namespace BookCollector.Api.ImportProvider
     {
         string Name { get; }
 
-        Task Execute(IProgress<string> status, IProgress<List<ImportedBook>> results);
+        Task<List<ImportedBook>> Execute(IProgress<string> status);
     }
 }

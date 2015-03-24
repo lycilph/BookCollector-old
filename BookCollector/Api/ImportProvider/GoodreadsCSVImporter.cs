@@ -21,18 +21,15 @@ namespace BookCollector.Api.ImportProvider
 
         public IProgress<string> Status { get; private set; }
 
-        public IProgress<List<ImportedBook>> Results { get; private set; }
-
         [ImportingConstructor]
         public GoodreadsCSVImporter(ISettings settings)
         {
             this.settings = settings;
         }
 
-        public Task Execute(IProgress<string> status, IProgress<List<ImportedBook>> results)
+        public Task<List<ImportedBook>> Execute(IProgress<string> status)
         {
             Status = status;
-            Results = results;
 
             var ofd = new OpenFileDialog
             {
@@ -45,10 +42,10 @@ namespace BookCollector.Api.ImportProvider
             if (result == true)
                 return Task.Factory.StartNew(() => ImportInternal(ofd.FileName));
 
-            return Task.FromResult(0);
+            return Task.FromResult(new List<ImportedBook>());
         }
 
-        private void ImportInternal(string filename)
+        private List<ImportedBook> ImportInternal(string filename)
         {
             Status.Report("Starting import of " + filename);
 
@@ -63,16 +60,10 @@ namespace BookCollector.Api.ImportProvider
             using (var csv = new TrimmingCsvReader(sr, configuration))
             {
                 var csv_books = csv.GetRecords<GoodreadsCsvBook>().ToList();
-                var books = Mapper.Map<List<GoodreadsCsvBook>, List<ImportedBook>>(csv_books);
+                var books = Mapper.Map<List<ImportedBook>>(csv_books);
 
                 Status.Report(string.Format("Found {0} books", books.Count));
-                Results.Report(books);
-
-                //books.Apply(b =>
-                //{
-                //    b.Source = "Goodreads CSV";
-                //    b.History.Add("Imported on " + DateTime.Now.ToShortDateString());
-                //});
+                return books;
             }
         }
     }

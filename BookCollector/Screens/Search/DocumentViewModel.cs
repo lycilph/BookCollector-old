@@ -15,7 +15,7 @@ namespace BookCollector.Screens.Search
 
         public DocumentViewModel(Document obj) : base(obj) { }
 
-        public void Test(Shelf shelf)
+        public void AddToShelf(Shelf shelf)
         {
             var book = AssociatedObject.Book;
             shelf.Add(book);

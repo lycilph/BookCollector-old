@@ -53,19 +53,16 @@ namespace BookCollector.Screens.Search
         }
 
         [ImportingConstructor]
-        public SearchViewModel(IStatusController status_controller, INavigationController navigation_controller, IDataController data_controller)
+        public SearchViewModel(IStatusController status_controller, 
+                               INavigationController navigation_controller, 
+                               IDataController data_controller, 
+                               [ImportMany] IEnumerable<ISearchProvider> search_providers)
         {
             this.status_controller = status_controller;
             this.navigation_controller = navigation_controller;
             this.data_controller = data_controller;
 
-            var results = new Progress<List<Book>>(Update);
-            SearchProviders = new ReactiveList<SearchProviderViewModel>
-            {
-                new SearchProviderViewModel(new AmazonSearchProvider(results), "Amazon-icon.png"),
-                new SearchProviderViewModel(new GoodreadsSearchProvider(results), "Goodreads-icon.png"),
-                new SearchProviderViewModel(new GoogleBooksSearchProvider(results), "Google-Play-Books-icon.png"),
-            };
+            SearchProviders = search_providers.Select(s => new SearchProviderViewModel(s)).ToReactiveList();
         }
 
         private void Update(IEnumerable<Book> search_results)
@@ -98,7 +95,10 @@ namespace BookCollector.Screens.Search
             similarity = new Similarity(SearchText);
 
             var sw = Stopwatch.StartNew();
-            var tasks = SearchProviders.Select(s => s.Search(SearchText)).ToList();
+            var tasks = SearchProviders.Select(
+                s => s.Search(SearchText)
+                      .ContinueWith(parent => Update(parent.Result), TaskScheduler.FromCurrentSynchronizationContext()))
+                .ToList();
             await Task.WhenAll(tasks);
             var elapsed = sw.StopAndGetElapsedMilliseconds();
 
@@ -109,11 +109,6 @@ namespace BookCollector.Screens.Search
         public void Back()
         {
             navigation_controller.Back();
-        }
-
-        public void Test()
-        {
-            
         }
     }
 }

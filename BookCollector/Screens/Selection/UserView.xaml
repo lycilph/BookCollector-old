@@ -4,7 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:panda="http://www.lycilph.com/Panda"
+             xmlns:selection="clr-namespace:BookCollector.Screens.Selection"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <panda:EditableTextControl Text="{Binding Name}"/>
+             d:DesignHeight="300"
+             d:DesignWidth="300" 
+             d:DataContext="{d:DesignInstance selection:UserViewModel}">
+    <panda:EditableTextControl Text="{Binding Name}" IsEditing="{Binding IsEditing}"/>
 </UserControl>

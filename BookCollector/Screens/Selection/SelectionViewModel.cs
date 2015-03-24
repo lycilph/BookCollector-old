@@ -116,6 +116,11 @@ namespace BookCollector.Screens.Selection
             }
         }
 
+        public void EditUser(UserViewModel user)
+        {
+            user.IsEditing = true;
+        }
+
         public void AddCollection()
         {
             var user = CurrentUser.AssociatedObject;
@@ -134,6 +139,11 @@ namespace BookCollector.Screens.Selection
                 var collection = CurrentUser.CurrentCollection.AssociatedObject;
                 user.Remove(collection);
             }
+        }
+
+        public void EditCollection(CollectionViewModel collection)
+        {
+            collection.IsEditing = true;
         }
     }
 }

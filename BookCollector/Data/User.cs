@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Panda.ApplicationCore.Utilities;
 using ReactiveUI;
@@ -27,6 +28,13 @@ namespace BookCollector.Data
         {
             get { return _Collections; }
             set { this.RaiseAndSetIfChanged(ref _Collections, value); }
+        }
+
+        private Dictionary<string, string> _Credentials = new Dictionary<string, string>();
+        public Dictionary<string, string> Credentials
+        {
+            get { return _Credentials; }
+            set { this.RaiseAndSetIfChanged(ref _Credentials, value); }
         }
 
         public User() : this("[User]") { }

@@ -13,5 +13,7 @@ namespace BookCollector.Controllers
         List<User> GetAllUsers();
         void Delete(User user);
         bool IsDuplicate(Book book);
+        T GetApiCredential<T>(string name) where T : class;
+        void AddApiCredential<T>(string api, T credential);
     }
 }

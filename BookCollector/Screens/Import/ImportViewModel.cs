@@ -15,6 +15,7 @@ using Panda.ApplicationCore.Dialogs;
 using System.ComponentModel.Composition;
 using Panda.Utilities.Extensions;
 using ReactiveUI;
+using EnumerableExtensions = Caliburn.Micro.EnumerableExtensions;
 
 namespace BookCollector.Screens.Import
 {
@@ -147,29 +148,35 @@ namespace BookCollector.Screens.Import
 
         private async Task Import(IImportProvider import_provider)
         {
-            var imported_books = new List<ImportedBook>();
             var status = new Progress<string>(str => Messages.Add(str));
-            var results = new Progress<List<ImportedBook>>(imported_books.AddRange);
             using (var disp = status_controller.BusyWithMessage("Importing from " + import_provider.Name))
             {
-                await import_provider.Execute(status, results);
+                var imported_books = await import_provider.Execute(status);
 
                 await Task.Delay(500);
                 Page = ResultsPage;
 
-                var total = 0;
-                await imported_books.ToObservable()
-                          .Regulate(TimeSpan.FromMilliseconds(20))
-                          .ObserveOnDispatcher()
-                          .Do(b =>
-                          {
-                              total++;
-                              status_controller.AuxiliaryStatusText = "Books: " + total;
+                if (imported_books.Any())
+                {
+                    var total = 0;
+                    await imported_books
+                        .ToObservable()
+                        .Regulate(TimeSpan.FromMilliseconds(20))
+                        .ObserveOnDispatcher()
+                        .Do(b =>
+                        {
+                            total++;
+                            status_controller.AuxiliaryStatusText = "Books: " + total;
 
-                              var book = Mapper.Map<Book>(b);
-                              var is_duplicate = data_controller.IsDuplicate(book);
-                              Books.Add(new ImportBookViewModel(b, is_duplicate));
-                          });
+                            var book = Mapper.Map<Book>(b);
+                            var is_duplicate = data_controller.IsDuplicate(book);
+                            Books.Add(new ImportBookViewModel(b, is_duplicate));
+                        });
+                }
+                else
+                {
+                    status_controller.AuxiliaryStatusText = "Nothing found";
+                }
             }
             status_controller.MainStatusText = "Done importing";
         }
@@ -181,12 +188,12 @@ namespace BookCollector.Screens.Import
 
         public void UpdateSelection()
         {
-            Panda.Utilities.Extensions.EnumerableExtensions.Apply(Books, b => b.IsSelected = IsAllSelected == true);
+            EnumerableExtensions.Apply(Books, b => b.IsSelected = IsAllSelected == true);
         }
 
         public void SelectNonDuplicates()
         {
-            Panda.Utilities.Extensions.EnumerableExtensions.Apply(Books, b => b.IsSelected = !b.IsDuplicate);
+            EnumerableExtensions.Apply(Books, b => b.IsSelected = !b.IsDuplicate);
         }
 
         public void ShowSettings()
@@ -205,6 +212,7 @@ namespace BookCollector.Screens.Import
                 {
                     var shelf = data_controller.Collection.GetOrCreate(import.Key);
                     var books = Mapper.Map<List<Book>>(import);
+                    EnumerableExtensions.Apply(books, b => b.History.Add("Imported on " + DateTime.Now.ToShortDateString()));
                     shelf.AddRange(books);
                     data_controller.Collection.All.AddRange(books);
                 }
@@ -213,6 +221,7 @@ namespace BookCollector.Screens.Import
             {
                 var imported_books = Books.Where(b => b.IsSelected).Select(b => b.AssociatedObject);
                 var books = Mapper.Map<List<Book>>(imported_books);
+                EnumerableExtensions.Apply(books, b => b.History.Add("Imported on " + DateTime.Now.ToShortDateString()));
                 data_controller.Collection.All.AddRange(books);
             }
 

@@ -174,13 +174,17 @@
     <Compile Include="Api\Amazon\AmazonSigningEndpointBehavior.cs" />
     <Compile Include="Api\Amazon\AmazonSigningMessageInspector.cs" />
     <Compile Include="Api\Goodreads\AuthorResolver.cs" />
+    <Compile Include="Api\Goodreads\GoodreadsAccessResponse.cs" />
     <Compile Include="Api\Goodreads\GoodreadsAuthor.cs" />
+    <Compile Include="Api\Goodreads\GoodreadsAuthorizationResponse.cs" />
+    <Compile Include="Api\Goodreads\GoodreadsCredential.cs" />
     <Compile Include="Api\Goodreads\GoodreadsResponse.cs" />
     <Compile Include="Api\Goodreads\GoodreadsSettings.cs" />
     <Compile Include="Api\Goodreads\GoodreadsWork.cs" />
     <Compile Include="Api\Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Api\GoogleBooks\GoogleBooksSettings.cs" />
     <Compile Include="Api\ImportProvider\GoodreadsCSVImporter.cs" />
+    <Compile Include="Api\ImportProvider\GoodreadsImporter.cs" />
     <Compile Include="Api\ImportProvider\IImportProvider.cs" />
     <Compile Include="Api\ImportProvider\ImportedBook.cs" />
     <Compile Include="Api\SearchProvider\AmazonSearchProvider.cs" />
@@ -197,6 +201,7 @@
     <Compile Include="Controllers\INavigationController.cs" />
     <Compile Include="Controllers\IStatusController.cs" />
     <Compile Include="Controllers\Misc\BusyWithMessage.cs" />
+    <Compile Include="Controllers\Misc\StringExtensions.cs" />
     <Compile Include="Controllers\NavigationController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Data\Book.cs" />

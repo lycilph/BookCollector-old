@@ -12,6 +12,5 @@
     <Button Content="{Binding DisplayName}"
             Style="{StaticResource ChromelessButtonStyle}" 
             FontSize="{StaticResource SidebarItemFontSize}" 
-            HorizontalAlignment="Left"
             cal:Message.Attach="[Click] = [Select($dataContext)]"/>
 </UserControl>

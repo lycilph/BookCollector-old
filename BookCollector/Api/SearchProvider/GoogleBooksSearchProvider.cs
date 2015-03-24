@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using BookCollector.Api.Goodreads;
@@ -12,15 +13,15 @@ using ReactiveUI;
 
 namespace BookCollector.Api.SearchProvider
 {
+    [Export(typeof(ISearchProvider))]
     public class GoogleBooksSearchProvider : ISearchProvider
     {
         private readonly BooksService service;
 
-        public IProgress<List<Book>> Results { get; private set; }
+        public string Image { get { return "Images/Google-Play-Books-icon.png"; } }
 
-        public GoogleBooksSearchProvider(IProgress<List<Book>> results)
+        public GoogleBooksSearchProvider()
         {
-            Results = results;
             var json = ResourceExtensions.GetResource("GoogleBooks");
             var settings = JsonConvert.DeserializeObject<GoodreadsSettings>(json);
             service = new BooksService(new BaseClientService.Initializer
@@ -30,21 +31,20 @@ namespace BookCollector.Api.SearchProvider
             });
         }
 
-        public async Task Search(string text)
+        public async Task<List<Book>> Search(string text)
         {
             var request = service.Volumes.List(text);
             var volumes = await request.ExecuteAsync();
-            var books = volumes.Items
-                               .Select(volume => new Book
-                               {
-                                   Title = volume.VolumeInfo.Title,
-                                   Authors = new ReactiveList<string> { volume.VolumeInfo.Authors != null && volume.VolumeInfo.Authors.Any() ? 
-                                                                        volume.VolumeInfo.Authors.First() : 
-                                                                        string.Empty },
-                                   Source = "Google Books"
-                               })
-                               .ToList();
-            Results.Report(books);
+            return volumes.Items
+                          .Select(volume => new Book
+                          {
+                              Title = volume.VolumeInfo.Title,
+                              Authors = new ReactiveList<string> { volume.VolumeInfo.Authors != null && volume.VolumeInfo.Authors.Any() ? 
+                                                                   volume.VolumeInfo.Authors.First() : 
+                                                                   string.Empty },
+                              Source = "Google Books"
+                          })
+                          .ToList();
         }
     }
 }

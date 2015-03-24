@@ -27,6 +27,13 @@ namespace BookCollector.Screens.Selection
             set { this.RaiseAndSetIfChanged(ref _Collections, value); }
         }
 
+        private bool _IsEditing;
+        public bool IsEditing
+        {
+            get { return _IsEditing; }
+            set { this.RaiseAndSetIfChanged(ref _IsEditing, value); }
+        }
+
         public UserViewModel(User user) : base(user)
         {
             Collections = AssociatedObject.Collections.CreateDerivedCollection(c => new CollectionViewModel(c));

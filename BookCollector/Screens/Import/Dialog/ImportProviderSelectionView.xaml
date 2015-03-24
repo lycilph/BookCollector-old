@@ -11,13 +11,9 @@
                    HorizontalAlignment="Center" 
                    Margin="0, 10"/>
 
-        <ItemsControl x:Name="ImportProviders" HorizontalAlignment="Center" Margin="0, 10">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+        <ItemsControl x:Name="ImportProviders" 
+                      HorizontalAlignment="Center" 
+                      Margin="0, 10"/>
 
         <Button x:Name="Cancel"
                 Content="Cancel"
