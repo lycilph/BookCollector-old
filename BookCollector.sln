@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookCollector", "BookCollector\BookCollector.csproj", "{7330E2D7-BC74-4FED-A88E-051DEBA7E964}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{0BBB27B3-4AA9-4BAB-A1CA-660CCF78FE91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookCollector", "BookCollector\BookCollector.csproj", "{148619CC-7CBC-48C3-A09B-45F0F1952578}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7330E2D7-BC74-4FED-A88E-051DEBA7E964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7330E2D7-BC74-4FED-A88E-051DEBA7E964}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7330E2D7-BC74-4FED-A88E-051DEBA7E964}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7330E2D7-BC74-4FED-A88E-051DEBA7E964}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BBB27B3-4AA9-4BAB-A1CA-660CCF78FE91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BBB27B3-4AA9-4BAB-A1CA-660CCF78FE91}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BBB27B3-4AA9-4BAB-A1CA-660CCF78FE91}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BBB27B3-4AA9-4BAB-A1CA-660CCF78FE91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{148619CC-7CBC-48C3-A09B-45F0F1952578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{148619CC-7CBC-48C3-A09B-45F0F1952578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{148619CC-7CBC-48C3-A09B-45F0F1952578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{148619CC-7CBC-48C3-A09B-45F0F1952578}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

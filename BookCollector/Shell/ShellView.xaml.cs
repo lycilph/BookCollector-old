@@ -1,4 +1,6 @@
-﻿namespace BookCollector.Shell
+﻿using System.Windows;
+
+namespace BookCollector.Shell
 {
     public partial class ShellView
     {

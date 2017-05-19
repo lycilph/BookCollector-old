@@ -1,20 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7330E2D7-BC74-4FED-A88E-051DEBA7E964}</ProjectGuid>
+    <ProjectGuid>{148619CC-7CBC-48C3-A09B-45F0F1952578}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BookCollector</RootNamespace>
     <AssemblyName>BookCollector</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>bcfa5b1a</NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,257 +35,72 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=4.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.4.0.0-ci1034\lib\net40\AutoMapper.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.0.3\lib\net45\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.3\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.Platform, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Caliburn.Micro.2.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.3.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.3\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro.ReactiveUI">
-      <HintPath>..\packages\Caliburn.Micro.ReactiveUI.2.2.1\lib\portable-net45+win8+wp8+wpa81\Caliburn.Micro.ReactiveUI.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
-    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CsvHelper.2.11.1.1\lib\net40-client\CsvHelper.dll</HintPath>
+    <Reference Include="ReactiveUI, Version=7.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\reactiveui-core.7.3.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="GongSolutions.Wpf.DragDrop">
-      <HintPath>..\packages\gong-wpf-dragdrop.0.1.4.3\lib\net40\GongSolutions.Wpf.DragDrop.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis">
-      <HintPath>..\packages\Google.Apis.1.9.1\lib\net40\Google.Apis.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Auth">
-      <HintPath>..\packages\Google.Apis.Auth.1.9.1\lib\net40\Google.Apis.Auth.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Auth.PlatformServices">
-      <HintPath>..\packages\Google.Apis.Auth.1.9.1\lib\net40\Google.Apis.Auth.PlatformServices.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Books.v1">
-      <HintPath>..\packages\Google.Apis.Books.v1.1.9.0.680\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Books.v1.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.Core">
-      <HintPath>..\packages\Google.Apis.Core.1.9.1\lib\portable-net40+sl50+win+wpa81+wp80\Google.Apis.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Apis.PlatformServices">
-      <HintPath>..\packages\Google.Apis.1.9.1\lib\net40\Google.Apis.PlatformServices.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
-    </Reference>
-    <Reference Include="MahApps.Metro, Version=1.1.3.5, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MahApps.Metro.1.1.3-ALPHA005\lib\net45\MahApps.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop">
-      <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1-beta1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.3.2.0.0\lib\net45\NLog.dll</HintPath>
-    </Reference>
-    <Reference Include="Panda.ApplicationCore">
-      <HintPath>..\packages\Panda.ApplicationCore.0.1.0-alpha\lib\net451\Panda.ApplicationCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Panda.UI">
-      <HintPath>..\packages\Panda.UI.0.1.0-alpha\lib\net451\Panda.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Panda.Utilities">
-      <HintPath>..\packages\Panda.Utilities.0.1.0-alpha\lib\net451\Panda.Utilities.dll</HintPath>
-    </Reference>
-    <Reference Include="ReactiveUI">
-      <HintPath>..\packages\reactiveui-core.6.4.0.1\lib\Net45\ReactiveUI.dll</HintPath>
-    </Reference>
-    <Reference Include="RestSharp">
-      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Splat">
-      <HintPath>..\packages\Splat.1.6.1\lib\Net45\Splat.dll</HintPath>
+    <Reference Include="Splat, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Splat.1.4.0\lib\Net45\Splat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Extensions">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.Primitives">
-      <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Reactive.Core">
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces">
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Linq">
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Windows.Threading">
+    <Reference Include="System.Reactive.Windows.Threading, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.1.3-ALPHA005\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Zlib.Portable">
-      <HintPath>..\packages\Zlib.Portable.1.10.0\lib\portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid\Zlib.Portable.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Api\Amazon\AmazonHeader.cs" />
-    <Compile Include="Api\Amazon\AmazonSettings.cs" />
-    <Compile Include="Api\Amazon\AmazonSigningEndpointBehavior.cs" />
-    <Compile Include="Api\Amazon\AmazonSigningMessageInspector.cs" />
-    <Compile Include="Api\Goodreads\AuthorResolver.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsAccessResponse.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsAuthor.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsAuthorizationResponse.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsCredential.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsResponse.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsSettings.cs" />
-    <Compile Include="Api\Goodreads\GoodreadsWork.cs" />
-    <Compile Include="Api\Goodreads\TrimmingCsvReader.cs" />
-    <Compile Include="Api\GoogleBooks\GoogleBooksSettings.cs" />
-    <Compile Include="Api\ImportProvider\GoodreadsCSVImporter.cs" />
-    <Compile Include="Api\ImportProvider\GoodreadsImporter.cs" />
-    <Compile Include="Api\ImportProvider\IImportProvider.cs" />
-    <Compile Include="Api\ImportProvider\ImportedBook.cs" />
-    <Compile Include="Api\SearchProvider\AmazonSearchProvider.cs" />
-    <Compile Include="Api\SearchProvider\GoodreadsSearchProvider.cs" />
-    <Compile Include="Api\SearchProvider\GoogleBooksSearchProvider.cs" />
-    <Compile Include="Api\SearchProvider\ISearchProvider.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ApplicationTasks.cs" />
-    <Compile Include="Controllers\DataController.cs" />
-    <Compile Include="Controllers\IDataController.cs" />
-    <Compile Include="Controllers\INavigationController.cs" />
-    <Compile Include="Controllers\IStatusController.cs" />
-    <Compile Include="Controllers\Misc\BusyWithMessage.cs" />
-    <Compile Include="Controllers\Misc\StringExtensions.cs" />
-    <Compile Include="Controllers\NavigationController.cs" />
-    <Compile Include="Controllers\StatusController.cs" />
-    <Compile Include="Data\Book.cs" />
-    <Compile Include="Data\Collection.cs" />
-    <Compile Include="Resources\IsBusyOpacityConverter.cs" />
-    <Compile Include="Screens\BookCollectorScreenBase.cs" />
-    <Compile Include="Screens\IBookCollectorScreen.cs" />
-    <Compile Include="Screens\Import\ColumnViewModel.cs" />
-    <Compile Include="Screens\Import\Dialog\ImportProviderSelectionViewModel.cs" />
-    <Compile Include="Screens\Import\Dialog\ImportProviderSelectionView.xaml.cs">
-      <DependentUpon>ImportProviderSelectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Import\Dialog\ImportProviderView.xaml.cs">
-      <DependentUpon>ImportProviderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Import\Dialog\ImportProviderViewModel.cs" />
-    <Compile Include="Screens\Import\ImportBookViewModel.cs" />
-    <Compile Include="Screens\Import\ImportView.xaml.cs">
-      <DependentUpon>ImportView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Import\ImportViewModel.cs" />
-    <Compile Include="Screens\Import\SettingsView.xaml.cs">
-      <DependentUpon>SettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Import\SettingsViewModel.cs" />
-    <Compile Include="Screens\Search\DocumentDetailView.xaml.cs">
-      <DependentUpon>DocumentDetailView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Search\DocumentView.xaml.cs">
-      <DependentUpon>DocumentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Search\DocumentViewModel.cs" />
-    <Compile Include="Screens\Search\SearchProviderView.xaml.cs">
-      <DependentUpon>SearchProviderView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Search\SearchProviderViewModel.cs" />
-    <Compile Include="Screens\Selection\CollectionView.xaml.cs">
-      <DependentUpon>CollectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Selection\CollectionViewModel.cs" />
-    <Compile Include="Screens\Selection\SelectionView.xaml.cs">
-      <DependentUpon>SelectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Selection\SelectionViewModel.cs" />
-    <Compile Include="Screens\Selection\UserView.xaml.cs">
-      <DependentUpon>UserView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Selection\UserViewModel.cs" />
-    <Compile Include="Service References\Amazon\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Api\Goodreads\GoodreadsCsvBook.cs" />
-    <Compile Include="Services\DocumentScoring\Document.cs" />
-    <Compile Include="Services\DocumentScoring\IStemmer.cs" />
-    <Compile Include="Services\DocumentScoring\Normalizer.cs" />
-    <Compile Include="Services\DocumentScoring\PorterStemmer.cs" />
-    <Compile Include="Services\DocumentScoring\Similarity.cs" />
-    <Compile Include="Services\DocumentScoring\StopWordHandler.cs" />
-    <Compile Include="Services\ISettings.cs" />
-    <Compile Include="Services\Settings.cs" />
-    <Compile Include="Data\Shelf.cs" />
-    <Compile Include="Data\User.cs" />
-    <Compile Include="Screens\Main\BookDetailView.xaml.cs">
-      <DependentUpon>BookDetailView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Main\BookView.xaml.cs">
-      <DependentUpon>BookView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Main\BookViewModel.cs" />
     <Compile Include="Screens\Main\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Main\MainViewModel.cs" />
-    <Compile Include="Screens\Main\ShelfView.xaml.cs">
-      <DependentUpon>ShelfView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Main\ShelfViewModel.cs" />
-    <Compile Include="Screens\Search\SearchView.xaml.cs">
-      <DependentUpon>SearchView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Screens\Search\SearchViewModel.cs" />
-    <Compile Include="Shell\IBookCollectorShell.cs" />
-    <Compile Include="Shell\ShellMessage.cs" />
+    <Compile Include="Shell\Bootstrapper.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
@@ -306,198 +120,36 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\Amazon\BookCollector.Amazon.BrowseNodeLookupResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.BrowseNodeLookupResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartAddResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartAddResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartClearResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartClearResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartCreateResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartCreateResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartGetResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartGetResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartModifyResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.CartModifyResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.ItemLookupResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.ItemLookupResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.ItemSearchResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.ItemSearchResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.SimilarityLookupResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\BookCollector.Amazon.SimilarityLookupResponse1.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\Amazon\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\Amazon\configuration.svcinfo" />
-    <None Include="Service References\Amazon\configuration91.svcinfo" />
-    <EmbeddedResource Include="Services\DocumentScoring\stopwords_en.txt" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Service References\Amazon\AWSECommerceService.wsdl" />
-    <Resource Include="Images\appbar.add.png" />
-    <EmbeddedResource Include="Api\Settings\AmazonSettings.txt" />
-    <EmbeddedResource Include="Api\Settings\GoodreadsSettings.txt" />
-    <EmbeddedResource Include="Api\Settings\GoogleBooksSettings.txt" />
-    <Resource Include="Images\Amazon-icon.png" />
-    <Resource Include="Images\Goodreads-icon.png" />
-    <Resource Include="Images\Google-Play-Books-icon.png" />
-    <Resource Include="Images\appbar.arrow.left.png" />
-    <Resource Include="Images\appbar.minus.png" />
-    <Resource Include="Images\appbar.check.png" />
-    <Resource Include="Images\appbar.cancel.png" />
-    <Resource Include="Images\appbar.page.copy.png" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Resources\FontSizes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ImageStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\MarginsAndSizes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Import\Dialog\ImportProviderSelectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Import\Dialog\ImportProviderView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Import\ImportView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Import\SettingsView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Main\BookDetailView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Main\BookView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Screens\Main\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Main\ShelfView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Search\DocumentDetailView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Search\DocumentView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Search\SearchProviderView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Screens\Search\SearchView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Selection\CollectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Selection\SelectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Screens\Selection\UserView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Shell\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
+    <Resource Include="Graphics\main-window-icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\Amazon\" />
+    <Folder Include="Framework\Utilities\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
