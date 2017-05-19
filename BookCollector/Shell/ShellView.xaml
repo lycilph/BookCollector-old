@@ -4,12 +4,41 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:local="clr-namespace:BookCollector.Shell"
+                      xmlns:cal="http://www.caliburnproject.org"
+                      xmlns:converters="clr-namespace:BookCollector.Framework.Converters"
+                      xmlns:shell="clr-namespace:BookCollector.Shell"
                       mc:Ignorable="d"
                       Icon="../Graphics/main-window-icon.ico"
                       Height="600" 
-                      Width="800">
-    <Grid>
-        
-    </Grid>
+                      Width="800"
+                      SaveWindowPosition="True"
+                      WindowButtonCommandsOverlayBehavior="Always"
+                      RightWindowCommandsOverlayBehavior="Always"
+                      IsEnabled="{Binding IsEnabled}">
+    <controls:MetroWindow.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="CollapsedVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed"/>
+    </controls:MetroWindow.Resources>
+
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <ItemsControl x:Name="RightShellCommands">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type shell:WindowCommand}">
+                        <Button x:Name="Execute"
+                                Content="{Binding DisplayName}"
+                                IsEnabled="{Binding IsEnabled}"
+                                Visibility="{Binding IsVisible, Converter={StaticResource CollapsedVisibilityConverter}}"
+                                cal:Bind.Model="{Binding}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+
+    <ContentControl x:Name="ShellContent"/>
 </controls:MetroWindow>
