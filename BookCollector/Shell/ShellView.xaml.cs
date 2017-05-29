@@ -8,5 +8,21 @@ namespace BookCollector.Shell
         {
             InitializeComponent();
         }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is IViewAware)
+            {
+                (DataContext as IViewAware).OnViewLoaded();
+            }
+        }
+
+        private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (DataContext is IViewAware)
+            {
+                (DataContext as IViewAware).OnViewClosing();
+            }
+        }
     }
 }

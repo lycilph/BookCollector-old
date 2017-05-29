@@ -3,13 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BookCollector.Screens.Main"
+             xmlns:main="clr-namespace:BookCollector.Screens.Main"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance main:BookViewModel}">
     <StackPanel>
-        <TextBlock x:Name="Title" FontSize="18" TextWrapping="Wrap"/>
-        <TextBlock x:Name="Authors"/>
-        <TextBlock x:Name="ISBN10"/>
-        <TextBlock x:Name="ISBN13"/>
+        <TextBlock Text="{Binding Title}" FontSize="18" TextWrapping="Wrap"/>
+        <TextBlock Text="{Binding Authors}"/>
+        <TextBlock Text="{Binding ISBN10}"/>
+        <TextBlock Text="{Binding ISBN13}"/>
     </StackPanel>
 </UserControl>

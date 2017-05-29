@@ -4,41 +4,49 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:cal="http://www.caliburnproject.org"
                       xmlns:converters="clr-namespace:BookCollector.Framework.Converters"
                       xmlns:shell="clr-namespace:BookCollector.Shell"
                       mc:Ignorable="d"
                       Icon="../Graphics/main-window-icon.ico"
                       Height="600" 
                       Width="800"
+                      Loaded="OnLoaded"
+                      Closing="OnClosing"
+                      Title="{Binding DisplayName}"
+                      IsEnabled="{Binding IsEnabled}"
                       SaveWindowPosition="True"
                       WindowButtonCommandsOverlayBehavior="Always"
                       RightWindowCommandsOverlayBehavior="Always"
-                      IsEnabled="{Binding IsEnabled}">
+                      d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <controls:MetroWindow.Resources>
         <converters:BooleanToVisibilityConverter x:Key="CollapsedVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed"/>
     </controls:MetroWindow.Resources>
 
     <controls:MetroWindow.RightWindowCommands>
-        <controls:WindowCommands>
-            <ItemsControl x:Name="RightShellCommands">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="{x:Type shell:WindowCommand}">
-                        <Button x:Name="Execute"
-                                Content="{Binding DisplayName}"
-                                IsEnabled="{Binding IsEnabled}"
-                                Visibility="{Binding IsVisible, Converter={StaticResource CollapsedVisibilityConverter}}"
-                                cal:Bind.Model="{Binding}"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+        <controls:WindowCommands ItemsSource="{Binding RightShellCommands}">
+            <controls:WindowCommands.ItemTemplate>
+                <DataTemplate DataType="{x:Type shell:WindowCommand}">
+                    <Button Content="{Binding DisplayName}"
+                            IsEnabled="{Binding IsEnabled}"
+                            Visibility="{Binding IsVisible, Converter={StaticResource CollapsedVisibilityConverter}}"
+                            Command="{Binding ExecuteCommand}"/>
+                </DataTemplate>
+            </controls:WindowCommands.ItemTemplate>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
 
-    <ContentControl x:Name="ShellContent"/>
+    <controls:MetroWindow.Flyouts>
+        <controls:FlyoutsControl ItemsSource="{Binding ShellFlyouts}" d:DataContext="{d:DesignInstance shell:FlyoutBase}">
+            <controls:FlyoutsControl.ItemContainerStyle>
+                <Style TargetType="{x:Type controls:Flyout}" BasedOn="{StaticResource {x:Type controls:Flyout}}">
+                    <Setter Property="Header" Value="{Binding DisplayName}"/>
+                    <Setter Property="IsOpen" Value="{Binding IsOpen}" />
+                    <Setter Property="IsPinned" Value="{Binding IsPinned}"/>
+                    <Setter Property="Position" Value="{Binding Position}" />
+                </Style>
+            </controls:FlyoutsControl.ItemContainerStyle>
+        </controls:FlyoutsControl>
+    </controls:MetroWindow.Flyouts>
+
+    <ContentControl Content="{Binding ShellContent}"/>
 </controls:MetroWindow>

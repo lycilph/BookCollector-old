@@ -28,15 +28,14 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _IsVisible, value); }
         }
 
+        public ReactiveCommand ExecuteCommand { get; private set; }
+
         public WindowCommand(string name, Action action)
         {
             this.action = action;
             DisplayName = name;
-        }
 
-        public virtual void Execute()
-        {
-            action();
+            ExecuteCommand = ReactiveCommand.Create(action);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using Caliburn.Micro;
+﻿using ReactiveUI;
 
 namespace BookCollector.Shell
 {
-    public interface IWindowCommand : IHaveDisplayName
+    public interface IWindowCommand
     {
         bool IsEnabled { get; set; }
         bool IsVisible { get; set; }
-        void Execute();
+        ReactiveCommand ExecuteCommand { get; }
     }
 }

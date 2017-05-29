@@ -5,18 +5,18 @@ using System.Reflection;
 using AutoMapper;
 using BookCollector.Data;
 using BookCollector.Extensions;
+using BookCollector.Framework.Logging;
+using BookCollector.Shell;
 using BookCollector.ThirdParty.Goodreads;
-using Caliburn.Micro;
 using CsvHelper.Configuration;
 using Microsoft.Win32;
 using ReactiveUI;
 
 namespace BookCollector.Screens.Main
 {
-    public class MainViewModel : ReactiveObject
+    public class MainViewModel : ShellScreenBase
     {
-        private ILog log = LogManager.GetLog(typeof(MainViewModel));
-        private IDataController data_controller;
+        private ILog log = LogManager.GetCurrentClassLogger();
 
         private ReactiveList<BookViewModel> _Books = new ReactiveList<BookViewModel>();
         public ReactiveList<BookViewModel> Books
@@ -32,12 +32,21 @@ namespace BookCollector.Screens.Main
             set { this.RaiseAndSetIfChanged(ref _SelectedBook, value); }
         }
 
-        public MainViewModel(IDataController data_controller)
+        private ReactiveCommand _ImportCommand;
+        public ReactiveCommand ImportCommand
         {
-            this.data_controller = data_controller;
+            get { return _ImportCommand; }
+            set { this.RaiseAndSetIfChanged(ref _ImportCommand, value); }
         }
 
-        public void Import()
+        public MainViewModel()
+        {
+            DisplayName = ScreenNames.MainScreenName;
+
+            ImportCommand = ReactiveCommand.Create(() => Import());
+        }
+
+        private void Import()
         {
             var ofd = new OpenFileDialog
             {

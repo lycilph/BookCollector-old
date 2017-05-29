@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:main="clr-namespace:BookCollector.Screens.Main"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance main:MainViewModel}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" MinWidth="200"/>
@@ -20,8 +21,8 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button x:Name="Import" Content="Import"/>
-            <ListBox x:Name="Books" Grid.Row="1"/>
+            <Button Command="{Binding ImportCommand}" Content="Import"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook}"/>
         </Grid>
 
         <GridSplitter Grid.Column="1"
@@ -30,7 +31,7 @@
                       Width="5"/>
 
         <controls:TransitioningContentControl Grid.Column="2" 
-                                              x:Name="SelectedBook"
-                                              cal:View.Context="Detail"/>
+                                              ContentTemplate="{StaticResource BookDetails}"
+                                              Content="{Binding SelectedBook}"/>
     </Grid>
 </UserControl>
