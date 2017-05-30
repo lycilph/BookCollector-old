@@ -117,6 +117,7 @@
     <Compile Include="Framework\MessageBus\MessageHandler.cs" />
     <Compile Include="Framework\Messages\ApplicationMessage.cs" />
     <Compile Include="Framework\Messages\NavigationMessage.cs" />
+    <Compile Include="Framework\Messages\StatusMessage.cs" />
     <Compile Include="Framework\MVVM\ItemViewModel.cs" />
     <Compile Include="Data\Book.cs" />
     <Compile Include="Initialization\ApplicationModule.cs" />

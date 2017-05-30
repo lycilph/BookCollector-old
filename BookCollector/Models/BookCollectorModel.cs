@@ -4,12 +4,15 @@ using ReactiveUI;
 using System;
 using System.Reactive.Linq;
 using BookCollector.Controllers;
+using BookCollector.Framework.MessageBus;
+using BookCollector.Framework.Messages;
 
 namespace BookCollector.Models
 {
     public class BookCollectorModel : ReactiveObject, IBookCollectorModel
     {
         private ILog log = LogManager.GetCurrentClassLogger();
+        private IEventAggregator event_aggregator;
         private IDataController data_controller;
         private Settings settings;
 
@@ -20,14 +23,19 @@ namespace BookCollector.Models
             set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
-        public BookCollectorModel(IDataController data_controller, Settings settings)
+        public BookCollectorModel(IEventAggregator event_aggregator, IDataController data_controller, Settings settings)
         {
+            this.event_aggregator = event_aggregator;
             this.data_controller = data_controller;
             this.settings = settings;
 
             this.WhenAnyValue(x => x.CurrentCollection)
                 .Skip(1) // Skip the initial value (will be loaded from file)
-                .Subscribe(x => this.settings.LastCollectionFilename = x?.Description.Filename );
+                .Subscribe(collection =>
+                {
+                    this.settings.LastCollectionFilename = collection?.Description.Filename;
+                    this.event_aggregator.Publish(new StatusMessage(StatusMessage.MessageKind.CollectionChanged, collection.Description.Name));
+                });
         }
 
         public void LoadAndSetCurrentCollection(string path)

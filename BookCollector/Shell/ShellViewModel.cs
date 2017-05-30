@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace BookCollector.Shell
 {
-    public class ShellViewModel : ReactiveObject, IViewAware, IHandle<NavigationMessage>
+    public class ShellViewModel : ReactiveObject, IViewAware, IHandle<NavigationMessage>, IHandle<StatusMessage>
     {
         private ILog log = LogManager.GetCurrentClassLogger();
         private IEventAggregator event_aggregator;
@@ -57,8 +57,8 @@ namespace BookCollector.Shell
             this.event_aggregator = event_aggregator;
             shell_screens = screens.ToList();
 
-            DisplayName = ScreenNames.ShellName;
             IsEnabled = true;
+            UpdateTitle();
 
             event_aggregator.Subscribe(this);
 
@@ -89,6 +89,25 @@ namespace BookCollector.Shell
 
             screen.Activate();
             ShellContent = screen;
+        }
+
+        public void Handle(StatusMessage message)
+        {
+            log.Info("Handling status message " + message.Kind);
+
+            switch (message.Kind)
+            {
+                case StatusMessage.MessageKind.CollectionChanged:
+                    UpdateTitle(message.Name);
+                    break;
+                default:
+                    throw new InvalidOperationException("Unknown status message kind " + message.Kind);
+            }
+        }
+
+        private void UpdateTitle(string text = "")
+        {
+            DisplayName = ScreenNames.ShellName + (string.IsNullOrWhiteSpace(text) ? "" : " - " + text);
         }
     }
 }
