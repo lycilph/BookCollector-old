@@ -52,6 +52,12 @@
                     Width="48"
                     Height="48"
                     Margin="4"/>
+            <Button Content="{icons:PackIconMaterial Kind=PencilCircle}"
+                    Style="{DynamicResource MetroCircleButtonStyle}"
+                    Command="{Binding EditCollectionCommand}"
+                    Width="48"
+                    Height="48"
+                    Margin="4"/>
         </StackPanel>
 
         <Button Grid.Row="2"

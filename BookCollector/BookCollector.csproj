@@ -104,9 +104,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\DataController.cs" />
+    <Compile Include="Controllers\IApplicationController.cs" />
+    <Compile Include="Controllers\IDataController.cs" />
     <Compile Include="Data\CollectionDescription.cs" />
     <Compile Include="Data\Settings.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Framework\MessageBus\IHandle.cs" />
     <Compile Include="Framework\MessageBus\IEventAggregator.cs" />
     <Compile Include="Framework\MessageBus\EventAggregator.cs" />
@@ -115,7 +119,7 @@
     <Compile Include="Framework\Messages\NavigationMessage.cs" />
     <Compile Include="Framework\MVVM\ItemViewModel.cs" />
     <Compile Include="Data\Book.cs" />
-    <Compile Include="Initialization\ApplicationModel.cs" />
+    <Compile Include="Initialization\ApplicationModule.cs" />
     <Compile Include="Models\BookCollectorModel.cs" />
     <Compile Include="Data\Collection.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
@@ -131,6 +135,12 @@
     <Compile Include="Screens\Start\CollectionDescriptionSelectedView.xaml.cs">
       <DependentUpon>CollectionDescriptionSelectedView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Start\CollectionDialogView.xaml.cs">
+      <DependentUpon>CollectionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Start\CollectionDialogViewModel.cs" />
+    <Compile Include="Shell\DialogService.cs" />
+    <Compile Include="Shell\IDialogService.cs" />
     <Compile Include="Shell\IShellScreen.cs" />
     <Compile Include="Screens\Main\BookDetailView.xaml.cs">
       <DependentUpon>BookDetailView.xaml</DependentUpon>
@@ -225,6 +235,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Start\CollectionDescriptionSelectedView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Start\CollectionDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

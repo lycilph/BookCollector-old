@@ -15,6 +15,10 @@
         <start:CollectionDescriptionSelectedView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type start:CollectionDialogViewModel}">
+        <start:CollectionDialogView/>
+    </DataTemplate>
+
     <!-- Bindings for the main screen -->
     <DataTemplate DataType="{x:Type main:MainViewModel}">
         <main:MainView/>

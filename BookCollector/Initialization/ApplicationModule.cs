@@ -1,4 +1,5 @@
 ﻿using BookCollector.Controllers;
+using BookCollector.Data;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.MessageBus;
 using BookCollector.Models;
@@ -17,10 +18,19 @@ namespace BookCollector.Initialization
         {
             log.Info("Configuring Ninject");
 
+            // Application bindings
             Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
-            Bind<IBookCollectorModel>().To<BookCollectorModel>().InSingletonScope();
-            Bind<ApplicationController>().ToSelf().InSingletonScope();
+            Bind<IDialogService>().To<DialogService>().InSingletonScope();
+            Bind<IApplicationController>().To<ApplicationController>().InSingletonScope();
+            Bind<IDataController>().To<DataController>().InSingletonScope();
 
+            // Data bindings
+            Bind<Settings>().ToSelf().InSingletonScope();
+
+            // Model bindings
+            Bind<IBookCollectorModel>().To<BookCollectorModel>().InSingletonScope();
+
+            // ViewModel bindings
             Bind<IShellScreen>().To<StartViewModel>().InSingletonScope();
             Bind<IShellScreen>().To<MainViewModel>().InSingletonScope();
         }

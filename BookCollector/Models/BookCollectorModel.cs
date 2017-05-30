@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using BookCollector.Data;
-using BookCollector.Extensions;
+﻿using BookCollector.Data;
 using BookCollector.Framework.Logging;
 using ReactiveUI;
+using System;
+using System.Reactive.Linq;
+using BookCollector.Controllers;
 
 namespace BookCollector.Models
 {
     public class BookCollectorModel : ReactiveObject, IBookCollectorModel
     {
-        private const string collection_extension = ".bcdb"; // bcdb = Book Collector DataBase
-
         private ILog log = LogManager.GetCurrentClassLogger();
+        private IDataController data_controller;
+        private Settings settings;
 
         private Collection _CurrentCollection;
         public Collection CurrentCollection
@@ -21,51 +20,27 @@ namespace BookCollector.Models
             set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
-        public List<CollectionDescription> GetAllCollectionDescriptions()
+        public BookCollectorModel(IDataController data_controller, Settings settings)
         {
-            var app_path = Assembly.GetExecutingAssembly().Location;
-            var dir = Path.GetDirectoryName(app_path);
+            this.data_controller = data_controller;
+            this.settings = settings;
 
-            var collection_descriptions = new List<CollectionDescription>();
-            foreach (var filename in Directory.EnumerateFiles(dir, "*" + collection_extension))
-            {
-                log.Info($"Loading file {filename}");
-                var collection = JsonExtensions.ReadFromFile<Collection>(filename);
-                collection.Description.Filename = filename;
-                collection_descriptions.Add(collection.Description);
-            }
-            return collection_descriptions;
+            this.WhenAnyValue(x => x.CurrentCollection)
+                .Skip(1) // Skip the initial value (will be loaded from file)
+                .Subscribe(x => this.settings.LastCollectionFilename = x?.Description.Filename );
         }
 
-        //private string GetDatabasePath()
-        //{
-        //    var app_path = Assembly.GetExecutingAssembly().Location;
-        //    return Path.Combine(Path.GetDirectoryName(app_path), database_name);
-        //}
+        public void LoadAndSetCurrentCollection(string path)
+        {
+            log.Info($"Loading current collection {path}");
 
-        //public void LoadData()
-        //{
-        //    log.Info("Loading model data");
+            if (!data_controller.CollectionExists(path))
+            {
+                log.Warn($"No collection found for {path}");
+                return;
+            }
 
-        //    //var database_path = GetDatabasePath();
-
-        //    // Load users and collections
-        //    //if (File.Exists(database_path))
-        //    //{
-        //    //    var data = JsonExtensions.ReadFromFile<BookCollectorModelSerializer>(database_path);
-        //    //    Mapper.Map(data, this);
-        //    //}
-        //}
-
-        //public void SaveData()
-        //{
-        //    log.Info("Saving model data");
-
-        //    //var database_path = GetDatabasePath();
-
-        //    // On application exit, save current state
-        //    //var data = Mapper.Map<BookCollectorModelSerializer>(this);
-        //    //JsonExtensions.WriteToFile(database_path, data);
-        //}
+            CurrentCollection = data_controller.LoadCollection(path);
+        }
     }
 }

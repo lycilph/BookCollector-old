@@ -16,6 +16,9 @@ namespace BookCollector.Initialization
             CreateMap<GoodreadsCsvBook, Book>()
                 .ForMember(destination => destination.Authors, opt => opt.ResolveUsing<AuthorResolver>())
                 .ForMember(destination => destination.ISBN10, opt => opt.MapFrom(source => source.ISBN));
+
+            CreateMap<Settings, Settings>();
+            CreateMap<CollectionDescription, CollectionDescription>();
         }
     }
 }

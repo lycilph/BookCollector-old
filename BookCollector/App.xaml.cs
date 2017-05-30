@@ -34,7 +34,7 @@ namespace BookCollector
         {
             log.Info("Initializing application controller");
 
-            var application_controller = kernel.Get<ApplicationController>();
+            var application_controller = kernel.Get<IApplicationController>();
             application_controller.Initialize();
         }
 

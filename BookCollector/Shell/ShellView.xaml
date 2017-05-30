@@ -4,6 +4,7 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                       xmlns:converters="clr-namespace:BookCollector.Framework.Converters"
                       xmlns:shell="clr-namespace:BookCollector.Shell"
                       mc:Ignorable="d"
@@ -17,6 +18,7 @@
                       SaveWindowPosition="True"
                       WindowButtonCommandsOverlayBehavior="Always"
                       RightWindowCommandsOverlayBehavior="Always"
+                      dialogs:DialogParticipation.Register="{Binding}"
                       d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <controls:MetroWindow.Resources>
         <converters:BooleanToVisibilityConverter x:Key="CollapsedVisibilityConverter" TrueValue="Visible" FalseValue="Collapsed"/>

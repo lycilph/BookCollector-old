@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300"
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:CollectionDescriptionViewModel}">
-    <TextBlock Text="{Binding Name}"/>
+             d:DataContext="{d:DesignInstance local:CollectionDescriptionViewModel}"
+             ToolTip="{Binding Filename}">
+    <TextBlock Text="{Binding Name}" FontSize="20"/>
 </UserControl>
