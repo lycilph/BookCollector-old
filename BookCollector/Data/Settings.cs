@@ -19,6 +19,13 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _LastCollectionFilename, value); }
         }
 
+        private bool _LoadCollectionOnStart = true;
+        public bool LoadCollectionOnStart
+        {
+            get { return _LoadCollectionOnStart; }
+            set { this.RaiseAndSetIfChanged(ref _LoadCollectionOnStart, value); }
+        }
+
         public Settings(IDataController data_controller)
         {
             this.data_controller = data_controller;

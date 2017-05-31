@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using BookCollector.Controllers;
 using BookCollector.Framework.MessageBus;
 using BookCollector.Application.Messages;
+using System.Collections.Generic;
 
 namespace BookCollector.Models
 {
@@ -38,6 +39,11 @@ namespace BookCollector.Models
                 });
         }
 
+        public void AddToCurrentCollection(List<Book> books)
+        {
+            CurrentCollection.Books.AddRange(books);
+        }
+
         public void LoadAndSetCurrentCollection(string path)
         {
             log.Info($"Loading current collection {path}");
@@ -49,6 +55,13 @@ namespace BookCollector.Models
             }
 
             CurrentCollection = data_controller.LoadCollection(path);
+        }
+
+        public void SaveCurrentCollection()
+        {
+            log.Info($"Loading current collection {CurrentCollection.Description.Filename}");
+
+            data_controller.SaveCollection(CurrentCollection);
         }
     }
 }

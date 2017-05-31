@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 
 namespace BookCollector.Models
 {
@@ -6,6 +7,8 @@ namespace BookCollector.Models
     {
         Collection CurrentCollection { get; set; }
 
+        void AddToCurrentCollection(List<Book> books);
         void LoadAndSetCurrentCollection(string path);
+        void SaveCurrentCollection();
     }
 }

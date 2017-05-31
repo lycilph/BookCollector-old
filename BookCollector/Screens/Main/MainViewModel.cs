@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using BookCollector.Data;
-using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
+using BookCollector.Models;
 using BookCollector.Shell;
 using BookCollector.ThirdParty.Goodreads;
 using CsvHelper.Configuration;
@@ -17,14 +17,15 @@ namespace BookCollector.Screens.Main
     public class MainViewModel : ShellScreenBase
     {
         private ILog log = LogManager.GetCurrentClassLogger();
+        private IBookCollectorModel book_collector_model;
 
-        private ReactiveList<BookViewModel> _Books = new ReactiveList<BookViewModel>();
-        public ReactiveList<BookViewModel> Books
+        private IReactiveDerivedList<BookViewModel> _Books;
+        public IReactiveDerivedList<BookViewModel> Books
         {
             get { return _Books; }
-            private set { this.RaiseAndSetIfChanged(ref _Books, value); }
+            set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
-
+        
         private BookViewModel _SelectedBook;
         public BookViewModel SelectedBook
         {
@@ -39,11 +40,22 @@ namespace BookCollector.Screens.Main
             set { this.RaiseAndSetIfChanged(ref _ImportCommand, value); }
         }
 
-        public MainViewModel()
+        public MainViewModel(IBookCollectorModel book_collector_model)
         {
+            this.book_collector_model = book_collector_model;
+
             DisplayName = ScreenNames.MainScreenName;
 
             ImportCommand = ReactiveCommand.Create(() => Import());
+        }
+
+        public override void Activate()
+        {
+            Books = book_collector_model.CurrentCollection
+                                        .Books
+                                        .CreateDerivedCollection(b => new BookViewModel(b));
+            if (Books.Any())
+                SelectedBook = Books.First();
         }
 
         private void Import()
@@ -69,8 +81,8 @@ namespace BookCollector.Screens.Main
                 using (var csv = new TrimmingCsvReader(sr, configuration))
                 {
                     var csv_books = csv.GetRecords<GoodreadsCsvBook>().ToList();
-                    var books = Mapper.Map<IEnumerable<GoodreadsCsvBook>, IEnumerable<Book>>(csv_books);
-                    Books = books.Select(x => new BookViewModel(x)).ToReactiveList();
+                    var books = Mapper.Map<IEnumerable<GoodreadsCsvBook>, IEnumerable<Book>>(csv_books).ToList();
+                    book_collector_model.AddToCurrentCollection(books);
                 }
 
                 if (Books.Count > 0)

@@ -28,7 +28,6 @@ namespace BookCollector.Controllers
             log.Info("Initializing application controller");
 
             settings.Load();
-            book_collector_model.LoadAndSetCurrentCollection(settings.LastCollectionFilename);
         }
 
         public void Handle(ApplicationMessage message)
@@ -38,16 +37,34 @@ namespace BookCollector.Controllers
             switch (message.Kind)
             {
                 case ApplicationMessage.MessageKind.ShellLoaded:
-                    log.Info("Showing start screen");
-                    event_aggregator.Publish(new NavigationMessage(ScreenNames.StartScreenName));
+                    ShellLoaded();
                     break;
                 case ApplicationMessage.MessageKind.ShellClosing:
-                    log.Info("Closing application");
-
-                    settings.Save();
-                    // Save current collection
+                    ShellClosing();
                     break;
             }
+        }
+
+        private void ShellClosing()
+        {
+            log.Info("Closing application");
+
+            settings.Save();
+            book_collector_model.SaveCurrentCollection();
+        }
+
+        private void ShellLoaded()
+        {
+            log.Info("Showing first screen");
+
+            // Load current collection
+            book_collector_model.LoadAndSetCurrentCollection(settings.LastCollectionFilename);
+
+            // Figure out which screen to show
+            if (settings.LoadCollectionOnStart)
+                event_aggregator.Publish(new NavigationMessage(ScreenNames.MainScreenName));
+            else
+                event_aggregator.Publish(new NavigationMessage(ScreenNames.StartScreenName));
         }
     }
 }
