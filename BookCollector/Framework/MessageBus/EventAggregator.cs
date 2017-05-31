@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BookCollector.Extensions;
+using BookCollector.Framework.Extensions;
 
 namespace BookCollector.Framework.MessageBus
 {
     // This implementation is inspired by (ie. stolen from) the caliburn.micro EventAggregator.
-    // However there is not thread marshaling here
+    // However there is no thread marshaling here
     public class EventAggregator : IEventAggregator
     {
         private readonly List<MessageHandler> handlers = new List<MessageHandler>();

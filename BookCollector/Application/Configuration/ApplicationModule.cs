@@ -8,7 +8,7 @@ using BookCollector.Screens.Start;
 using BookCollector.Shell;
 using Ninject.Modules;
 
-namespace BookCollector.Initialization
+namespace BookCollector.Application.Configuration
 {
     public class ApplicationModule : NinjectModule
     {

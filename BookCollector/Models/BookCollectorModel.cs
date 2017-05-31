@@ -5,7 +5,7 @@ using System;
 using System.Reactive.Linq;
 using BookCollector.Controllers;
 using BookCollector.Framework.MessageBus;
-using BookCollector.Framework.Messages;
+using BookCollector.Application.Messages;
 
 namespace BookCollector.Models
 {

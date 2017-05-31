@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using BookCollector.Application.Messages;
 using BookCollector.Controllers;
 using BookCollector.Data;
-using BookCollector.Extensions;
+using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.MessageBus;
-using BookCollector.Framework.Messages;
 using BookCollector.Models;
 using BookCollector.Shell;
 using MahApps.Metro.Controls.Dialogs;

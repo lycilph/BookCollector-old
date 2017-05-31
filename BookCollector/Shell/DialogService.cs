@@ -28,7 +28,7 @@ namespace BookCollector.Shell
 
         private MetroWindow GetMetroWindow()
         {
-            var window = Application.Current.MainWindow as MetroWindow;
+            var window = System.Windows.Application.Current.MainWindow as MetroWindow;
             if (window == null)
                 throw new InvalidOperationException("Main window must be a MetroWindow");
             return window;

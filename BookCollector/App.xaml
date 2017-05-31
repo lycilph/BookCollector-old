@@ -15,7 +15,7 @@
                 <!-- Themes -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Themes/Dialogs/BaseMetroDialog.xaml" />
 
-                <ResourceDictionary Source="Initialization/ViewBindings.xaml"/>
+                <ResourceDictionary Source="Application/Configuration/ViewBindings.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

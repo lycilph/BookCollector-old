@@ -1,7 +1,7 @@
-﻿using BookCollector.Data;
+﻿using BookCollector.Application.Messages;
+using BookCollector.Data;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.MessageBus;
-using BookCollector.Framework.Messages;
 using BookCollector.Models;
 using BookCollector.Screens;
 

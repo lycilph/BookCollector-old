@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace BookCollector.Extensions
+namespace BookCollector.Framework.Extensions
 {
     public static class JsonExtensions
     {

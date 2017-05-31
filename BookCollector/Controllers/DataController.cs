@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using AutoMapper;
 using BookCollector.Data;
-using BookCollector.Extensions;
+using BookCollector.Framework.Extensions;
 
 namespace BookCollector.Controllers
 {

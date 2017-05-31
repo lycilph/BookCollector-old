@@ -3,7 +3,7 @@ using BookCollector.Data;
 using BookCollector.Framework.Logging;
 using BookCollector.ThirdParty.Goodreads;
 
-namespace BookCollector.Initialization
+namespace BookCollector.Application.Configuration
 {
     public class MappingProfile : Profile
     {

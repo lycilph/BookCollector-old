@@ -1,4 +1,4 @@
-﻿namespace BookCollector.Framework.Messages
+﻿namespace BookCollector.Application.Messages
 {
     public class StatusMessage
     {

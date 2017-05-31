@@ -1,14 +1,14 @@
 ﻿using System.Windows;
 using AutoMapper;
+using BookCollector.Application.Configuration;
 using BookCollector.Controllers;
 using BookCollector.Framework.Logging;
-using BookCollector.Initialization;
 using BookCollector.Shell;
 using Ninject;
 
 namespace BookCollector
 {
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private ILog log;
         private IKernel kernel;

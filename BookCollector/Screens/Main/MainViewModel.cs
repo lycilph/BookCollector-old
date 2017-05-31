@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using BookCollector.Data;
-using BookCollector.Extensions;
+using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
 using BookCollector.Shell;
 using BookCollector.ThirdParty.Goodreads;

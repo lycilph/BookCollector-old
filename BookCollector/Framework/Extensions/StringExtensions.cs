@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace BookCollector.Extensions
+namespace BookCollector.Framework.Extensions
 {
     public static class StringExtensions
     {

@@ -8,7 +8,7 @@
                       xmlns:converters="clr-namespace:BookCollector.Framework.Converters"
                       xmlns:shell="clr-namespace:BookCollector.Shell"
                       mc:Ignorable="d"
-                      Icon="../Graphics/main-window-icon.ico"
+                      Icon="../Application/Graphics/main-window-icon.ico"
                       Height="600" 
                       Width="800"
                       Loaded="OnLoaded"

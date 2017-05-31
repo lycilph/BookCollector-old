@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BookCollector.Application.Messages;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.MessageBus;
-using BookCollector.Framework.Messages;
 using BookCollector.Screens;
 using ReactiveUI;
 

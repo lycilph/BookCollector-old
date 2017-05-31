@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ReactiveUI;
 
-namespace BookCollector.Extensions
+namespace BookCollector.Framework.Extensions
 {
     public static class ReactiveListExtensions
     {

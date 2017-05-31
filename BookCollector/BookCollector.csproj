@@ -37,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Graphics\main-window-icon.ico</ApplicationIcon>
+    <ApplicationIcon>Application\Graphics\main-window-icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -109,29 +109,29 @@
     <Compile Include="Controllers\IDataController.cs" />
     <Compile Include="Data\CollectionDescription.cs" />
     <Compile Include="Data\Settings.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Framework\Extensions\StringExtensions.cs" />
     <Compile Include="Framework\MessageBus\IHandle.cs" />
     <Compile Include="Framework\MessageBus\IEventAggregator.cs" />
     <Compile Include="Framework\MessageBus\EventAggregator.cs" />
     <Compile Include="Framework\MessageBus\MessageHandler.cs" />
-    <Compile Include="Framework\Messages\ApplicationMessage.cs" />
-    <Compile Include="Framework\Messages\NavigationMessage.cs" />
-    <Compile Include="Framework\Messages\StatusMessage.cs" />
+    <Compile Include="Application\Messages\ApplicationMessage.cs" />
+    <Compile Include="Application\Messages\NavigationMessage.cs" />
+    <Compile Include="Application\Messages\StatusMessage.cs" />
     <Compile Include="Framework\MVVM\ItemViewModel.cs" />
     <Compile Include="Data\Book.cs" />
-    <Compile Include="Initialization\ApplicationModule.cs" />
+    <Compile Include="Application\Configuration\ApplicationModule.cs" />
     <Compile Include="Models\BookCollectorModel.cs" />
     <Compile Include="Data\Collection.cs" />
-    <Compile Include="Extensions\JsonExtensions.cs" />
-    <Compile Include="Extensions\ReactiveListExtensions.cs" />
+    <Compile Include="Framework\Extensions\JsonExtensions.cs" />
+    <Compile Include="Framework\Extensions\ReactiveListExtensions.cs" />
     <Compile Include="Framework\Converters\BooleanConverter.cs" />
     <Compile Include="Framework\Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
     <Compile Include="Framework\Logging\ILog.cs" />
     <Compile Include="Framework\Logging\LogManager.cs" />
     <Compile Include="Framework\Logging\NullLog.cs" />
-    <Compile Include="Initialization\MappingProfile.cs" />
+    <Compile Include="Application\Configuration\MappingProfile.cs" />
     <Compile Include="Models\IBookCollectorModel.cs" />
     <Compile Include="Screens\Start\CollectionDescriptionSelectedView.xaml.cs">
       <DependentUpon>CollectionDescriptionSelectedView.xaml</DependentUpon>
@@ -211,7 +211,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Initialization\ViewBindings.xaml">
+    <Page Include="Application\Configuration\ViewBindings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -253,7 +253,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Graphics\main-window-icon.ico" />
+    <Resource Include="Application\Graphics\main-window-icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Screens\Import\" />

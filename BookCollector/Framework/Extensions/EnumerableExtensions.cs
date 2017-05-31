@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BookCollector.Extensions
+namespace BookCollector.Framework.Extensions
 {
     public static class EnumerableExtensions
     {
