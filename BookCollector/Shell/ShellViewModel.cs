@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using BookCollector.Application.Messages;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.MessageBus;
@@ -14,6 +15,8 @@ namespace BookCollector.Shell
         private ILog log = LogManager.GetCurrentClassLogger();
         private IEventAggregator event_aggregator;
         private List<IShellScreen> shell_screens;
+
+        private WindowCommand tools_window_command;
 
         private string _DisplayName;
         public string DisplayName
@@ -62,9 +65,19 @@ namespace BookCollector.Shell
 
             event_aggregator.Subscribe(this);
 
-            //var t = new ToolsViewModel();
-            //ShellFlyouts.Add(t);
-            //RightShellCommands.Add(new WindowCommand("Tools", () => t.Toggle()));
+            tools_window_command = new WindowCommand("Tools", () => ShellContent.Tools.Toggle());
+            RightShellCommands.Add(tools_window_command);
+
+            this.WhenAnyValue(x => x.ShellContent)
+                .Where(screen => screen != null)
+                .Subscribe(screen => 
+                {
+                    tools_window_command.IsVisible = screen.Tools != null;
+
+                    ShellFlyouts.Clear();
+                    if (screen.Tools != null)
+                        ShellFlyouts.Add(screen.Tools);
+                });
         }
 
         public void OnViewLoaded()

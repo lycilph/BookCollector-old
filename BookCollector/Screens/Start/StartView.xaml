@@ -10,7 +10,6 @@
              d:DataContext="{d:DesignInstance start:StartViewModel}">
     <Grid Margin="100,20">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -20,9 +19,7 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.ColumnSpan="2" Text="Start" FontSize="36" HorizontalAlignment="Center"/>
-
-        <ListBox Grid.Row="1"
+        <ListBox Grid.Row="0"
                  Grid.Column="0"
                  ItemsSource="{Binding Collections}"
                  SelectedItem="{Binding SelectedCollection}">
@@ -38,7 +35,7 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <StackPanel Grid.Row="1"
+        <StackPanel Grid.Row="0"
                     Grid.Column="1">
             <Button Content="{icons:PackIconMaterial PlusCircle}" 
                     Command="{Binding AddCollectionCommand}"
@@ -60,7 +57,7 @@
                     Margin="4"/>
         </StackPanel>
 
-        <Button Grid.Row="2"
+        <Button Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Right"
                 Content="{icons:PackIconMaterial ArrowRightBoldCircle}" 

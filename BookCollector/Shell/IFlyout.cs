@@ -7,6 +7,7 @@ namespace BookCollector.Shell
         bool IsOpen { get; set; }
         bool IsPinned { get; set; }
         Position Position { get; set; }
+
         void Toggle();
         void Show();
         void Hide();

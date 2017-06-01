@@ -40,11 +40,12 @@ namespace BookCollector.Screens.Main
             set { this.RaiseAndSetIfChanged(ref _ImportCommand, value); }
         }
 
-        public MainViewModel(IBookCollectorModel book_collector_model)
+        public MainViewModel(IBookCollectorModel book_collector_model, MainToolsViewModel tools_view_model)
         {
             this.book_collector_model = book_collector_model;
 
             DisplayName = ScreenNames.MainScreenName;
+            Tools = tools_view_model;
 
             ImportCommand = ReactiveCommand.Create(() => Import());
         }
@@ -54,8 +55,8 @@ namespace BookCollector.Screens.Main
             Books = book_collector_model.CurrentCollection
                                         .Books
                                         .CreateDerivedCollection(b => new BookViewModel(b));
-            if (Books.Any())
-                SelectedBook = Books.First();
+
+            SelectedBook = Books.FirstOrDefault();
         }
 
         private void Import()

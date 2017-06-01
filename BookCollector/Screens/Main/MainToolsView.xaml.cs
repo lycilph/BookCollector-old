@@ -1,8 +1,8 @@
 ﻿namespace BookCollector.Screens.Main
 {
-    public partial class ToolsView
+    public partial class MainToolsView
     {
-        public ToolsView()
+        public MainToolsView()
         {
             InitializeComponent();
         }

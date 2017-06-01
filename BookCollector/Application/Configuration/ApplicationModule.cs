@@ -33,6 +33,8 @@ namespace BookCollector.Application.Configuration
             // ViewModel bindings
             Bind<IShellScreen>().To<StartViewModel>().InSingletonScope();
             Bind<IShellScreen>().To<MainViewModel>().InSingletonScope();
+
+            Bind<MainToolsViewModel>().ToSelf().InSingletonScope();
         }
     }
 }

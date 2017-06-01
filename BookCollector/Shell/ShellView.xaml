@@ -50,5 +50,25 @@
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
-    <ContentControl Content="{Binding ShellContent}"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            <Rectangle Fill="White">
+                <Rectangle.Effect>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2.5" Direction="270" Color="#BBBBBB"/>
+                </Rectangle.Effect>
+            </Rectangle>
+            <Rectangle Fill="{StaticResource AccentColorBrush3}"/>
+            <TextBlock Text="{Binding ShellContent.DisplayName}" FontSize="36" Margin="150,20,0,10"/>
+        </Grid>
+        
+        <ContentControl Grid.Row="1" 
+                        Margin="20,10"
+                        Content="{Binding ShellContent}"/>
+    </Grid>
+    
 </controls:MetroWindow>

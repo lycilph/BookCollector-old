@@ -32,7 +32,7 @@
         <main:BookDetailView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type main:ToolsViewModel}">
-        <main:ToolsView/>
+    <DataTemplate DataType="{x:Type main:MainToolsViewModel}">
+        <main:MainToolsView/>
     </DataTemplate>
 </ResourceDictionary>
