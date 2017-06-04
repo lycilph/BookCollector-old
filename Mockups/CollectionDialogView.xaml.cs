@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Controls;
+using System.Windows;
 
 namespace Mockups
 {
-    public partial class CollectionDialogView : UserControl
+    public partial class CollectionDialogView
     {
         private Action close_handler;
 
@@ -13,7 +13,7 @@ namespace Mockups
             this.close_handler = close_handler;
         }
 
-        private void CloseClick(object sender, System.Windows.RoutedEventArgs e)
+        private void CloseClick(object sender, RoutedEventArgs e)
         {
             close_handler();
         }

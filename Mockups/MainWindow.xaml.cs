@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Mockups
 {
@@ -11,49 +10,46 @@ namespace Mockups
             InitializeComponent();
         }
 
-        public void ShowCollectionsView()
-        {
-            ShellContent.Content = new CollectionsView();
-            SearchBox.Visibility = Visibility.Hidden;
-            CollectionNameButton.Visibility = Visibility.Hidden;
-            ScreenTitle.Text = "Collections";
-            MenuToggleButton.IsEnabled = false;
-            SettingsButton.IsEnabled = false;
-        }
-
         public void ShowBooksView()
         {
-            ShellContent.Content = new BooksView();
-            SearchBox.Visibility = Visibility.Visible;
+            ShellContent.Content = new MainView();
+
             CollectionNameButton.Visibility = Visibility.Visible;
-            ScreenTitle.Text = "Books";
-            MenuToggleButton.IsEnabled = true;
-            SettingsButton.IsEnabled = true;
         }
 
-        internal void ShowWebView()
+        public void ShowWebView()
         {
             ShellContent.Content = new WebView();
-            SearchBox.Visibility = Visibility.Hidden;
+
             CollectionNameButton.Visibility = Visibility.Hidden;
-            ScreenTitle.Text = "Web";
-            MenuToggleButton.IsEnabled = false;
-            SettingsButton.IsEnabled = true;
         }
 
-        public void ShowImportView()
+        internal void ShowImportView()
         {
-            ShellContent.Content = new ImportView();
-            SearchBox.Visibility = Visibility.Hidden;
+            var main_view = ShellContent.Content as MainView;
+            if (main_view == null)
+                throw new InvalidOperationException("Shell content must be a MainView");
+
+            main_view.MainContent.Content = new ImportView();
+            main_view.SearchBox.Visibility = Visibility.Hidden;
+            main_view.MenuToggleButton.Visibility = Visibility.Hidden;
+            main_view.ScreenTitle.Text = "Import";
+
             CollectionNameButton.Visibility = Visibility.Hidden;
-            ScreenTitle.Text = "Import";
-            MenuToggleButton.IsEnabled = false;
-            SettingsButton.IsEnabled = true;
         }
 
-        private void ChangeCollectionClick(object sender, RoutedEventArgs e)
+        internal void ShowCollectionsView()
         {
-            ShowCollectionsView();
+            var main_view = ShellContent.Content as MainView;
+            if (main_view == null)
+                throw new InvalidOperationException("Shell content must be a MainView");
+
+            main_view.MainContent.Content = new CollectionsView();
+            main_view.SearchBox.Visibility = Visibility.Hidden;
+            main_view.MenuToggleButton.Visibility = Visibility.Hidden;
+            main_view.ScreenTitle.Text = "Collections";
+
+            CollectionNameButton.Visibility = Visibility.Hidden;
         }
 
         private void SettingsClick(object sender, RoutedEventArgs e)
@@ -61,10 +57,9 @@ namespace Mockups
             SettingsFlyout.IsOpen = !SettingsFlyout.IsOpen;
         }
 
-        private void ShelfChangedClick(object sender, SelectionChangedEventArgs e)
+        private void ChangeCollectionClick(object sender, RoutedEventArgs e)
         {
-            if (MenuToggleButton != null)
-                MenuToggleButton.IsChecked = !MenuToggleButton.IsChecked;
+            ShowCollectionsView();
         }
     }
 }

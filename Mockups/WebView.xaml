@@ -12,14 +12,15 @@
     <UserControl.Resources>
         <conv:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <DockPanel Grid.Row="0">
+        <DockPanel Grid.Row="0"
+                   Margin="8">
             <Button Click="HomeClick">
                 <md:PackIcon Kind="Home"/>
             </Button>
@@ -35,14 +36,26 @@
                     Margin="8,0,0,0">
                 <md:PackIcon Kind="Reload"/>
             </Button>
+            <Button DockPanel.Dock="Right"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}"
+                    Click="BackClick">
+                <md:PackIcon Kind="BookOpenVariant"/>
+            </Button>
+            <Button DockPanel.Dock="Right"
+                    Margin="0,0,8,0"
+                    ToolTip="Import book"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                <md:PackIcon Kind="Import"/>
+            </Button>
             <TextBlock Text="{Binding ElementName=WebBrowser, Path=Address}"
+                       VerticalAlignment="Center"
                        Margin="8,0,0,0"/>
         </DockPanel>
-        
+
         <cs:ChromiumWebBrowser Grid.Row="1"
                                x:Name="WebBrowser"
                                Margin="0,8,0,0"
-                               Address="http://www.google.com"/>
+                               Address="http://www.goodreads.com"/>
 
         <ProgressBar Grid.Row="1"
                      HorizontalAlignment="Center"

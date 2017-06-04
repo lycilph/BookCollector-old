@@ -6,7 +6,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:Mockups"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="212">
+             d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel Margin="32">
         <Grid>
             <Grid.ColumnDefinitions>

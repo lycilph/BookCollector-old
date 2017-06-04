@@ -10,7 +10,7 @@ namespace Mockups
             get { return (ObservableCollection<ImportedBookViewModel>)GetValue(ImportedBooksProperty); }
             set { SetValue(ImportedBooksProperty, value); }
         }
-        public static readonly DependencyProperty ImportedBooksProperty = 
+        public static readonly DependencyProperty ImportedBooksProperty =
             DependencyProperty.Register("ImportedBooks", typeof(ObservableCollection<ImportedBookViewModel>), typeof(ImportView), new PropertyMetadata(null));
 
         public ImportView()
@@ -29,7 +29,7 @@ namespace Mockups
             };
         }
 
-        private void ContinueClick(object sender, RoutedEventArgs e)
+        private void ContinueClick(object sender, System.Windows.RoutedEventArgs e)
         {
             var window = Application.Current.MainWindow as MainWindow;
             window.ShowBooksView();

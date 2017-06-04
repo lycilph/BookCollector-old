@@ -15,24 +15,6 @@ namespace Mockups
             DataContext = this;
         }
 
-        private void ContinueClick(object sender, RoutedEventArgs e)
-        {
-            var window = Application.Current.MainWindow as MainWindow;
-            window.ShowBooksView();
-        }
-
-        private void DeleteClick(object sender, RoutedEventArgs e)
-        {
-            var dialog_settings = new MetroDialogSettings
-            {
-                SuppressDefaultResources = true,
-                CustomResourceDictionary = dialog_dictionary,
-                NegativeButtonText = "CANCEL"
-            };
-
-            DialogCoordinator.Instance.ShowMessageAsync(this, "Warning", "Are you sure you want to delete the collection?", MessageDialogStyle.AffirmativeAndNegative, dialog_settings);
-        }
-
         private void AddClick(object sender, RoutedEventArgs e)
         {
             var dialog_settings = new MetroDialogSettings
@@ -67,6 +49,24 @@ namespace Mockups
             dialog.Content = view;
 
             DialogCoordinator.Instance.ShowMetroDialogAsync(this, dialog, dialog_settings);
+        }
+
+        private void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            var dialog_settings = new MetroDialogSettings
+            {
+                SuppressDefaultResources = true,
+                CustomResourceDictionary = dialog_dictionary,
+                NegativeButtonText = "CANCEL"
+            };
+
+            DialogCoordinator.Instance.ShowMessageAsync(this, "Warning", "Are you sure you want to delete the collection?", MessageDialogStyle.AffirmativeAndNegative, dialog_settings);
+        }
+
+        private void ContinueClick(object sender, RoutedEventArgs e)
+        {
+            var window = Application.Current.MainWindow as MainWindow;
+            window.ShowBooksView();
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Mockups
         {
             InitializeComponent();
             DataContext = this;
+
+            WebBrowser.MenuHandler = new MenuHandler();
         }
 
         private void BackClick(object sender, RoutedEventArgs e)
@@ -18,7 +20,7 @@ namespace Mockups
 
         private void HomeClick(object sender, RoutedEventArgs e)
         {
-            WebBrowser.Address = "http://www.google.com";
+            WebBrowser.Address = "http://www.goodreads.com";
         }
     }
 }
