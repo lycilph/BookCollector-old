@@ -1,4 +1,6 @@
-﻿using BookCollector.Framework.Logging;
+﻿using System;
+using System.Reactive.Linq;
+using BookCollector.Framework.Logging;
 using BookCollector.Framework.MVVM;
 using ReactiveUI;
 using IScreen = BookCollector.Framework.MVVM.IScreen;
@@ -9,8 +11,8 @@ namespace BookCollector.Screens.Main
     {
         private ILog log = LogManager.GetCurrentClassLogger();
 
-        private IScreen _MainContent;
-        public IScreen MainContent
+        private IMainScreen _MainContent;
+        public IMainScreen MainContent
         {
             get { return _MainContent; }
             set { this.RaiseAndSetIfChanged(ref _MainContent, value); }
@@ -41,6 +43,17 @@ namespace BookCollector.Screens.Main
         {
             DisplayName = ScreenNames.MainName;
             IsMenuOpen = false;
+
+            this.WhenAnyValue(x => x.MainContent)
+                .Where(content => content != null)
+                .Subscribe(content =>
+                {
+                    // Update title when content changes
+                    DisplayName = content.DisplayName;
+                    // Check if content has extra and menu content
+                    ExtraContent = content.ExtraContent;
+                    MenuContent = content.MenuContent;
+                });
         }
 
         public void ToggleMenu()
@@ -48,27 +61,18 @@ namespace BookCollector.Screens.Main
             IsMenuOpen = !IsMenuOpen;
         }
 
-        public void Show(IScreen content)
+        public void Show(IMainScreen content)
         {
+            if (MainContent == content)
+                return;
+
             // Deactivate old content
             MainContent?.Deactivate();
-
             // Activate new content
             content?.Activate();
 
             // Show new content
             MainContent = content;
-            DisplayName = MainContent.DisplayName;
-
-            if (MainContent is IMainScreen)
-            {
-                var main_screen_content = MainContent as IMainScreen;
-
-                // If screen have extra content, show this as well else hide it
-                ExtraContent = main_screen_content.ExtraContent;
-                // If screen have menu content, show this as well else hide it
-                MenuContent = main_screen_content.MenuContent;
-            }
         }
     }
 }

@@ -127,6 +127,8 @@
     <Compile Include="Domain\Configuration\ApplicationModule.cs" />
     <Compile Include="Domain\IApplicationController.cs" />
     <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
+    <Compile Include="Framework\Dialog\DialogService.cs" />
+    <Compile Include="Framework\Dialog\IDialogService.cs" />
     <Compile Include="Framework\MVVM\IMainScreen.cs" />
     <Compile Include="Framework\MVVM\MainScreenBase.cs" />
     <Compile Include="Models\Book.cs" />

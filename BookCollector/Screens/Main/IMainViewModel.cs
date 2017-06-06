@@ -5,6 +5,6 @@ namespace BookCollector.Screens.Main
     public interface IMainViewModel : IScreen
     {
         void ToggleMenu();
-        void Show(IScreen content);
+        void Show(IMainScreen content);
     }
 }

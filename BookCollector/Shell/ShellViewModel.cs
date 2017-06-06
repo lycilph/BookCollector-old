@@ -63,7 +63,6 @@ namespace BookCollector.Shell
 
             // Deactivate old content
             ShellContent?.Deactivate();
-
             // Activate new content
             content?.Activate();
 
