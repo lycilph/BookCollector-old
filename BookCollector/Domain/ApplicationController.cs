@@ -7,6 +7,7 @@ using BookCollector.Screens;
 using BookCollector.Screens.Main;
 using BookCollector.Screens.Settings;
 using BookCollector.Shell;
+using MaterialDesignThemes.Wpf;
 
 namespace BookCollector.Domain
 {
@@ -44,7 +45,8 @@ namespace BookCollector.Domain
             collection_command = new WindowCommand("[No Name]", () => NavigateTo(ScreenNames.CollectionsName));
             shell_view_model.RightShellCommands.Add(collection_command);
 
-            var settings_command = new WindowCommand("Settings", () => settings_view_model.Toggle());
+            var settings_icon = new PackIcon() { Kind = PackIconKind.Settings };
+            var settings_command = new WindowCommand(settings_icon, () => settings_view_model.Toggle());
             shell_view_model.LeftShellCommands.Add(settings_command);
 
             // Create and show shell

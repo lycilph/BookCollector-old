@@ -7,8 +7,8 @@ namespace BookCollector.Shell
     {
         private readonly Action action;
 
-        private string _DisplayName;
-        public string DisplayName
+        private object _DisplayName;
+        public object DisplayName
         {
             get { return _DisplayName; }
             set { this.RaiseAndSetIfChanged(ref _DisplayName, value); }
@@ -30,7 +30,7 @@ namespace BookCollector.Shell
 
         public ReactiveCommand ExecuteCommand { get; private set; }
 
-        public WindowCommand(string name, Action action)
+        public WindowCommand(object name, Action action)
         {
             this.action = action;
             DisplayName = name;

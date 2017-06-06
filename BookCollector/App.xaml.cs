@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using AutoMapper;
 using BookCollector.Domain;
 using BookCollector.Domain.Configuration;
 using BookCollector.Framework.Logging;
@@ -20,9 +21,11 @@ namespace BookCollector
 
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
+            // Configure ninject dependency injection
             kernel = new StandardKernel(new ApplicationModule());
             // Configure Automapper
-
+            Mapper.Initialize(cfg => cfg.AddProfile<ApplicationMappingProfile>());
+            // Initialize application controller
             var application_controller = kernel.Get<IApplicationController>();
             application_controller.Initialize();
         }

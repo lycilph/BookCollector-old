@@ -3,13 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:BookCollector.Screens.Books"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:BooksViewModel}">
-    <StackPanel>
-        <TextBlock Text="Books"/>
-        <Button Content="Web" Command="{Binding WebCommand}"/>
-    </StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*" MinWidth="200"/>
+        </Grid.ColumnDefinitions>
+
+        <ListBox Grid.Column="0"
+                 ItemsSource="{Binding Books}"
+                 SelectedItem="{Binding SelectedBook}"/>
+
+        <GridSplitter Grid.Column="1"
+                      Margin="20,0"
+                      Width="5"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      Style="{StaticResource MaterialDesignGridSplitter}"/>
+
+        <Grid Grid.Column="2">
+            <!-- Details view -->
+            <ContentControl Content="{Binding SelectedBook}"
+                            ContentTemplate="{StaticResource BookDetails}"/>
+
+            <!-- Action menu -->
+            <md:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                         HorizontalAlignment="Right"
+                         VerticalAlignment="Bottom"
+                         Margin="16">
+                <StackPanel>
+                    <Button ToolTip="Change Collection"
+                            Command="{Binding ChangeCollectionCommand}">
+                        <md:PackIcon Kind="Account"/>
+                    </Button>
+                    <Button ToolTip="Import"
+                            Command="{Binding ImportCommand}">
+                        <md:PackIcon Kind="Import"/>
+                    </Button>
+                    <Button ToolTip="Goodreads"
+                            Command="{Binding WebCommand}">
+                        <md:PackIcon Kind="Web"/>
+                    </Button>
+                </StackPanel>
+            </md:PopupBox>
+        </Grid>
+    </Grid>
 </UserControl>

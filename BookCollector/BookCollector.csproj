@@ -58,6 +58,12 @@
     <ApplicationIcon>Graphics\book_open_page_black.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -69,6 +75,9 @@
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
@@ -124,17 +133,31 @@
     </Compile>
     <Compile Include="Domain\ApplicationController.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
+    <Compile Include="Domain\Configuration\ApplicationMappingProfile.cs" />
     <Compile Include="Domain\Configuration\ApplicationModule.cs" />
     <Compile Include="Domain\IApplicationController.cs" />
+    <Compile Include="Domain\ThirdParty\Goodreads\AuthorResolver.cs" />
+    <Compile Include="Domain\ThirdParty\Goodreads\GoodreadsCsvBook.cs" />
+    <Compile Include="Domain\ThirdParty\Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
     <Compile Include="Framework\Dialog\DialogService.cs" />
     <Compile Include="Framework\Dialog\IDialogService.cs" />
+    <Compile Include="Framework\Extensions\ReactiveListExtensions.cs" />
     <Compile Include="Framework\MVVM\IMainScreen.cs" />
     <Compile Include="Framework\MVVM\MainScreenBase.cs" />
+    <Compile Include="Models\ApplicationModel.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\Description.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\Shelf.cs" />
+    <Compile Include="Screens\Books\BookDetailView.xaml.cs">
+      <DependentUpon>BookDetailView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\BookView.xaml.cs">
+      <DependentUpon>BookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\BookViewModel.cs" />
     <Compile Include="Screens\Books\MenuView.xaml.cs">
       <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
@@ -219,7 +242,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Books\BookDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Books\BooksView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Books\BookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

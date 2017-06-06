@@ -1,6 +1,6 @@
 ﻿namespace BookCollector.Models
 {
-    public class Collection
+    public class Settings
     {
     }
 }

@@ -25,6 +25,14 @@
         <books:BooksView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type books:BookViewModel}">
+        <books:BookView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BookDetails">
+        <books:BookDetailView/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type books:SearchViewModel}">
         <books:SearchView/>
     </DataTemplate>
