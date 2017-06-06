@@ -1,17 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using BookCollector.Domain;
+using BookCollector.Framework.Logging;
+using Ninject;
 
 namespace BookCollector
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application
+    // This bootstraps the application
+    public partial class App
     {
+        private ILog log;
+        private IKernel kernel;
+
+        public App()
+        {
+            LogManager.GetLog = type => new DebugLog(type);
+            log = LogManager.GetCurrentClassLogger();
+        }
+
+        private void ApplicationStartup(object sender, StartupEventArgs e)
+        {
+            kernel = new StandardKernel(new ApplicationModule());
+            // Configure Automapper
+
+            var application_controller = kernel.Get<IApplicationController>();
+            application_controller.Initialize();
+        }
+
+        private void ApplicationExit(object sender, ExitEventArgs e)
+        {
+
+        }
     }
 }

@@ -6,6 +6,11 @@ namespace Mockups
 {
     public partial class App
     {
+        public App()
+        {
+
+        }
+
         private void ApplicationStart(object sender, System.Windows.StartupEventArgs e)
         {
             var path = Assembly.GetExecutingAssembly().Location;
