@@ -4,6 +4,7 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
+                xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                 xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                 xmlns:conv="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                 xmlns:shell="clr-namespace:BookCollector.Shell"
@@ -16,8 +17,8 @@
                 Closing="OnClosing"
                 IsEnabled="{Binding IsEnabled}"
                 SaveWindowPosition="True"
-                WindowButtonCommandsOverlayBehavior="Always"
-                RightWindowCommandsOverlayBehavior="Always"
+                WindowButtonCommandsOverlayBehavior="Never"
+                RightWindowCommandsOverlayBehavior="Never"
                 dialog:DialogParticipation.Register="{Binding}"
                 d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <ma:MetroWindow.Resources>
@@ -58,8 +59,11 @@
                     <Setter Property="IsOpen" Value="{Binding IsOpen}" />
                     <Setter Property="IsPinned" Value="{Binding IsPinned}"/>
                     <Setter Property="Position" Value="{Binding Position}" />
+                    <Setter Property="md:FlyoutAssist.HeaderColorMode" Value="Accent" />
                 </Style>
             </ma:FlyoutsControl.ItemContainerStyle>
         </ma:FlyoutsControl>
     </ma:MetroWindow.Flyouts>
+
+    <md:TransitioningContent Content="{Binding ShellContent}"/>
 </ma:MetroWindow>

@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="BookCollector.Screens.Main.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:BookCollector.Screens.Main"
+             xmlns:conv="clr-namespace:BookCollector.Framework.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <UserControl.Resources>
+        <conv:NullToEnabledConverter x:Key="NullConverter"/>
+    </UserControl.Resources>
+    
+    <md:DrawerHost IsLeftDrawerOpen="{Binding IsMenuOpen}">
+        <md:DrawerHost.LeftDrawerContent>
+            <Grid MinWidth="212">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <!-- Menu toggle button -->
+                <ToggleButton Grid.Row="0"
+                              HorizontalAlignment="Right"
+                              Margin="16"
+                              Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                              IsChecked="{Binding IsMenuOpen}"/>
+
+                <!-- Menu content -->
+                <ContentControl Grid.Row="1"
+                                Content="{Binding MenuContent}"/>
+            </Grid>
+            
+        </md:DrawerHost.LeftDrawerContent>
+
+        <DockPanel>
+            <!-- Top part - title and extras -->
+            <md:ColorZone DockPanel.Dock="Top"
+                          Padding="16"
+                          Mode="PrimaryMid"
+                          md:ShadowAssist.ShadowDepth="Depth4">
+                <DockPanel>
+                    <!-- Menu toggle -->
+                    <ToggleButton DockPanel.Dock="Left"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                  IsChecked="{Binding IsMenuOpen}"
+                                  IsEnabled="{Binding MenuContent, Converter={StaticResource NullConverter}}"/>
+                    
+                    <!-- Extra content -->
+                    <ContentControl DockPanel.Dock="Right"
+                                    Content="{Binding ExtraContent}"/>
+
+                    <!-- Screen Title -->
+                    <TextBlock Margin="32,0,0,0"
+                               VerticalAlignment="Center" 
+                               Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                               Text="{Binding DisplayName}"/>
+                </DockPanel>
+            </md:ColorZone>
+            
+            <!-- Lower part - content -->
+            <md:TransitioningContent Margin="16"
+                                     RunHint="All"
+                                     Content="{Binding MainContent}"/>
+        </DockPanel>
+    </md:DrawerHost>
+</UserControl>

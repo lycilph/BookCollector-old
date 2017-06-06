@@ -2,21 +2,16 @@
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
+using BookCollector.Screens;
 using ReactiveUI;
+using IScreen = BookCollector.Framework.MVVM.IScreen;
 
 namespace BookCollector.Shell
 {
-    public class ShellViewModel : ReactiveObject, IShellViewModel, IViewAware
+    public class ShellViewModel : ScreenBase, IShellViewModel, IViewAware
     {
         private ILog log = LogManager.GetCurrentClassLogger();
         private IEventAggregator event_aggregator;
-
-        private string _DisplayName;
-        public string DisplayName
-        {
-            get { return _DisplayName; }
-            set { this.RaiseAndSetIfChanged(ref _DisplayName, value); }
-        }
 
         private bool _IsEnabled;
         public bool IsEnabled
@@ -46,24 +41,46 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _ShellFlyouts, value); }
         }
 
+        private IScreen _ShellContent;
+        public IScreen ShellContent
+        {
+            get { return _ShellContent; }
+            set { this.RaiseAndSetIfChanged(ref _ShellContent, value); }
+        }
+
         public ShellViewModel(IEventAggregator event_aggregator)
         {
             this.event_aggregator = event_aggregator;
 
-            DisplayName = "Book Collector";
+            DisplayName = ScreenNames.ShellName;
             IsEnabled = true;
+        }
+
+        public void Show(IScreen content)
+        {
+            if (ShellContent == content)
+                return;
+
+            // Deactivate old content
+            ShellContent?.Deactivate();
+
+            // Activate new content
+            content?.Activate();
+
+            // Show new content
+            ShellContent = content;
         }
 
         public void OnViewLoaded()
         {
             log.Info("ShellViewModel - view loaded");
-            event_aggregator.Publish(new ApplicationMessage(ApplicationMessage.MessageKind.ShellLoaded));
+            event_aggregator.Publish(ApplicationMessage.ShellLoadedMessage());
         }
 
         public void OnViewClosing()
         {
             log.Info("ShellViewModel - view closing");
-            event_aggregator.Publish(new ApplicationMessage(ApplicationMessage.MessageKind.ShellClosing));
+            event_aggregator.Publish(ApplicationMessage.ShellClosingMessage());
         }
     }
 }

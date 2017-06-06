@@ -1,13 +1,15 @@
-﻿using ReactiveUI;
+﻿using BookCollector.Framework.MVVM;
+using ReactiveUI;
+using IScreen = BookCollector.Framework.MVVM.IScreen;
 
 namespace BookCollector.Shell
 {
-    public interface IShellViewModel
+    public interface IShellViewModel : IScreen
     {
-        string DisplayName { get; set; }
-        bool IsEnabled { get; set; }
-        ReactiveList<IWindowCommand> LeftShellCommands { get; set; }
-        ReactiveList<IWindowCommand> RightShellCommands { get; set; }
-        ReactiveList<IFlyout> ShellFlyouts { get; set; }
+        ReactiveList<IWindowCommand> LeftShellCommands { get; }
+        ReactiveList<IWindowCommand> RightShellCommands { get; }
+        ReactiveList<IFlyout> ShellFlyouts { get; }
+
+        void Show(IScreen content);
     }
 }

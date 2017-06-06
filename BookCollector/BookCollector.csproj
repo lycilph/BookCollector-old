@@ -124,8 +124,28 @@
     </Compile>
     <Compile Include="Domain\ApplicationController.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
-    <Compile Include="Domain\ApplicationModule.cs" />
+    <Compile Include="Domain\Configuration\ApplicationModule.cs" />
     <Compile Include="Domain\IApplicationController.cs" />
+    <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
+    <Compile Include="Framework\MVVM\IMainScreen.cs" />
+    <Compile Include="Framework\MVVM\MainScreenBase.cs" />
+    <Compile Include="Models\Book.cs" />
+    <Compile Include="Models\Collection.cs" />
+    <Compile Include="Models\Description.cs" />
+    <Compile Include="Models\Shelf.cs" />
+    <Compile Include="Screens\Books\MenuView.xaml.cs">
+      <DependentUpon>MenuView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\MenuViewModel.cs" />
+    <Compile Include="Screens\Books\SearchView.xaml.cs">
+      <DependentUpon>SearchView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\SearchViewModel.cs" />
+    <Compile Include="Screens\Collections\CollectionsView.xaml.cs">
+      <DependentUpon>CollectionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\CollectionsViewModel.cs" />
+    <Compile Include="Screens\ScreenNames.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
     <Compile Include="Framework\Logging\ILog.cs" />
@@ -135,7 +155,26 @@
     <Compile Include="Framework\Messaging\IEventAggregator.cs" />
     <Compile Include="Framework\Messaging\IHandle.cs" />
     <Compile Include="Framework\Messaging\MessageHandler.cs" />
+    <Compile Include="Framework\MVVM\IScreen.cs" />
     <Compile Include="Framework\MVVM\IViewAware.cs" />
+    <Compile Include="Framework\MVVM\ScreenBase.cs" />
+    <Compile Include="Screens\Books\BooksView.xaml.cs">
+      <DependentUpon>BooksView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\BooksViewModel.cs" />
+    <Compile Include="Screens\Main\IMainViewModel.cs" />
+    <Compile Include="Screens\Main\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Main\MainViewModel.cs" />
+    <Compile Include="Screens\Settings\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Settings\SettingsViewModel.cs" />
+    <Compile Include="Screens\Web\WebView.xaml.cs">
+      <DependentUpon>WebView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Web\WebViewModel.cs" />
     <Compile Include="Shell\FlyoutBase.cs" />
     <Compile Include="Shell\IFlyout.cs" />
     <Compile Include="Shell\IShellViewModel.cs" />
@@ -174,7 +213,35 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Domain\ViewBindings.xaml">
+    <Page Include="Domain\Configuration\ViewBindings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Books\BooksView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Books\MenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Collections\CollectionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Main\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Books\SearchView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Settings\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Web\WebView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -184,7 +251,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <Folder Include="Screens\Import\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Graphics\book_open_page_black.ico" />

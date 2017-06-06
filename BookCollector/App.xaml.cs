@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using BookCollector.Domain;
+using BookCollector.Domain.Configuration;
 using BookCollector.Framework.Logging;
 using Ninject;
 

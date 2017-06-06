@@ -23,7 +23,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml" />
                 
                 <!-- Application view bindings -->
-                <ResourceDictionary Source="Domain/ViewBindings.xaml"/>
+                <ResourceDictionary Source="Domain/Configuration/ViewBindings.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- MahApps Brushes -->
