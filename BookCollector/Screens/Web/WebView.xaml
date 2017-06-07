@@ -3,15 +3,72 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:cs="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:conv="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
              xmlns:local="clr-namespace:BookCollector.Screens.Web"
              mc:Ignorable="d" 
              d:DesignHeight="300"
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:WebViewModel}">
-    <DockPanel Background="AliceBlue">
-        <Button DockPanel.Dock="Top"
-                Content="Back"
-                Command="{Binding BackCommand}"/>
-        <TextBlock Text="Web"/>
-    </DockPanel>
+    <UserControl.Resources>
+        <conv:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0"
+                   Margin="8">
+            <Button Command="{Binding HomeCommand}"
+                    ToolTip="Navigate home">
+                <md:PackIcon Kind="Home"/>
+            </Button>
+            <Button Command="{Binding ElementName=WebBrowser, Path=BackCommand}"
+                    ToolTip="Navigate back"
+                    Margin="8,0,0,0">
+                <md:PackIcon Kind="ArrowLeft"/>
+            </Button>
+            <Button Command="{Binding ElementName=WebBrowser, Path=ForwardCommand}"
+                    ToolTip="Navigate forward"
+                    Margin="8,0,0,0">
+                <md:PackIcon Kind="ArrowRight"/>
+            </Button>
+            <Button Command="{Binding ElementName=WebBrowser, Path=ReloadCommand}"
+                    ToolTip="Reload page"
+                    Margin="8,0,0,0">
+                <md:PackIcon Kind="Reload"/>
+            </Button>
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding BackCommand}"
+                    ToolTip="Return to main screen"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                <md:PackIcon Kind="BookOpenVariant"/>
+            </Button>
+            <Button DockPanel.Dock="Right"
+                    Margin="0,0,8,0"
+                    ToolTip="Import book"
+                    Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                <md:PackIcon Kind="Import"/>
+            </Button>
+            <TextBlock Text="{Binding ElementName=WebBrowser, Path=Address}"
+                       VerticalAlignment="Center"
+                       Margin="8,0,0,0"/>
+        </DockPanel>
+
+        <cs:ChromiumWebBrowser Grid.Row="1"
+                               x:Name="WebBrowser"
+                               Address="{Binding Address, Mode=TwoWay}"/>
+
+        <ProgressBar Grid.Row="1"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     Value="0"
+                     IsIndeterminate="True"
+                     Style="{StaticResource MaterialDesignCircularProgressBar}"
+                     Visibility="{Binding ElementName=WebBrowser, Path=IsLoading, Converter={StaticResource VisibilityConverter}}"/>
+    </Grid>
 </UserControl>
