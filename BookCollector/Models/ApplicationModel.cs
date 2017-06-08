@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using BookCollector.Domain;
 using BookCollector.Framework.Logging;
+using BookCollector.Framework.Mapping;
 using BookCollector.Framework.Messaging;
 using ReactiveUI;
 
@@ -27,17 +28,11 @@ namespace BookCollector.Models
                 .Subscribe(collection => event_aggregator.Publish(ApplicationMessage.CollectionChangedMessage(collection?.Description.Filename)));
         }
 
-        public List<Description> GetAllCollectionDescriptions()
-        {
-            log.Info("Loading all collection descriptions");
-
-            return data_service.GetAllCollectionDescriptions();
-        }
-
         public void AddToCurrentCollection(List<Book> books)
         {
             log.Info($"Adding {books.Count} to current collection");
 
+            throw new NotImplementedException();
             //CurrentCollection.Books.AddRange(books);
         }
 
@@ -56,9 +51,49 @@ namespace BookCollector.Models
 
         public void SaveCurrentCollection()
         {
-            //log.Info($"Loading current collection {CurrentCollection.Description.Filename}");
+            log.Info($"Loading current collection {CurrentCollection.Description.Filename}");
 
-            //data_controller.SaveCollection(CurrentCollection);
+            data_service.SaveCollection(CurrentCollection);
+        }
+
+        public void AddCollection(Description description)
+        {
+            log.Info($"Adding collection {description.Filename}");
+
+            data_service.SaveCollection(new Collection() { Description = description });
+        }
+
+        public void UpdateCollection(Description description)
+        {
+            log.Info($"Updating collection {description.Filename}");
+
+            // Load, update and save back the collection
+            var collection = data_service.LoadCollection(description.Filename);
+            Mapper.Map(description, collection.Description);
+            data_service.SaveCollection(collection);
+
+            // If this was the current collection, reload this
+            if (CurrentCollection != null && CurrentCollection.Description.Filename == description.Filename)
+                LoadCurrentCollection(description.Filename);
+        }
+
+        public void DeleteCollection(Description description)
+        {
+            log.Info($"Deleting collection {description.Filename}");
+
+            // Delete the file
+            data_service.DeleteCollection(description.Filename);
+
+            // If this was the current collect, handle it
+            if (CurrentCollection != null && CurrentCollection.Matches(description))
+                CurrentCollection = null;
+        }
+
+        public List<Description> GetAllCollectionDescriptions()
+        {
+            log.Info("Loading all collection descriptions");
+
+            return data_service.GetAllCollectionDescriptions();
         }
     }
 }

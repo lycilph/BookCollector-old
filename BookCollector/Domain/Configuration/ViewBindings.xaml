@@ -53,4 +53,8 @@
     <DataTemplate x:Key="DescriptionSelectedView">
         <collections:DescriptionSelectedView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type collections:CollectionDialogViewModel}">
+        <collections:CollectionDialogView/>
+    </DataTemplate>
 </ResourceDictionary>

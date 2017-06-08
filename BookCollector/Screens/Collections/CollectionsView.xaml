@@ -54,14 +54,17 @@
                      VerticalAlignment="Bottom"
                      Margin="16">
             <StackPanel>
-                <Button ToolTip="Add">
+                <Button ToolTip="Edit"
+                        Command="{Binding EditCommand}">
+                    <md:PackIcon Kind="Pencil"/>
+                </Button>
+                <Button ToolTip="Add"
+                        Command="{Binding AddCommand}">
                     <md:PackIcon Kind="PlusCircle"/>
                 </Button>
-                <Button ToolTip="Delete">
+                <Button ToolTip="Delete"
+                        Command="{Binding DeleteCommand}">
                     <md:PackIcon Kind="MinusCircle"/>
-                </Button>
-                <Button ToolTip="Edit">
-                    <md:PackIcon Kind="Pencil"/>
                 </Button>
             </StackPanel>
         </md:PopupBox>

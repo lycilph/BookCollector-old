@@ -38,7 +38,8 @@ namespace BookCollector.Domain
 
         public void DeleteCollection(string path)
         {
-            throw new NotImplementedException();
+            if (File.Exists(path))
+                File.Delete(path);
         }
 
         public Collection LoadCollection(string path)

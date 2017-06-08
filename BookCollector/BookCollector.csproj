@@ -175,6 +175,10 @@
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Books\SearchViewModel.cs" />
+    <Compile Include="Screens\Collections\CollectionDialogView.xaml.cs">
+      <DependentUpon>CollectionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\CollectionDialogViewModel.cs" />
     <Compile Include="Screens\Collections\CollectionsView.xaml.cs">
       <DependentUpon>CollectionsView.xaml</DependentUpon>
     </Compile>
@@ -273,6 +277,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Books\MenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Collections\CollectionDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

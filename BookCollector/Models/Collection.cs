@@ -12,5 +12,10 @@ namespace BookCollector.Models
             get { return _Description; }
             set { this.RaiseAndSetIfChanged(ref _Description, value); }
         }
+
+        public bool Matches(Description description)
+        {
+            return Description.Equals(description);
+        }
     }
 }
