@@ -3,6 +3,7 @@ using System.Linq;
 using BookCollector.Domain.ThirdParty.Goodreads;
 using BookCollector.Framework.Mapping;
 using BookCollector.Models;
+using BookCollector.Screens.Settings;
 
 namespace BookCollector.Domain.Configuration
 {
@@ -19,6 +20,12 @@ namespace BookCollector.Domain.Configuration
                 // Add additional authors
                 if (!string.IsNullOrWhiteSpace(source.AdditionalAuthors))
                     destination.Authors.AddRange(source.AdditionalAuthors.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()));
+            });
+
+            Mapper.Add<SettingsViewModel, SettingsModel>((source, destination) =>
+            {
+                destination.PrimaryColorName = source.SelectedPrimaryColor.Name;
+                destination.AccentColorName = source.SelectedAccentColor.Name;
             });
         }
     }

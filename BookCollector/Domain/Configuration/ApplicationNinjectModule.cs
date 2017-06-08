@@ -13,7 +13,7 @@ using Ninject.Modules;
 
 namespace BookCollector.Domain.Configuration
 {
-    public class ApplicationModule : NinjectModule
+    public class ApplicationNinjectModule : NinjectModule
     {
         private ILog log = LogManager.GetCurrentClassLogger();
 

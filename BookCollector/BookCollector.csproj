@@ -134,7 +134,7 @@
     </Compile>
     <Compile Include="Domain\ApplicationController.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
-    <Compile Include="Domain\Configuration\ApplicationModule.cs" />
+    <Compile Include="Domain\Configuration\ApplicationNinjectModule.cs" />
     <Compile Include="Domain\Configuration\ApplicationObjectMapping.cs" />
     <Compile Include="Domain\DataService.cs" />
     <Compile Include="Domain\IApplicationController.cs" />

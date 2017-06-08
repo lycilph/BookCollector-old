@@ -52,6 +52,11 @@ namespace BookCollector.Domain
             // Load settings
             settings_model.Load();
 
+            // Set theme
+            var palette_helper = new PaletteHelper();
+            palette_helper.ReplacePrimaryColor(settings_model.PrimaryColorName);
+            palette_helper.ReplaceAccentColor(settings_model.AccentColorName);
+
             // Load application model
             if (settings_model.LoadCollectionOnStart && !string.IsNullOrEmpty(settings_model.LastCollectionFilename))
                 application_model.LoadCurrentCollection(settings_model.LastCollectionFilename);

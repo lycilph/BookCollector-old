@@ -13,7 +13,6 @@ namespace BookCollector
     public partial class App
     {
         private ILog log;
-        private IKernel kernel;
 
         public App()
         {
@@ -23,12 +22,14 @@ namespace BookCollector
 
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
+            log.Info("Application startup");
+
             // Setup CEF
             SetupCEF();
             // Setup object mapping
             ApplicationObjectMapping.Setup();
             // Configure ninject dependency injection
-            kernel = new StandardKernel(new ApplicationModule());
+            var kernel = new StandardKernel(new ApplicationNinjectModule());
             // Initialize application controller
             var application_controller = kernel.Get<IApplicationController>();
             application_controller.Initialize();
@@ -36,6 +37,8 @@ namespace BookCollector
 
         private void ApplicationExit(object sender, ExitEventArgs e)
         {
+            log.Info("Application exit");
+
             Cef.Shutdown();
         }
 
