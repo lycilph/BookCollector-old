@@ -18,9 +18,10 @@ namespace BookCollector.Screens.Books
     public class BooksViewModel : MainScreenBase
     {
         private ILog log = LogManager.GetCurrentClassLogger();
+        private IApplicationModel application_model;
 
-        private ReactiveList<BookViewModel> _Books;
-        public ReactiveList<BookViewModel> Books
+        private IReactiveDerivedList<BookViewModel> _Books;
+        public IReactiveDerivedList<BookViewModel> Books
         {
             get { return _Books; }
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
@@ -54,8 +55,10 @@ namespace BookCollector.Screens.Books
             set { this.RaiseAndSetIfChanged(ref _ChangeCollectionCommand, value); }
         }
 
-        public BooksViewModel(IEventAggregator event_aggregator, SearchViewModel search_view_model, MenuViewModel menu_view_model)
+        public BooksViewModel(IEventAggregator event_aggregator, IApplicationModel application_model, SearchViewModel search_view_model, MenuViewModel menu_view_model)
         {
+            this.application_model = application_model;
+
             DisplayName = ScreenNames.BooksName;
             ShowCollectionCommand = true;
             ExtraContent = search_view_model;
@@ -64,6 +67,17 @@ namespace BookCollector.Screens.Books
             WebCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateToMessage(ScreenNames.WebName)));
             ChangeCollectionCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateToMessage(ScreenNames.CollectionsName)));
             ImportCommand = ReactiveCommand.Create(Import);
+        }
+
+        public override void Activate()
+        {
+            Books = application_model.CurrentCollection.Books.CreateDerivedCollection(b => new BookViewModel(b));
+            SelectedBook = Books.FirstOrDefault();
+        }
+
+        public override void Deactivate()
+        {
+            application_model.SaveCurrentCollection();
         }
 
         private void Import()
@@ -91,9 +105,9 @@ namespace BookCollector.Screens.Books
                 using (var csv = new TrimmingCsvReader(sr, configuration))
                 {
                     var csv_books = csv.GetRecords<GoodreadsCsvBook>().ToList();
-                    Books = csv_books.Select(b => Mapper.Map<Book>(b))
-                                     .Select(b => new BookViewModel(b))
-                                     .ToReactiveList();
+                    var books = csv_books.Select(b => Mapper.Map<Book>(b)).ToList();
+
+                    application_model.AddToCurrentCollection(books);
                 }
 
                 if (Books.Count > 0)

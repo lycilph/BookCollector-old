@@ -113,6 +113,7 @@ namespace BookCollector.Domain
             settings_model.Save();
 
             // Save application model
+            application_model.SaveCurrentCollection();
         }
 
         private void NavigateTo(string screen_name)

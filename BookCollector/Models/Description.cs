@@ -7,14 +7,14 @@ namespace BookCollector.Models
     [JsonObject(MemberSerialization.OptOut)]
     public class Description : ReactiveObject, IEquatable<Description>
     {
-        private string _Name;
+        private string _Name = string.Empty;
         public string Name
         {
             get { return _Name; }
             set { this.RaiseAndSetIfChanged(ref _Name, value); }
         }
 
-        private string _Text;
+        private string _Text = string.Empty;
         public string Text
         {
             get { return _Text; }

@@ -32,8 +32,7 @@ namespace BookCollector.Models
         {
             log.Info($"Adding {books.Count} to current collection");
 
-            throw new NotImplementedException();
-            //CurrentCollection.Books.AddRange(books);
+            CurrentCollection.Books.AddRange(books);
         }
 
         public void LoadCurrentCollection(string path)

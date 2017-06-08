@@ -35,6 +35,10 @@
                      HorizontalAlignment="Left"
                      Margin="16">
             <StackPanel>
+                <Button ToolTip="Edit"
+                        ToolTipService.Placement="Right">
+                    <md:PackIcon Kind="Pencil"/>
+                </Button>
                 <Button ToolTip="Add"
                         ToolTipService.Placement="Right"
                         Command="{Binding AddCommand}">
@@ -43,10 +47,6 @@
                 <Button ToolTip="Delete"
                         ToolTipService.Placement="Right">
                     <md:PackIcon Kind="MinusCircle"/>
-                </Button>
-                <Button ToolTip="Edit"
-                        ToolTipService.Placement="Right">
-                    <md:PackIcon Kind="Pencil"/>
                 </Button>
             </StackPanel>
         </md:PopupBox>
