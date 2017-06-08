@@ -39,7 +39,7 @@ namespace BookCollector.Domain.Configuration
 
             Bind<IScreen>().To<BooksViewModel>().InSingletonScope();
             Bind<SearchViewModel>().ToSelf().InSingletonScope();
-            Bind<MenuViewModel>().ToSelf().InSingletonScope();
+            Bind<ShelvesViewModel>().ToSelf().InSingletonScope();
 
             Bind<IScreen>().To<CollectionsViewModel>().InSingletonScope();
 

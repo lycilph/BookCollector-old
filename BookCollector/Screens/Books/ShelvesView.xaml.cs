@@ -1,8 +1,8 @@
 ﻿namespace BookCollector.Screens.Books
 {
-    public partial class MenuView
+    public partial class ShelvesView
     {
-        public MenuView()
+        public ShelvesView()
         {
             InitializeComponent();
         }

@@ -167,10 +167,10 @@
       <DependentUpon>BookView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Books\BookViewModel.cs" />
-    <Compile Include="Screens\Books\MenuView.xaml.cs">
-      <DependentUpon>MenuView.xaml</DependentUpon>
+    <Compile Include="Screens\Books\ShelvesView.xaml.cs">
+      <DependentUpon>ShelvesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Books\MenuViewModel.cs" />
+    <Compile Include="Screens\Books\ShelvesViewModel.cs" />
     <Compile Include="Screens\Books\SearchView.xaml.cs">
       <DependentUpon>SearchView.xaml</DependentUpon>
     </Compile>
@@ -276,7 +276,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Books\MenuView.xaml">
+    <Page Include="Screens\Books\ShelvesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace BookCollector.Screens.Books
 {
-    public class MenuViewModel : ScreenBase
+    public class ShelvesViewModel : ScreenBase
     {
         private ReactiveCommand _AddCommand;
         public ReactiveCommand AddCommand
@@ -14,7 +14,7 @@ namespace BookCollector.Screens.Books
             set { this.RaiseAndSetIfChanged(ref _AddCommand, value); }
         }
 
-        public MenuViewModel(IEventAggregator event_aggregator)
+        public ShelvesViewModel(IEventAggregator event_aggregator)
         {
             DisplayName = "Shelves";
 

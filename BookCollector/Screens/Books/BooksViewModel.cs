@@ -55,7 +55,7 @@ namespace BookCollector.Screens.Books
             set { this.RaiseAndSetIfChanged(ref _ChangeCollectionCommand, value); }
         }
 
-        public BooksViewModel(IEventAggregator event_aggregator, IApplicationModel application_model, SearchViewModel search_view_model, MenuViewModel menu_view_model)
+        public BooksViewModel(IEventAggregator event_aggregator, IApplicationModel application_model, SearchViewModel search_view_model, ShelvesViewModel menu_view_model)
         {
             this.application_model = application_model;
 

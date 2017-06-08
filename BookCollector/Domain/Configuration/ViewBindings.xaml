@@ -37,8 +37,8 @@
         <books:SearchView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type books:MenuViewModel}">
-        <books:MenuView/>
+    <DataTemplate DataType="{x:Type books:ShelvesViewModel}">
+        <books:ShelvesView/>
     </DataTemplate>
     
     <!-- Collections View -->

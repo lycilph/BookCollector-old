@@ -8,5 +8,6 @@
         public const string BooksName = "Books";
         public const string CollectionsName = "Collection";
         public const string SettingsName = "Settings";
+        public const string ShelvesName = "Shelves";
     }
 }
