@@ -62,9 +62,6 @@
     <ApplicationIcon>Graphics\book_open_page_black.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.0.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.0.2\lib\net45\AutoMapper.dll</HintPath>
-    </Reference>
     <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
@@ -137,23 +134,31 @@
     </Compile>
     <Compile Include="Domain\ApplicationController.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
-    <Compile Include="Domain\Configuration\ApplicationMappingProfile.cs" />
     <Compile Include="Domain\Configuration\ApplicationModule.cs" />
+    <Compile Include="Domain\Configuration\ApplicationObjectMapping.cs" />
+    <Compile Include="Domain\DataService.cs" />
     <Compile Include="Domain\IApplicationController.cs" />
-    <Compile Include="Domain\ThirdParty\Goodreads\AuthorResolver.cs" />
+    <Compile Include="Domain\IDataService.cs" />
     <Compile Include="Domain\ThirdParty\Goodreads\GoodreadsCsvBook.cs" />
     <Compile Include="Domain\ThirdParty\Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
     <Compile Include="Framework\Dialog\DialogService.cs" />
     <Compile Include="Framework\Dialog\IDialogService.cs" />
+    <Compile Include="Framework\Extensions\JsonExtensions.cs" />
     <Compile Include="Framework\Extensions\ReactiveListExtensions.cs" />
+    <Compile Include="Framework\Extensions\StringExtensions.cs" />
+    <Compile Include="Framework\Mapping\Mapper.cs" />
+    <Compile Include="Framework\Mapping\MapperInstance.cs" />
     <Compile Include="Framework\MVVM\IMainScreen.cs" />
+    <Compile Include="Framework\MVVM\ItemViewModel.cs" />
     <Compile Include="Framework\MVVM\MainScreenBase.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
     <Compile Include="Models\Book.cs" />
     <Compile Include="Models\Collection.cs" />
     <Compile Include="Models\Description.cs" />
-    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\IApplicationModel.cs" />
+    <Compile Include="Models\ISettingsModel.cs" />
+    <Compile Include="Models\SettingsModel.cs" />
     <Compile Include="Models\Shelf.cs" />
     <Compile Include="Screens\Books\BookDetailView.xaml.cs">
       <DependentUpon>BookDetailView.xaml</DependentUpon>
@@ -174,6 +179,13 @@
       <DependentUpon>CollectionsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Collections\CollectionsViewModel.cs" />
+    <Compile Include="Screens\Collections\DescriptionListView.xaml.cs">
+      <DependentUpon>DescriptionListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\DescriptionSelectedView.xaml.cs">
+      <DependentUpon>DescriptionSelectedView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\DescriptionViewModel.cs" />
     <Compile Include="Screens\ScreenNames.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
@@ -265,6 +277,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Collections\CollectionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Collections\DescriptionListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Collections\DescriptionSelectedView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

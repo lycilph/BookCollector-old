@@ -3,13 +3,67 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:BookCollector.Screens.Collections"
              mc:Ignorable="d" 
              d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignWidth="600"
              d:DataContext="{d:DesignInstance local:CollectionsViewModel}">
-    <StackPanel>
-        <Button Content="Back" Command="{Binding ContinueCommand}"/>
-        <Button Content="Dialog" Command="{Binding DialogCommand}"/>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListBox Grid.Row="0"
+                 Margin="150,50,150,0"
+                 ItemsSource="{Binding Collections}"
+                 SelectedItem="{Binding SelectedCollection}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                    <Setter Property="ContentTemplate" Value="{StaticResource DescriptionListView}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Setter Property="Padding" Value="8"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="ContentTemplate" Value="{StaticResource DescriptionSelectedView}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <StackPanel Grid.Row="1"
+                    Margin="150,0,150,50"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+            <Button Content="Continue"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Command="{Binding ContinueCommand}"/>
+            <Button Content="Cancel"
+                    Margin="8,0,0,0"
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                    Command="{Binding CancelCommand}"/>
+        </StackPanel>
+
+        <md:PopupBox Grid.Row="0"
+                     Grid.RowSpan="2"
+                     Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                     HorizontalAlignment="Right"
+                     VerticalAlignment="Bottom"
+                     Margin="16">
+            <StackPanel>
+                <Button ToolTip="Add">
+                    <md:PackIcon Kind="PlusCircle"/>
+                </Button>
+                <Button ToolTip="Delete">
+                    <md:PackIcon Kind="MinusCircle"/>
+                </Button>
+                <Button ToolTip="Edit">
+                    <md:PackIcon Kind="Pencil"/>
+                </Button>
+            </StackPanel>
+        </md:PopupBox>
+    </Grid>
 </UserControl>

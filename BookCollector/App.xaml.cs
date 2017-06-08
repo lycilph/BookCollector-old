@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Windows;
-using AutoMapper;
 using BookCollector.Domain;
 using BookCollector.Domain.Configuration;
 using BookCollector.Framework.Logging;
@@ -26,10 +25,10 @@ namespace BookCollector
         {
             // Setup CEF
             SetupCEF();
+            // Setup object mapping
+            ApplicationObjectMapping.Setup();
             // Configure ninject dependency injection
             kernel = new StandardKernel(new ApplicationModule());
-            // Configure Automapper
-            Mapper.Initialize(cfg => cfg.AddProfile<ApplicationMappingProfile>());
             // Initialize application controller
             var application_controller = kernel.Get<IApplicationController>();
             application_controller.Initialize();

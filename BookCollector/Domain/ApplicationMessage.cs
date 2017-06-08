@@ -2,16 +2,16 @@
 {
     public class ApplicationMessage
     {
-        public enum MessageKind { ShellLoaded, ShellClosing, ToggleMainMenu, NavigateTo };
+        public enum MessageKind { ShellLoaded, ShellClosing, ToggleMainMenu, NavigateTo, CollectionChanged };
 
         public MessageKind Kind { get; private set; }
-        public string ScreenName { get; set; }
+        public string Text { get; set; }
 
         public ApplicationMessage(MessageKind kind) : this(kind, string.Empty) { }
-        public ApplicationMessage(MessageKind kind, string screen_name)
+        public ApplicationMessage(MessageKind kind, string text)
         {
             Kind = kind;
-            ScreenName = screen_name;
+            Text = text;
         }
 
         public static ApplicationMessage ShellLoadedMessage()
@@ -32,6 +32,11 @@
         public static ApplicationMessage NavigateToMessage(string screen_name)
         {
             return new ApplicationMessage(MessageKind.NavigateTo, screen_name);
+        }
+
+        public static ApplicationMessage CollectionChangedMessage(string filename)
+        {
+            return new ApplicationMessage(MessageKind.CollectionChanged, filename);
         }
     }
 }

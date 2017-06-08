@@ -45,4 +45,12 @@
     <DataTemplate DataType="{x:Type collections:CollectionsViewModel}">
         <collections:CollectionsView/>
     </DataTemplate>
+
+    <DataTemplate x:Key="DescriptionListView">
+        <collections:DescriptionListView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DescriptionSelectedView">
+        <collections:DescriptionSelectedView/>
+    </DataTemplate>
 </ResourceDictionary>

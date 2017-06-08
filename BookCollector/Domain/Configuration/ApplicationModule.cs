@@ -2,6 +2,7 @@
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
+using BookCollector.Models;
 using BookCollector.Screens.Books;
 using BookCollector.Screens.Collections;
 using BookCollector.Screens.Main;
@@ -24,6 +25,11 @@ namespace BookCollector.Domain.Configuration
             Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
             Bind<IApplicationController>().To<ApplicationController>().InSingletonScope();
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
+            Bind<IDataService>().To<DataService>().InSingletonScope();
+
+            // Models
+            Bind<IApplicationModel>().To<ApplicationModel>().InSingletonScope();
+            Bind<ISettingsModel>().To<SettingsModel>().InSingletonScope();
 
             // View models
             Bind<IShellViewModel>().To<ShellViewModel>().InSingletonScope();

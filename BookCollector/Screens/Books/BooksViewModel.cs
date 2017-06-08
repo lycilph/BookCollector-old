@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
-using AutoMapper;
 using BookCollector.Domain;
 using BookCollector.Domain.ThirdParty.Goodreads;
 using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
+using BookCollector.Framework.Mapping;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Models;
@@ -92,8 +91,9 @@ namespace BookCollector.Screens.Books
                 using (var csv = new TrimmingCsvReader(sr, configuration))
                 {
                     var csv_books = csv.GetRecords<GoodreadsCsvBook>().ToList();
-                    var books = Mapper.Map<IEnumerable<GoodreadsCsvBook>, IEnumerable<Book>>(csv_books).ToReactiveList();
-                    Books = books.Select(b => new BookViewModel(b)).ToReactiveList();
+                    Books = csv_books.Select(b => Mapper.Map<Book>(b))
+                                     .Select(b => new BookViewModel(b))
+                                     .ToReactiveList();
                 }
 
                 if (Books.Count > 0)

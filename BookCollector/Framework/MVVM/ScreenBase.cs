@@ -13,6 +13,6 @@ namespace BookCollector.Framework.MVVM
 
         public virtual void Activate() { }
 
-        public void Deactivate() { }
+        public virtual void Deactivate() { }
     }
 }

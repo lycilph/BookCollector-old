@@ -14,18 +14,18 @@ namespace BookCollector.Models
             set { this.RaiseAndSetIfChanged(ref _Name, value); }
         }
 
-        private DateTime _LastModfied;
-        public DateTime LastModfied
-        {
-            get { return _LastModfied; }
-            set { this.RaiseAndSetIfChanged(ref _LastModfied, value); }
-        }
-
         private string _Text;
         public string Text
         {
             get { return _Text; }
             set { this.RaiseAndSetIfChanged(ref _Text, value); }
+        }
+
+        private DateTime _LastModfied;
+        public DateTime LastModfied
+        {
+            get { return _LastModfied; }
+            set { this.RaiseAndSetIfChanged(ref _LastModfied, value); }
         }
 
         // Other data
@@ -42,8 +42,8 @@ namespace BookCollector.Models
         public bool Equals(Description other)
         {
             return Name.Equals(other.Name) &&
-                   LastModfied.Equals(other.LastModfied) &&
-                   Text.Equals(other.Text);
+                   Text.Equals(other.Text) &&
+                   LastModfied.Equals(other.LastModfied);
         }
 
         public override bool Equals(object obj)
@@ -60,8 +60,8 @@ namespace BookCollector.Models
             {
                 var hashcode = 269;
                 hashcode = (hashcode * 47) + (!string.IsNullOrEmpty(Name) ? Name.GetHashCode() : 0);
-                hashcode = (hashcode * 47) + (LastModfied != null ? LastModfied.GetHashCode() : 0);
                 hashcode = (hashcode * 47) + (!string.IsNullOrEmpty(Text) ? Text.GetHashCode() : 0);
+                hashcode = (hashcode * 47) + (LastModfied != null ? LastModfied.GetHashCode() : 0);
                 return hashcode;
             }
         }
