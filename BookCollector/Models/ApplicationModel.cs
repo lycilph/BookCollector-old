@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BookCollector.Data;
 using BookCollector.Domain;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Mapping;

@@ -1,5 +1,5 @@
-﻿using BookCollector.Framework.MVVM;
-using BookCollector.Models;
+﻿using BookCollector.Data;
+using BookCollector.Framework.MVVM;
 using ReactiveUI;
 
 namespace BookCollector.Screens.Import

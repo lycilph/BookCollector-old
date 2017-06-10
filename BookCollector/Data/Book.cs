@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BookCollector.Models
+namespace BookCollector.Data
 {
     public class Book
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using ReactiveUI;
 
-namespace BookCollector.Models
+namespace BookCollector.Data
 {
     [JsonObject(MemberSerialization.OptOut)]
     public class Collection : ReactiveObject
@@ -18,6 +18,13 @@ namespace BookCollector.Models
         {
             get { return _Books; }
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
+        }
+
+        private ReactiveList<Shelf> _Shelves;
+        public ReactiveList<Shelf> Shelves
+        {
+            get { return _Shelves; }
+            set { this.RaiseAndSetIfChanged(ref _Shelves, value); }
         }
 
         public bool Matches(Description description)

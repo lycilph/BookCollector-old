@@ -156,13 +156,13 @@
     <Compile Include="Framework\MVVM\ItemViewModel.cs" />
     <Compile Include="Framework\MVVM\MainScreenBase.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
-    <Compile Include="Models\Book.cs" />
-    <Compile Include="Models\Collection.cs" />
-    <Compile Include="Models\Description.cs" />
+    <Compile Include="Data\Book.cs" />
+    <Compile Include="Data\Collection.cs" />
+    <Compile Include="Data\Description.cs" />
     <Compile Include="Models\IApplicationModel.cs" />
     <Compile Include="Models\ISettingsModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
-    <Compile Include="Models\Shelf.cs" />
+    <Compile Include="Data\Shelf.cs" />
     <Compile Include="Screens\Books\BookDetailView.xaml.cs">
       <DependentUpon>BookDetailView.xaml</DependentUpon>
     </Compile>

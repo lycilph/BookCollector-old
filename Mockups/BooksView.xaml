@@ -67,6 +67,15 @@
                         Click="GoodreadsClick">
                     <md:PackIcon Kind="Web"/>
                 </Button>
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Left">
+                    <Button ToolTip="Goodreads">
+                        <md:PackIcon Kind="Web"/>
+                    </Button>
+                    <Button ToolTip="Goodreads">
+                        <md:PackIcon Kind="Web"/>
+                    </Button>
+                </StackPanel>
             </StackPanel>
         </md:PopupBox>
     </Grid>
