@@ -39,10 +39,12 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Left">
             <Button Content="Continue"
+                    MinWidth="80"
                     Style="{StaticResource MaterialDesignFlatButton}"
                     Command="{Binding ContinueCommand}"/>
             <Button Content="Cancel"
                     Margin="8,0,0,0"
+                    MinWidth="80"
                     Style="{StaticResource MaterialDesignFlatButton}"
                     Command="{Binding CancelCommand}"/>
         </StackPanel>

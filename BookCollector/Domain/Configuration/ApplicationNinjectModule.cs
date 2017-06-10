@@ -5,6 +5,7 @@ using BookCollector.Framework.MVVM;
 using BookCollector.Models;
 using BookCollector.Screens.Books;
 using BookCollector.Screens.Collections;
+using BookCollector.Screens.Import;
 using BookCollector.Screens.Main;
 using BookCollector.Screens.Settings;
 using BookCollector.Screens.Web;
@@ -42,6 +43,8 @@ namespace BookCollector.Domain.Configuration
             Bind<ShelvesViewModel>().ToSelf().InSingletonScope();
 
             Bind<IScreen>().To<CollectionsViewModel>().InSingletonScope();
+
+            Bind<IScreen>().To<ImportViewModel>().InSingletonScope();
 
             Bind<IScreen>().To<WebViewModel>().InSingletonScope();
         }

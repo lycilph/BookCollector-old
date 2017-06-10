@@ -1,16 +1,9 @@
-﻿using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.Linq;
 using BookCollector.Domain;
-using BookCollector.Domain.ThirdParty.Goodreads;
-using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
-using BookCollector.Framework.Mapping;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Models;
-using CsvHelper.Configuration;
-using Microsoft.Win32;
 using ReactiveUI;
 
 namespace BookCollector.Screens.Books
@@ -66,7 +59,7 @@ namespace BookCollector.Screens.Books
 
             WebCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateToMessage(ScreenNames.WebName)));
             ChangeCollectionCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateToMessage(ScreenNames.CollectionsName)));
-            ImportCommand = ReactiveCommand.Create(Import);
+            ImportCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateToMessage(ScreenNames.ImportName)));
         }
 
         public override void Activate()
@@ -78,43 +71,6 @@ namespace BookCollector.Screens.Books
         public override void Deactivate()
         {
             application_model.SaveCurrentCollection();
-        }
-
-        private void Import()
-        {
-            log.Info("Importing books");
-
-            var ofd = new OpenFileDialog
-            {
-                Title = "Please select file to import",
-                InitialDirectory = Assembly.GetExecutingAssembly().Location,
-                DefaultExt = ".csv",
-                Filter = "Goodreads CSV files |*.csv"
-            };
-            var result = ofd.ShowDialog();
-            if (result == true)
-            {
-                var configuration = new CsvConfiguration
-                {
-                    IsHeaderCaseSensitive = false,
-                    IgnoreHeaderWhiteSpace = true,
-                    TrimFields = true
-                };
-
-                using (var sr = new StreamReader(ofd.FileName))
-                using (var csv = new TrimmingCsvReader(sr, configuration))
-                {
-                    var csv_books = csv.GetRecords<GoodreadsCsvBook>().ToList();
-                    var books = csv_books.Select(b => Mapper.Map<Book>(b)).ToList();
-
-                    application_model.AddToCurrentCollection(books);
-                }
-
-                if (Books.Count > 0)
-                    SelectedBook = Books.First();
-
-                log.Info($"Imported {Books.Count} books from {ofd.FileName}");
-            }
         }
     }
 }

@@ -44,7 +44,7 @@
                       SelectedItem="{Binding SelectedPrimaryColor}"
                       DisplayMemberPath="Name"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Primary" VerticalAlignment="Center"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Accent" VerticalAlignment="Center"/>
             <ComboBox Grid.Row="3"
                       Grid.Column="2"
                       IsEditable="False" 

@@ -4,7 +4,8 @@
                     xmlns:web="clr-namespace:BookCollector.Screens.Web"
                     xmlns:books="clr-namespace:BookCollector.Screens.Books"
                     xmlns:collections="clr-namespace:BookCollector.Screens.Collections"
-                    xmlns:settings="clr-namespace:BookCollector.Screens.Settings">
+                    xmlns:settings="clr-namespace:BookCollector.Screens.Settings"
+                    xmlns:import="clr-namespace:BookCollector.Screens.Import">
     <!-- Main View -->
     <DataTemplate DataType="{x:Type main:MainViewModel}">
         <main:MainView/>
@@ -56,5 +57,14 @@
 
     <DataTemplate DataType="{x:Type collections:CollectionDialogViewModel}">
         <collections:CollectionDialogView/>
+    </DataTemplate>
+    
+    <!-- Import View -->
+    <DataTemplate DataType="{x:Type import:ImportViewModel}">
+        <import:ImportView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type import:ImportedBookViewModel}">
+        <import:ImportedBookView/>
     </DataTemplate>
 </ResourceDictionary>

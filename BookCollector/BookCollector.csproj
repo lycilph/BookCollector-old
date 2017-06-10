@@ -141,6 +141,9 @@
     <Compile Include="Domain\IDataService.cs" />
     <Compile Include="Domain\ThirdParty\Goodreads\GoodreadsCsvBook.cs" />
     <Compile Include="Domain\ThirdParty\Goodreads\TrimmingCsvReader.cs" />
+    <Compile Include="Framework\BusyCursor.cs" />
+    <Compile Include="Framework\Converters\BackgroundColorConverter.cs" />
+    <Compile Include="Framework\Converters\BindingProxy.cs" />
     <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
     <Compile Include="Framework\Dialog\DialogService.cs" />
     <Compile Include="Framework\Dialog\IDialogService.cs" />
@@ -190,6 +193,14 @@
       <DependentUpon>DescriptionSelectedView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Collections\DescriptionViewModel.cs" />
+    <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
+      <DependentUpon>ImportedBookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ImportedBookViewModel.cs" />
+    <Compile Include="Screens\Import\ImportView.xaml.cs">
+      <DependentUpon>ImportView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ImportViewModel.cs" />
     <Compile Include="Screens\ScreenNames.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
@@ -296,6 +307,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Screens\Import\ImportedBookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Screens\Main\MainView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -317,9 +336,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Screens\Import\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Graphics\book_open_page_black.ico" />
   </ItemGroup>

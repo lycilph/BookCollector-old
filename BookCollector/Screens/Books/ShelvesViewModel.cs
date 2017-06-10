@@ -16,7 +16,7 @@ namespace BookCollector.Screens.Books
 
         public ShelvesViewModel(IEventAggregator event_aggregator)
         {
-            DisplayName = "Shelves";
+            DisplayName = ScreenNames.ShelvesName;
 
             AddCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.ToggleMainMenuMessage()));
         }

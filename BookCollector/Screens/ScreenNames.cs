@@ -7,6 +7,7 @@
         public const string MainName = "Main";
         public const string BooksName = "Books";
         public const string CollectionsName = "Collection";
+        public const string ImportName = "Import";
         public const string SettingsName = "Settings";
         public const string ShelvesName = "Shelves";
     }

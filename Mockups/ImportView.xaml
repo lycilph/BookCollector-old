@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Mockups"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="500">
     <Grid Margin="50,0">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -57,6 +58,19 @@
             <Separator Margin="8,32" Style="{StaticResource MaterialDesignDarkSeparator}"/>
 
             <TextBlock Text="Books selected: xx of yy" Margin="16,0"/>
+
+            <TextBlock Text="New shelves found" Margin="16,32,16,0"/>
+            <ItemsControl Margin="16,8,16,0">
+                <Border BorderBrush="{StaticResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Padding="8">
+                    <TextBlock Text="All"/>
+                </Border>
+                <Border BorderBrush="{StaticResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Padding="8">
+                    <TextBlock Text="Read"/>
+                </Border>
+                <Border BorderBrush="{StaticResource MaterialDesignDivider}" BorderThickness="0,0,0,1" Padding="8">
+                    <TextBlock Text="Wishlist"/>
+                </Border>
+            </ItemsControl>
         </StackPanel>
 
         <StackPanel Grid.Row="1"
