@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using BookCollector.Data;
 using BookCollector.Domain.ThirdParty.Goodreads;
 using BookCollector.Framework.Mapping;
 using BookCollector.Models;

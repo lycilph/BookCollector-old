@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
+using BookCollector.Data;
 using BookCollector.Domain;
 using BookCollector.Domain.ThirdParty.Goodreads;
 using BookCollector.Framework.Extensions;
@@ -28,6 +29,13 @@ namespace BookCollector.Screens.Import
         {
             get { return _Books; }
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
+        }
+
+        private string _FilenameShort;
+        public string FilenameShort
+        {
+            get { return _FilenameShort; }
+            set { this.RaiseAndSetIfChanged(ref _FilenameShort, value); }
         }
 
         private string _Filename = string.Empty;
@@ -98,6 +106,9 @@ namespace BookCollector.Screens.Import
             this.event_aggregator = event_aggregator;
             this.application_model = application_model;
             DisplayName = ScreenNames.ImportName;
+
+            this.WhenAnyValue(x => x.Filename)
+                .Subscribe(f => FilenameShort = Path.GetFileName(Filename));
 
             var have_books = this.WhenAny(x => x.Books, x => x.Value != null && x.Value.Any());
 

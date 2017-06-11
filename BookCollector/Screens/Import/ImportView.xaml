@@ -31,7 +31,8 @@
                     VerticalAlignment="Center"/>
             <Border BorderBrush="{StaticResource MaterialDesignDivider}"
                     BorderThickness="0,0,0,1">
-                <TextBlock Text="{Binding Filename}"
+                <TextBlock Text="{Binding FilenameShort}"
+                           ToolTip="{Binding Filename}"
                            VerticalAlignment="Center"
                            Style="{StaticResource MaterialDesignTitleTextBlock}"/>
             </Border>

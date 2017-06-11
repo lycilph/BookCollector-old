@@ -10,24 +10,43 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:BooksViewModel}">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" MinWidth="200"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="1*" MinWidth="200"/>
         </Grid.ColumnDefinitions>
 
-        <ListBox Grid.Column="0"
+        <!-- Shelf name -->
+        <Border Grid.Row="0"
+                Grid.Column="0"
+                Margin="0,0,0,8"
+                BorderBrush="{StaticResource MaterialDesignDivider}"
+                BorderThickness="0,0,0,1">
+            <TextBlock Text="Shelf: Read"
+                       VerticalAlignment="Center"
+                       Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+        </Border>
+
+        <ListBox Grid.Row="1"
+                 Grid.Column="0"
                  ItemsSource="{Binding Books}"
                  SelectedItem="{Binding SelectedBook}"/>
 
-        <GridSplitter Grid.Column="1"
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="1"
                       Margin="20,0"
                       Width="5"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Stretch"
                       Style="{StaticResource MaterialDesignGridSplitter}"/>
 
-        <Grid Grid.Column="2">
+        <Grid Grid.Row="1"
+              Grid.Column="2">
             <!-- Details view -->
             <ContentControl Content="{Binding SelectedBook}"
                             ContentTemplate="{StaticResource BookDetails}"/>
