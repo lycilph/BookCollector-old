@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BookCollector.Data;
 using BookCollector.Domain;
+using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Mapping;
 using BookCollector.Framework.Messaging;
@@ -21,6 +23,13 @@ namespace BookCollector.Models
             set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
+        private Shelf _CurrentShelf;
+        public Shelf CurrentShelf
+        {
+            get { return _CurrentShelf; }
+            set { this.RaiseAndSetIfChanged(ref _CurrentShelf, value); }
+        }
+
         public ApplicationModel(IEventAggregator event_aggregator, IDataService data_service)
         {
             this.data_service = data_service;
@@ -33,7 +42,10 @@ namespace BookCollector.Models
         {
             log.Info($"Adding {books.Count} to current collection");
 
+            // Add books
             CurrentCollection.Books.AddRange(books);
+            // Add shelves
+            CurrentCollection.Shelves = CurrentCollection.Books.SelectMany(b => b.Shelves).Distinct().ToReactiveList();
         }
 
         public void LoadCurrentCollection(string path)
@@ -47,6 +59,7 @@ namespace BookCollector.Models
             }
 
             CurrentCollection = data_service.LoadCollection(path);
+            CurrentShelf = CurrentCollection.Shelves.Single(s => s.Name == ShelfNames.AllShelf);
         }
 
         public void SaveCurrentCollection()

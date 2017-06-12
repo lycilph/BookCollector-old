@@ -171,6 +171,13 @@
       <DependentUpon>BookView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Books\BookViewModel.cs" />
+    <Compile Include="Screens\Books\ShelfHeaderView.xaml.cs">
+      <DependentUpon>ShelfHeaderView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\ShelfView.xaml.cs">
+      <DependentUpon>ShelfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Books\ShelfViewModel.cs" />
     <Compile Include="Screens\Books\ShelvesView.xaml.cs">
       <DependentUpon>ShelvesView.xaml</DependentUpon>
     </Compile>
@@ -289,6 +296,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Books\BookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Books\ShelfHeaderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Books\ShelfView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

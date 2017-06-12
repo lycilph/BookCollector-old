@@ -44,13 +44,22 @@ namespace BookCollector.Screens.Main
             DisplayName = ScreenNames.MainName;
             IsMenuOpen = false;
 
+            this.WhenAnyValue(x => x.IsMenuOpen)
+                .Subscribe(open => 
+                {
+                    if (open)
+                        MenuContent?.Activate();
+                    else
+                        MenuContent?.Deactivate();
+                });
+
             this.WhenAnyValue(x => x.MainContent)
                 .Where(content => content != null)
                 .Subscribe(content =>
                 {
                     // Update title when content changes
                     DisplayName = content.DisplayName;
-                    // Check if content has extra and menu content
+                    // Set extra content and menu content
                     ExtraContent = content.ExtraContent;
                     MenuContent = content.MenuContent;
                 });

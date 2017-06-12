@@ -22,13 +22,9 @@
                    Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
 
         <ListBox Grid.Row="1"
-                 Margin="32,8,32,16">
-            <ListBoxItem Content="All"/>
-            <ListBoxItem Content="Read"/>
-            <ListBoxItem Content="Currently reading"/>
-            <ListBoxItem Content="Wishlist"/>
-        </ListBox>
-
+                 Margin="32,8,32,16"
+                 ItemsSource="{Binding Shelves}"
+                 SelectedItem="{Binding SelectedShelf}"/>
 
         <md:PopupBox Grid.Row="2"
                      Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"

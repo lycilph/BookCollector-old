@@ -22,15 +22,11 @@
         </Grid.ColumnDefinitions>
 
         <!-- Shelf name -->
-        <Border Grid.Row="0"
-                Grid.Column="0"
-                Margin="0,0,0,8"
-                BorderBrush="{StaticResource MaterialDesignDivider}"
-                BorderThickness="0,0,0,1">
-            <TextBlock Text="Shelf: Read"
-                       VerticalAlignment="Center"
-                       Style="{StaticResource MaterialDesignTitleTextBlock}"/>
-        </Border>
+        <ContentControl Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="0,0,0,8"
+                        Content="{Binding Shelf}"
+                        ContentTemplate="{StaticResource ShelfHeaderView}"/>
 
         <ListBox Grid.Row="1"
                  Grid.Column="0"

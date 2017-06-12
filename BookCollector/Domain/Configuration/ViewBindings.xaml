@@ -41,6 +41,14 @@
     <DataTemplate DataType="{x:Type books:ShelvesViewModel}">
         <books:ShelvesView/>
     </DataTemplate>
+
+    <DataTemplate x:Key="ShelfHeaderView">
+        <books:ShelfHeaderView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type books:ShelfViewModel}">
+        <books:ShelfView/>
+    </DataTemplate>
     
     <!-- Collections View -->
     <DataTemplate DataType="{x:Type collections:CollectionsViewModel}">

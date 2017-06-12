@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 using BookCollector.Models;
 
 namespace BookCollector.Screens.Books
@@ -11,6 +12,7 @@ namespace BookCollector.Screens.Books
         public string Authors { get { return string.Join(", ", book.Authors); } }
         public string ISBN10 { get { return book.ISBN10; } }
         public string ISBN13 { get { return book.ISBN13; } }
+        public List<Shelf> Shelves { get { return book.Shelves; } }
 
         public BookViewModel(Book book)
         {

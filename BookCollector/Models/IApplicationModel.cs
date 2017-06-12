@@ -6,6 +6,7 @@ namespace BookCollector.Models
     public interface IApplicationModel
     {
         Collection CurrentCollection { get; set; }
+        Shelf CurrentShelf { get; set; }
 
         void AddToCurrentCollection(List<Book> books);
         void LoadCurrentCollection(string path);
