@@ -9,15 +9,16 @@
         public string ISBN13 { get; set; }
         public string Bookshelves { get; set; }
         public string ExclusiveShelf { get; set; }
-        public string Shelf
+        public string Shelves
         {
             get
             {
+                var shelves = string.Empty;
                 if (!string.IsNullOrWhiteSpace(Bookshelves))
-                    return Bookshelves;
+                    shelves = Bookshelves;
                 if (!string.IsNullOrWhiteSpace(ExclusiveShelf))
-                    return ExclusiveShelf;
-                return string.Empty;
+                    shelves += ", " + ExclusiveShelf;
+                return shelves;
             }
         }
         public string Source { get { return "Goodreads CSV"; } }

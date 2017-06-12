@@ -87,24 +87,8 @@
             <!-- Details + shelves -->
             <TextBlock Text="{Binding SelectedBooksText}" Margin="16,0"/>
 
-            <TextBlock Text="New shelves found" Margin="16,32,16,0"/>
-            <ItemsControl Margin="16,8,16,0">
-                <Border BorderBrush="{StaticResource MaterialDesignDivider}"
-                        BorderThickness="0,0,0,1"
-                        Padding="8">
-                    <TextBlock Text="All"/>
-                </Border>
-                <Border BorderBrush="{StaticResource MaterialDesignDivider}" 
-                        BorderThickness="0,0,0,1" 
-                        Padding="8">
-                    <TextBlock Text="Read"/>
-                </Border>
-                <Border BorderBrush="{StaticResource MaterialDesignDivider}" 
-                        BorderThickness="0,0,0,1" 
-                        Padding="8">
-                    <TextBlock Text="Wishlist"/>
-                </Border>
-            </ItemsControl>
+            <TextBlock Text="{Binding ShelvesText}" Margin="16,32,16,0"/>
+            <ItemsControl Margin="16,8,16,0" ItemsSource="{Binding Shelves}"/>
         </StackPanel>
         
         <!-- Buttons -->

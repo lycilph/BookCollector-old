@@ -132,6 +132,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\ShelfNames.cs" />
     <Compile Include="Domain\ApplicationController.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
     <Compile Include="Domain\Configuration\ApplicationNinjectModule.cs" />
@@ -201,6 +202,10 @@
       <DependentUpon>ImportView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Import\ImportViewModel.cs" />
+    <Compile Include="Screens\Import\ShelfView.xaml.cs">
+      <DependentUpon>ShelfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ShelfViewModel.cs" />
     <Compile Include="Screens\ScreenNames.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
@@ -312,6 +317,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Import\ImportView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\ShelfView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -51,6 +51,9 @@ namespace BookCollector.Models
 
         public void SaveCurrentCollection()
         {
+            if (CurrentCollection == null)
+                return;
+
             log.Info($"Loading current collection {CurrentCollection.Description.Filename}");
 
             data_service.SaveCollection(CurrentCollection);
@@ -60,7 +63,14 @@ namespace BookCollector.Models
         {
             log.Info($"Adding collection {description.Filename}");
 
-            data_service.SaveCollection(new Collection() { Description = description });
+            data_service.SaveCollection(new Collection()
+            {
+                Description = description,
+                Shelves = new ReactiveList<Shelf>()
+                {
+                    new Shelf(ShelfNames.AllShelf, ShelfNames.AllShelfDescription, true)
+                }
+            });
         }
 
         public void UpdateCollection(Description description)

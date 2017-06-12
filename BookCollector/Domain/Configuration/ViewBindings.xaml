@@ -67,4 +67,8 @@
     <DataTemplate DataType="{x:Type import:ImportedBookViewModel}">
         <import:ImportedBookView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type import:ShelfViewModel}">
+        <import:ShelfView/>
+    </DataTemplate>
 </ResourceDictionary>

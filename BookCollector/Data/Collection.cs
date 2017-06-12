@@ -20,7 +20,7 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
 
-        private ReactiveList<Shelf> _Shelves;
+        private ReactiveList<Shelf> _Shelves = new ReactiveList<Shelf>();
         public ReactiveList<Shelf> Shelves
         {
             get { return _Shelves; }

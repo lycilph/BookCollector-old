@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 using BookCollector.Framework.MVVM;
 using ReactiveUI;
 
@@ -8,6 +9,7 @@ namespace BookCollector.Screens.Import
     {
         public string Title { get { return obj.Title; } }
         public string Authors { get { return string.Join(", ", obj.Authors); } }
+        public List<Shelf> Shelves { get { return obj.Shelves; } }
 
         private int _Similarity;
         public int Similarity

@@ -11,6 +11,7 @@ namespace BookCollector.Data
         public string Asin { get; set; }
         public string ISBN10 { get; set; }
         public string ISBN13 { get; set; }
+        public List<Shelf> Shelves { get; private set; } = new List<Shelf>(); 
         public string Source { get; set; }
         public List<string> History { get; private set; } = new List<string>();
     }

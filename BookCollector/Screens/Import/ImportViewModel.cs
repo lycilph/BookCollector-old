@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
@@ -31,6 +32,13 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
 
+        private ReactiveList<ShelfViewModel> _Shelves = new ReactiveList<ShelfViewModel>();
+        public ReactiveList<ShelfViewModel> Shelves
+        {
+            get { return _Shelves; }
+            set { this.RaiseAndSetIfChanged(ref _Shelves, value); }
+        }
+
         private string _FilenameShort;
         public string FilenameShort
         {
@@ -57,6 +65,13 @@ namespace BookCollector.Screens.Import
         {
             get { return _SelectedBooksText; }
             set { this.RaiseAndSetIfChanged(ref _SelectedBooksText, value); }
+        }
+
+        private string _ShelvesText;
+        public string ShelvesText
+        {
+            get { return _ShelvesText; }
+            set { this.RaiseAndSetIfChanged(ref _ShelvesText, value); }
         }
 
         private ReactiveCommand _SelectFileCommand;
@@ -118,7 +133,11 @@ namespace BookCollector.Screens.Import
                                           .Select(x => Books.Any(b => b.Selected));
             var have_selected_books = Observable.Merge(list_changed, item_changed);
 
-            have_selected_books.Subscribe(_ => UpdateSelectedBooksText());
+            have_selected_books.Subscribe(_ => 
+            {
+                UpdateSelectedBooksText();
+                UpdateSelectedShelves();
+            });
 
             SelectFileCommand = ReactiveCommand.Create(SelectFile);
             SelectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = true), have_books);
@@ -132,6 +151,7 @@ namespace BookCollector.Screens.Import
         {
             Filename = string.Empty;
             Books = null;
+            Shelves.Clear();
         }
 
         private void UpdateSelectedBooksText()
@@ -148,6 +168,23 @@ namespace BookCollector.Screens.Import
                 SelectedBooksText = $"{selected_count} books of {count} selected";
             else
                 SelectedBooksText = "No books selected";
+        }
+
+        private void UpdateSelectedShelves()
+        {
+            if (Books == null || !Books.Any())
+            {
+                ShelvesText = "No shelves";
+                return;
+            }
+            else
+                ShelvesText = "New shelves found";
+
+            var selected_shelves = Books.Where(b => b.Selected)
+                                        .SelectMany(b => b.Shelves)
+                                        .Distinct()
+                                        .ToList();
+            Shelves.Apply(s => s.Enabled = selected_shelves.Contains(s.Unwrap()));
         }
 
         private void Import()
@@ -192,14 +229,46 @@ namespace BookCollector.Screens.Import
             using (var sr = new StreamReader(Filename))
             using (var csv = new TrimmingCsvReader(sr, configuration))
             {
-                Books = csv.GetRecords<GoodreadsCsvBook>()
-                            .Select(b => Mapper.Map<Book>(b))
-                            .Select(b => new ImportedBookViewModel(b))
-                            .ToReactiveList();
+                var imported = csv.GetRecords<GoodreadsCsvBook>()
+                                  .Select(goodreads =>
+                                  {
+                                      var book = Mapper.Map<Book>(goodreads);
+                                      return Tuple.Create(goodreads, book, new ImportedBookViewModel(book));
+                                  })
+                                  .ToList();
+
+                Books = imported.Select(p => p.Item3).ToReactiveList();
                 Books.ChangeTrackingEnabled = true;
+
+                HandleShelves(imported);
             }
 
             log.Info($"Found {Books.Count} books in {Filename}");
+        }
+
+        private void HandleShelves(List<Tuple<GoodreadsCsvBook, Book, ImportedBookViewModel>> imported)
+        {
+            var shelves_found = imported.SelectMany(b => b.Item1.Shelves.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()));
+            var distinct_shelves = shelves_found.Distinct();
+            var existing_shelves = application_model.CurrentCollection.Shelves;
+            var new_shelves = distinct_shelves.Where(name => !existing_shelves.Any(shelf => shelf.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)))
+                                              .Select(s => new Shelf(s))
+                                              .ToList();
+            var all_shelves = existing_shelves.Concat(new_shelves).ToList();
+
+            // Create the view models for the new shelves
+            Shelves = new_shelves.Select(s => new ShelfViewModel(s)).ToReactiveList();
+
+            // Update the shelves for each book
+            var all_shelf = existing_shelves.Single(s => s.Name == ShelfNames.AllShelf);
+            imported.Apply(t => 
+            {
+                var shelve_names = t.Item1.Shelves.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(a => a.Trim()).ToList();
+                var shelves = new_shelves.Where(s => shelve_names.Contains(s.Name)).ToList();
+                shelves.Add(all_shelf);
+
+                t.Item2.Shelves.AddRange(shelves);
+            });
         }
 
         private void CalculateSimilarity()
