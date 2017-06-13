@@ -1,30 +1,31 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using BookCollector.Framework.MVVM;
 
 namespace BookCollector.Shell
 {
-    public partial class ShellView
+    public partial class ShellView : IShellView
     {
-        public ShellView()
+        public ShellView(IShellViewModel shell_view_model)
         {
             InitializeComponent();
+
+            DataContext = shell_view_model;
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            if (DataContext is IViewAware)
-            {
-                (DataContext as IViewAware).OnViewLoaded();
-            }
+            //if (DataContext is IViewAware)
+            //{
+            //    (DataContext as IViewAware).OnViewLoaded();
+            //}
         }
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
-            if (DataContext is IViewAware)
-            {
-                (DataContext as IViewAware).OnViewClosing();
-            }
+            //if (DataContext is IViewAware)
+            //{
+            //    (DataContext as IViewAware).OnViewClosing();
+            //}
         }
     }
 }

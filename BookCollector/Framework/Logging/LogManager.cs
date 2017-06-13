@@ -3,6 +3,7 @@ using System.Diagnostics;
 
 namespace BookCollector.Framework.Logging
 {
+    // "Inspired" by Caliburn.Micro
     public class LogManager
     {
         static readonly ILog NullLogInstance = new NullLog();

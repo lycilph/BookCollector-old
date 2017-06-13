@@ -2,13 +2,12 @@
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
-using BookCollector.Screens;
 using ReactiveUI;
 using IScreen = BookCollector.Framework.MVVM.IScreen;
 
 namespace BookCollector.Shell
 {
-    public class ShellViewModel : ScreenBase, IShellViewModel, IViewAware
+    public class ShellViewModel : ScreenBase, IShellViewModel
     {
         private ILog log = LogManager.GetCurrentClassLogger();
         private IEventAggregator event_aggregator;
@@ -52,7 +51,7 @@ namespace BookCollector.Shell
         {
             this.event_aggregator = event_aggregator;
 
-            DisplayName = ScreenNames.ShellName;
+            DisplayName = Constants.ShellDisplayName;
             IsEnabled = true;
         }
 
@@ -70,16 +69,16 @@ namespace BookCollector.Shell
             ShellContent = content;
         }
 
-        public void OnViewLoaded()
-        {
-            log.Info("ShellViewModel - view loaded");
-            event_aggregator.Publish(ApplicationMessage.ShellLoadedMessage());
-        }
+        //public void OnViewLoaded()
+        //{
+        //    log.Info("ShellViewModel - view loaded");
+        //    event_aggregator.Publish(ApplicationMessage.ShellLoadedMessage());
+        //}
 
-        public void OnViewClosing()
-        {
-            log.Info("ShellViewModel - view closing");
-            event_aggregator.Publish(ApplicationMessage.ShellClosingMessage());
-        }
+        //public void OnViewClosing()
+        //{
+        //    log.Info("ShellViewModel - view closing");
+        //    event_aggregator.Publish(ApplicationMessage.ShellClosingMessage());
+        //}
     }
 }

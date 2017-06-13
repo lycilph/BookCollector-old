@@ -16,9 +16,9 @@ namespace BookCollector.Framework.Mapping
 
         public TDestination Map<TDestination>(object source) where TDestination : new()
         {
-            var target = new TDestination();
-            Map(source, target);
-            return target;
+            var destination = new TDestination();
+            Map(source, destination);
+            return destination;
         }
 
         public void Map<TSource, TDestination>(TSource source, TDestination destination)

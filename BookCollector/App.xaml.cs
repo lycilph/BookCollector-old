@@ -1,59 +1,32 @@
-﻿using System.IO;
-using System.Reflection;
-using System.Windows;
+﻿using System.Windows;
 using BookCollector.Domain;
-using BookCollector.Domain.Configuration;
 using BookCollector.Framework.Logging;
-using CefSharp;
-using Ninject;
 
 namespace BookCollector
 {
-    // This bootstraps the application
     public partial class App
     {
         private ILog log;
+        private Bootstrapper bootstrapper;
 
         public App()
         {
             LogManager.GetLog = type => new DebugLog(type);
             log = LogManager.GetCurrentClassLogger();
+
+            bootstrapper = new Bootstrapper();
         }
 
         private void ApplicationStartup(object sender, StartupEventArgs e)
         {
-            log.Info("Application startup");
-
-            // Setup CEF
-            SetupCEF();
-            // Setup object mapping
-            ApplicationObjectMapping.Setup();
-            // Configure ninject dependency injection
-            var kernel = new StandardKernel(new ApplicationNinjectModule());
-            // Initialize application controller
-            var application_controller = kernel.Get<IApplicationController>();
-            application_controller.Initialize();
+            log.Info("Startup");
+            bootstrapper.Startup();
         }
 
         private void ApplicationExit(object sender, ExitEventArgs e)
         {
-            log.Info("Application exit");
-
-            Cef.Shutdown();
-        }
-
-        private void SetupCEF()
-        {
-            var path = Assembly.GetExecutingAssembly().Location;
-            var dir = Path.GetDirectoryName(path);
-
-            var settings = new CefSettings()
-            {
-                //By default CefSharp will use an in-memory cache, you need to specify a Cache Folder to persist data
-                CachePath = Path.Combine(dir, "CefSharp"),
-            };
-            //Perform dependency check to make sure all relevant resources are in our output directory.
-            Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+            log.Info("Exit");
+            bootstrapper.Exit();
         }
     }
 }

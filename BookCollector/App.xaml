@@ -21,9 +21,9 @@
 
                 <!-- Material Design: MahApps Compatibility -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml" />
-                
+
                 <!-- Application view bindings -->
-                <ResourceDictionary Source="Domain/Configuration/ViewBindings.xaml"/>
+                
             </ResourceDictionary.MergedDictionaries>
 
             <!-- MahApps Brushes -->
@@ -42,6 +42,9 @@
             <SolidColorBrush x:Key="RightArrowFill" Color="{DynamicResource Primary500}"/>
             <SolidColorBrush x:Key="IdealForegroundColorBrush" Color="{DynamicResource Primary500Foreground}"/>
             <SolidColorBrush x:Key="IdealForegroundDisabledBrush" Color="{DynamicResource Primary500}" Opacity="0.4"/>
+            
+            <!-- Converters -->
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>
