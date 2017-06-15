@@ -1,15 +1,31 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vm="clr-namespace:BookCollector.ViewModels.Screens"
-                    xmlns:v="clr-namespace:BookCollector.Views.Screens">
+                    xmlns:svm="clr-namespace:BookCollector.ViewModels.Screens"
+                    xmlns:cvm="clr-namespace:BookCollector.ViewModels.Common"
+                    xmlns:dvm="clr-namespace:BookCollector.ViewModels.Dialogs"
+                    xmlns:sv="clr-namespace:BookCollector.Views.Screens"
+                    xmlns:cv="clr-namespace:BookCollector.Views.Common"
+                    xmlns:dv="clr-namespace:BookCollector.Views.Dialogs">
     <!-- Screens -->
-    <DataTemplate DataType="{x:Type vm:CollectionsScreenViewModel}">
-        <v:CollectionsScreenView/>
+    <DataTemplate DataType="{x:Type svm:CollectionsScreenViewModel}">
+        <sv:CollectionsScreenView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type vm:BooksScreenViewModel}">
-        <v:BooksScreenView/>
+    <DataTemplate DataType="{x:Type svm:BooksScreenViewModel}">
+        <sv:BooksScreenView/>
+    </DataTemplate>
+    
+    <!-- Dialogs -->
+    <DataTemplate DataType="{x:Type dvm:DescriptionDialogViewModel}">
+        <dv:DescriptionDialogView/>
     </DataTemplate>
 
     <!-- Common -->
+    <DataTemplate x:Key="DescriptionListView">
+        <cv:DescriptionListView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DescriptionDetailsView">
+        <cv:DescriptionDetailsView/>
+    </DataTemplate>
 </ResourceDictionary>

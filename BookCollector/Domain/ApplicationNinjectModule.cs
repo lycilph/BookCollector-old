@@ -1,7 +1,7 @@
-﻿using BookCollector.Framework.Logging;
+﻿using BookCollector.Framework.Dialog;
+using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
-using BookCollector.Models;
 using BookCollector.Services;
 using BookCollector.Shell;
 using BookCollector.ViewModels.Screens;
@@ -18,6 +18,7 @@ namespace BookCollector.Domain
             log.Info("Configuring Ninject");
 
             Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
+            Bind<IDialogService>().To<DialogService>().InSingletonScope();
             Bind<IDataService>().To<DataService>().InSingletonScope();
             Bind<IThemeService>().To<ThemeService>().InSingletonScope();
 

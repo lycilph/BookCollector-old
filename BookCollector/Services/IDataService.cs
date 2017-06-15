@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 
 namespace BookCollector.Services
 {
@@ -7,5 +8,12 @@ namespace BookCollector.Services
         bool SettingsExists();
         Settings LoadSettings();
         void SaveSettings(Settings settings);
+
+        bool CollectionExists(string path);
+        Collection LoadCollection(string path);
+        void SaveCollection(Collection collection);
+        void DeleteCollection(string path);
+
+        List<Description> GetAllCollectionDescriptions();
     }
 }

@@ -23,8 +23,9 @@
                 <!-- Material Design: MahApps Compatibility -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml" />
 
-                <!-- Application view bindings -->
+                <!-- Application view bindings and styles -->
                 <ResourceDictionary Source="Views/ViewBindings.xaml"/>
+                <ResourceDictionary Source="Views/ApplicationStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- MahApps Brushes -->

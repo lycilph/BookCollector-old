@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using BookCollector.Data;
 using BookCollector.Framework.Extensions;
@@ -33,6 +35,54 @@ namespace BookCollector.Services
                 JsonExtensions.WriteToFile<Settings>(GetSettingsPath(), settings);
                 settings.IsDirty = false;
             }
+        }
+
+        public bool CollectionExists(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public Collection LoadCollection(string path)
+        {
+            var collection = JsonExtensions.ReadFromFile<Collection>(path);
+            collection.Description.Filename = path;
+            collection.Description.BooksCount = collection.Books.Count;
+            collection.Description.ShelfCount = collection.Shelves.Count;
+            collection.IsDirty = false;
+            return collection;
+        }
+
+        public void SaveCollection(Collection collection)
+        {
+            if (collection.IsDirty || !CollectionExists(collection.Description.Filename))
+            {
+                // Set filename if empty
+                if (string.IsNullOrWhiteSpace(collection.Description.Filename))
+                    collection.Description.Filename = Path.Combine(GetDataDirectory(), collection.Description.Name.MakeFilenameSafe() + collection_extension);
+
+                // Set last modified date
+                collection.Description.LastModifiedDate = DateTime.Now;
+
+                JsonExtensions.WriteToFile(collection.Description.Filename, collection);
+                collection.IsDirty = false;
+            }
+        }
+
+        public void DeleteCollection(string path)
+        {
+            if (CollectionExists(path))
+                File.Delete(path);
+        }
+
+        public List<Description> GetAllCollectionDescriptions()
+        {
+            var descriptions = new List<Description>();
+            foreach (var path in Directory.EnumerateFiles(GetDataDirectory(), collection_search_pattern))
+            {
+                var collection = LoadCollection(path);
+                descriptions.Add(collection.Description);
+            }
+            return descriptions;
         }
 
         private string GetDataDirectory()

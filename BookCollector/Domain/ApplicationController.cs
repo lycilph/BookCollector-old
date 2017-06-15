@@ -4,7 +4,6 @@ using System.Linq;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
-using BookCollector.Models;
 using BookCollector.Shell;
 
 namespace BookCollector.Domain
