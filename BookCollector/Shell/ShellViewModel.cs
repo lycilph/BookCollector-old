@@ -19,6 +19,13 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _IsEnabled, value); }
         }
 
+        private bool _IsFullscreen;
+        public bool IsFullscreen
+        {
+            get { return _IsFullscreen; }
+            set { this.RaiseAndSetIfChanged(ref _IsFullscreen, value); }
+        }
+
         private ReactiveList<IWindowCommand> _LeftShellCommands = new ReactiveList<IWindowCommand>();
         public ReactiveList<IWindowCommand> LeftShellCommands
         {
@@ -40,11 +47,25 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _ShellFlyouts, value); }
         }
 
-        private IScreen _ShellContent;
-        public IScreen ShellContent
+        private IScreen _MainContent;
+        public IScreen MainContent
         {
-            get { return _ShellContent; }
-            set { this.RaiseAndSetIfChanged(ref _ShellContent, value); }
+            get { return _MainContent; }
+            set { this.RaiseAndSetIfChanged(ref _MainContent, value); }
+        }
+
+        private IScreen _MenuContent;
+        public IScreen MenuContent
+        {
+            get { return _MenuContent; }
+            set { this.RaiseAndSetIfChanged(ref _MenuContent, value); }
+        }
+
+        private IScreen _HeaderContent;
+        public IScreen HeaderContent
+        {
+            get { return _HeaderContent; }
+            set { this.RaiseAndSetIfChanged(ref _HeaderContent, value); }
         }
 
         public ShellViewModel(IEventAggregator event_aggregator)
@@ -53,32 +74,56 @@ namespace BookCollector.Shell
 
             DisplayName = Constants.ShellDisplayName;
             IsEnabled = true;
+            IsFullscreen = false;
         }
 
-        public void Show(IScreen content)
+        public void ShowMainContent(IScreen content, bool is_fullscreen = false)
         {
-            if (ShellContent == content)
+            if (MainContent == content)
                 return;
 
             // Deactivate old content
-            ShellContent?.Deactivate();
+            MainContent?.Deactivate();
             // Activate new content
             content?.Activate();
 
+            // Configure main content
+            IsFullscreen = is_fullscreen;
+
             // Show new content
-            ShellContent = content;
+            MainContent = content;
         }
 
-        //public void OnViewLoaded()
-        //{
-        //    log.Info("ShellViewModel - view loaded");
-        //    event_aggregator.Publish(ApplicationMessage.ShellLoadedMessage());
-        //}
+        public void ShowMenuContent(IScreen content)
+        {
+            throw new System.NotImplementedException();
 
-        //public void OnViewClosing()
-        //{
-        //    log.Info("ShellViewModel - view closing");
-        //    event_aggregator.Publish(ApplicationMessage.ShellClosingMessage());
-        //}
+            //if (MenuContent == content)
+            //    return;
+
+            //// Deactivate old content
+            //MenuContent?.Deactivate();
+            //// Activate new content
+            //content?.Activate();
+
+            //// Show new content
+            //MenuContent = content;
+        }
+
+        public void ShowHeaderContent(IScreen content)
+        {
+            throw new System.NotImplementedException();
+
+            //if (HeaderContent == content)
+            //    return;
+
+            //// Deactivate old content
+            //HeaderContent?.Deactivate();
+            //// Activate new content
+            //content?.Activate();
+
+            //// Show new content
+            //HeaderContent = content;
+        }
     }
 }

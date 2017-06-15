@@ -1,5 +1,4 @@
-﻿using BookCollector.Framework.MVVM;
-using ReactiveUI;
+﻿using ReactiveUI;
 using IScreen = BookCollector.Framework.MVVM.IScreen;
 
 namespace BookCollector.Shell
@@ -10,6 +9,8 @@ namespace BookCollector.Shell
         ReactiveList<IWindowCommand> RightShellCommands { get; }
         ReactiveList<IFlyout> ShellFlyouts { get; }
 
-        void Show(IScreen content);
+        void ShowMainContent(IScreen content, bool is_fullscreen = false);
+        void ShowMenuContent(IScreen content);
+        void ShowHeaderContent(IScreen content);
     }
 }

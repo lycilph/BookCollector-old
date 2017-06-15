@@ -11,8 +11,21 @@ namespace BookCollector.Framework.MVVM
             set { this.RaiseAndSetIfChanged(ref _DisplayName, value); }
         }
 
-        public virtual void Activate() { }
+        private bool _IsActive = false;
+        public bool IsActive
+        {
+            get { return _IsActive; }
+            protected set { this.RaiseAndSetIfChanged(ref _IsActive, value); }
+        }
 
-        public virtual void Deactivate() { }
+        public virtual void Activate()
+        {
+            IsActive = true;
+        }
+
+        public virtual void Deactivate()
+        {
+            IsActive = false;
+        }
     }
 }

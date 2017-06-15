@@ -6,16 +6,18 @@
                 xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
                 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                 xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-                xmlns:conv="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
                 xmlns:shell="clr-namespace:BookCollector.Shell"
+                xmlns:converters="clr-namespace:BookCollector.Framework.Converters"
                 mc:Ignorable="d"
                 Title="{Binding DisplayName}"
                 Height="600"
                 Width="800"
                 Icon="../Graphics/book_open_page_white.ico"
-                GlowBrush="{DynamicResource AccentColorBrush}"
                 BorderThickness="0"
+                TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                GlowBrush="{DynamicResource AccentColorBrush}"
                 Background="{DynamicResource MaterialDesignPaper}"
+                FontFamily="{StaticResource DefaultFont}"
                 Loaded="OnLoaded"
                 Closing="OnClosing"
                 IsEnabled="{Binding IsEnabled}"
@@ -25,7 +27,7 @@
                 dialog:DialogParticipation.Register="{Binding}"
                 d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <ma:MetroWindow.Resources>
-        <conv:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+        <converters:ShellMarginConverter x:Key="MarginConverter" TrueValueMargin="0" FalseValueMargin="16"/>
     </ma:MetroWindow.Resources>
     
     <ma:MetroWindow.LeftWindowCommands>
@@ -67,6 +69,34 @@
             </ma:FlyoutsControl.ItemContainerStyle>
         </ma:FlyoutsControl>
     </ma:MetroWindow.Flyouts>
+    
+    <DockPanel>
+        <!-- Top part - Title and extras -->
+        <md:ColorZone DockPanel.Dock="Top"
+                      Padding="16"
+                      Mode="PrimaryMid"
+                      md:ShadowAssist.ShadowDepth="Depth4"
+                      Visibility="{Binding IsFullscreen, Converter={StaticResource InvertedVisibilityConverter}}">
+            <DockPanel>
+                <!-- Menu toggle -->
+                <ToggleButton DockPanel.Dock="Left"
+                              Style="{StaticResource MaterialDesignHamburgerToggleButton}"/>
+                
+                <!-- Extra content -->
+                <ContentControl DockPanel.Dock="Right"
+                                Margin="0,0,32,0"
+                                Content="{Binding HeaderContent}"/>
 
-    <md:TransitioningContent Content="{Binding ShellContent}"/>
+                <!-- Screen Title -->
+                <TextBlock VerticalAlignment="Center" 
+                           Margin="32,0"
+                           Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                           Text="{Binding MainContent.DisplayName}"/>
+            </DockPanel>
+        </md:ColorZone>
+
+        <!-- Lower part - Main content -->
+        <md:TransitioningContent Margin="{Binding IsFullscreen, Converter={StaticResource MarginConverter}}"
+                                 Content="{Binding MainContent}"/>
+    </DockPanel>
 </ma:MetroWindow>

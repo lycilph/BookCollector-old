@@ -50,6 +50,12 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
@@ -102,29 +108,46 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Data\Settings.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
     <Compile Include="Domain\Constants.cs" />
+    <Compile Include="Framework\Converters\ShellMarginConverter.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Framework\Extensions\JsonExtensions.cs" />
     <Compile Include="Framework\Messaging\EventAggregator.cs" />
     <Compile Include="Framework\Messaging\IEventAggregator.cs" />
     <Compile Include="Framework\Messaging\IHandle.cs" />
     <Compile Include="Framework\Messaging\MessageHandler.cs" />
+    <Compile Include="Framework\MVVM\DirtyTrackingBase.cs" />
     <Compile Include="Framework\MVVM\IScreen.cs" />
     <Compile Include="Framework\MVVM\ScreenBase.cs" />
+    <Compile Include="Models\ApplicationModel.cs" />
+    <Compile Include="Models\IApplicationModel.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\IDataService.cs" />
     <Compile Include="Services\ImportService.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Shell\FlyoutBase.cs" />
     <Compile Include="Shell\IFlyout.cs" />
+    <Compile Include="Shell\IShellFacade.cs" />
     <Compile Include="Shell\IShellView.cs" />
     <Compile Include="Shell\IShellViewModel.cs" />
     <Compile Include="Shell\IWindowCommand.cs" />
+    <Compile Include="Shell\ShellFacade.cs" />
     <Compile Include="Shell\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="Shell\WindowCommand.cs" />
+    <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
+    <Compile Include="Views\Screens\BooksScreenView.xaml.cs">
+      <DependentUpon>BooksScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\CollectionsScreenView.xaml.cs">
+      <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\ApplicationController.cs" />
@@ -165,17 +188,25 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Models\" />
     <Folder Include="ViewModels\Common\" />
-    <Folder Include="ViewModels\Screens\" />
     <Folder Include="Views\Common\" />
-    <Folder Include="Views\Screens\" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Shell\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Screens\BooksScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\CollectionsScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ViewBindings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

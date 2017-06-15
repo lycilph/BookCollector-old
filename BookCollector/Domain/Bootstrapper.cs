@@ -1,5 +1,4 @@
-﻿using System;
-using BookCollector.Framework.Logging;
+﻿using BookCollector.Framework.Logging;
 using Ninject;
 
 namespace BookCollector.Domain

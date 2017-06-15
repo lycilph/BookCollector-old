@@ -1,12 +1,18 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using BookCollector.Domain;
+using BookCollector.Framework.Messaging;
 
 namespace BookCollector.Shell
 {
     public partial class ShellView : IShellView
     {
-        public ShellView(IShellViewModel shell_view_model)
+        private IEventAggregator event_aggregator;
+
+        public ShellView(IEventAggregator event_aggregator, IShellViewModel shell_view_model)
         {
+            this.event_aggregator = event_aggregator;
+
             InitializeComponent();
 
             DataContext = shell_view_model;
@@ -14,18 +20,12 @@ namespace BookCollector.Shell
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            //if (DataContext is IViewAware)
-            //{
-            //    (DataContext as IViewAware).OnViewLoaded();
-            //}
+            event_aggregator.Publish(ApplicationMessage.ShellLoaded());
         }
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
-            //if (DataContext is IViewAware)
-            //{
-            //    (DataContext as IViewAware).OnViewClosing();
-            //}
+            event_aggregator.Publish(ApplicationMessage.ShellClosing());
         }
     }
 }

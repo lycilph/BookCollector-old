@@ -2,6 +2,8 @@
 {
     public interface IThemeService
     {
-        void Set(string primary, string accent);
+        string GetPrimaryColor();
+        string GetAccentColor();
+        void Set(string primary_color, string accent_color);
     }
 }

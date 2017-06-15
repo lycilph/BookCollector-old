@@ -1,6 +1,7 @@
 ﻿<Application x:Class="BookCollector.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:MaterialDesignThemes.Wpf.Converters;assembly=MaterialDesignThemes.Wpf"
              Startup="ApplicationStartup"
              Exit="ApplicationExit">
     <Application.Resources>
@@ -23,7 +24,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Defaults.xaml" />
 
                 <!-- Application view bindings -->
-                
+                <ResourceDictionary Source="Views/ViewBindings.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- MahApps Brushes -->
@@ -44,7 +45,8 @@
             <SolidColorBrush x:Key="IdealForegroundDisabledBrush" Color="{DynamicResource Primary500}" Opacity="0.4"/>
             
             <!-- Converters -->
-            
+            <converters:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
+            <converters:BooleanToVisibilityConverter x:Key="InvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
