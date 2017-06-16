@@ -6,8 +6,8 @@
         {
             // Shell messages
             ShellLoaded, ShellClosing,
-            // Navigation and controll messages
-            NavigateTo
+            // Navigation and control messages
+            NavigateTo, CollectionChanged
         };
 
         public MessageKind Kind { get; private set; }
@@ -33,6 +33,11 @@
         public static ApplicationMessage NavigateTo(string screen)
         {
             return new ApplicationMessage(MessageKind.NavigateTo, screen);
+        }
+
+        public static ApplicationMessage CollectionChanged()
+        {
+            return new ApplicationMessage(MessageKind.CollectionChanged);
         }
     }
 }

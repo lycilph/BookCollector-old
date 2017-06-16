@@ -80,7 +80,8 @@
             <DockPanel>
                 <!-- Menu toggle -->
                 <ToggleButton DockPanel.Dock="Left"
-                              Style="{StaticResource MaterialDesignHamburgerToggleButton}"/>
+                              Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                              IsEnabled="{Binding MenuContent, Converter={StaticResource NullToEnabledConverter}}"/>
                 
                 <!-- Extra content -->
                 <ContentControl DockPanel.Dock="Right"

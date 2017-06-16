@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BookCollector.Domain;
 using BookCollector.Framework.Dialog;
 using BookCollector.Framework.Extensions;
@@ -11,7 +12,7 @@ using ReactiveUI;
 
 namespace BookCollector.ViewModels.Screens
 {
-    class CollectionsScreenViewModel : ScreenBase
+    class CollectionsScreenViewModel : ScreenBase, IHandle<ApplicationMessage>
     {
         private IEventAggregator event_aggregator;
         private IApplicationModel application_model;
@@ -80,6 +81,8 @@ namespace BookCollector.ViewModels.Screens
             this.dialog_service = dialog_service;
             DisplayName = Constants.CollectionsScreenDisplayName;
 
+            event_aggregator.Subscribe(this);
+
             var have_selected_collection = this.WhenAny(x => x.SelectedCollectionDescription, c => c.Value != null);
 
             ContinueCommand = ReactiveCommand.Create(Continue, have_selected_collection);
@@ -104,8 +107,12 @@ namespace BookCollector.ViewModels.Screens
                 SelectedCollectionDescription = CollectionDescriptions.SingleOrDefault(d => d.Filename == application_model.CurrentCollection.Description.Filename);
             else
                 SelectedCollectionDescription = CollectionDescriptions.FirstOrDefault();
+        }
 
-            UpdateCancelState();
+        public void Handle(ApplicationMessage message)
+        {
+            if (message.Kind == ApplicationMessage.MessageKind.CollectionChanged)
+                CanCancel = application_model.CurrentCollection != null;
         }
 
         private void Continue()
@@ -117,11 +124,6 @@ namespace BookCollector.ViewModels.Screens
         private void Cancel()
         {
             event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.BooksScreenDisplayName));
-        }
-
-        private void UpdateCancelState()
-        {
-            CanCancel = application_model.CurrentCollection != null;
         }
 
         private async void AddCollectionAsync()
@@ -187,7 +189,6 @@ namespace BookCollector.ViewModels.Screens
 
             CollectionDescriptions.Remove(collection_to_remove);
             application_model.DeleteCollection(collection_to_remove.Unwrap());
-            UpdateCancelState();
         }
     }
 }

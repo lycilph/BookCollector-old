@@ -5,6 +5,8 @@ namespace BookCollector.Shell
 {
     public class ShellFacade : IShellFacade
     {
+        public enum CommandPosition { Left, Right };
+
         private IShellViewModel shell_view_model;
         private IShellView shell_view;
 
@@ -12,6 +14,19 @@ namespace BookCollector.Shell
         {
             this.shell_view_model = shell_view_model;
             this.shell_view = shell_view;
+        }
+
+        public void AddCommand(IWindowCommand command, CommandPosition position)
+        {
+            if (position == CommandPosition.Left)
+                shell_view_model.LeftShellCommands.Add(command);
+            else
+                shell_view_model.RightShellCommands.Add(command);
+        }
+
+        public void AddFlyout(IFlyout flyout)
+        {
+            shell_view_model.ShellFlyouts.Add(flyout);
         }
 
         public void Show()

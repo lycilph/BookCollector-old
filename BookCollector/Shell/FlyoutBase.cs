@@ -1,17 +1,14 @@
-﻿using MahApps.Metro.Controls;
+﻿using System;
+using System.Reactive.Linq;
+using BookCollector.Framework.MVVM;
+using MahApps.Metro.Controls;
 using ReactiveUI;
+using IScreen = BookCollector.Framework.MVVM.IScreen;
 
 namespace BookCollector.Shell
 {
-    public class FlyoutBase : ReactiveObject, IFlyout
+    public class FlyoutBase : ScreenBase, IFlyout, IScreen
     {
-        private string _DisplayName;
-        public string DisplayName
-        {
-            get { return _DisplayName; }
-            set { this.RaiseAndSetIfChanged(ref _DisplayName, value); }
-        }
-
         private bool _IsOpen;
         public bool IsOpen
         {
@@ -35,8 +32,17 @@ namespace BookCollector.Shell
 
         public FlyoutBase(string name, Position position)
         {
-            _DisplayName = name;
+            DisplayName = name;
             _Position = position;
+
+            this.WhenAnyValue(x => x.IsOpen)
+                .Subscribe(is_open =>
+                {
+                    if (is_open)
+                        Activate();
+                    else
+                        Deactivate();
+                });
         }
 
         public void Toggle()

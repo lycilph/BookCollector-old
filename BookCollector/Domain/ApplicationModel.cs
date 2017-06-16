@@ -2,6 +2,7 @@
 using BookCollector.Data;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Mapping;
+using BookCollector.Framework.Messaging;
 using BookCollector.Services;
 
 namespace BookCollector.Domain
@@ -9,15 +10,26 @@ namespace BookCollector.Domain
     public class ApplicationModel : IApplicationModel
     {
         private ILog log = LogManager.GetCurrentClassLogger();
+        private IEventAggregator event_aggregator;
         private IDataService data_service;
         private IThemeService theme_service;
 
-        public Settings Settings { get; set; }
+        public Settings Settings { get; private set; }
 
-        public Collection CurrentCollection { get; set; }
-
-        public ApplicationModel(IDataService data_service, IThemeService theme_service)
+        private Collection _CurrentCollection;
+        public Collection CurrentCollection
         {
+            get { return _CurrentCollection; }
+            private set
+            {
+                _CurrentCollection = value;
+                event_aggregator.Publish(ApplicationMessage.CollectionChanged());
+            }
+        }
+
+        public ApplicationModel(IEventAggregator event_aggregator, IDataService data_service, IThemeService theme_service)
+        {
+            this.event_aggregator = event_aggregator;
             this.data_service = data_service;
             this.theme_service = theme_service;
         }
@@ -120,8 +132,8 @@ namespace BookCollector.Domain
 
         private void GetCurrentTheme()
         {
-            Settings.PrimaryColor = theme_service.GetPrimaryColor();
-            Settings.AccentColor = theme_service.GetAccentColor();
+            Settings.PrimaryColor = theme_service.GetCurrentPrimaryColor();
+            Settings.AccentColor = theme_service.GetCurrentAccentColor();
         }
 
         private void SetCurrentTheme()

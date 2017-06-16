@@ -5,7 +5,8 @@ namespace BookCollector.Domain
 {
     public interface IApplicationModel
     {
-        Collection CurrentCollection { get; set; }
+        Settings Settings { get; }
+        Collection CurrentCollection { get; }
 
         void Load();
         void Save();

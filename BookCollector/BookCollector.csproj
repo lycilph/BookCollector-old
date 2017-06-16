@@ -115,6 +115,7 @@
     <Compile Include="Data\Shelf.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
     <Compile Include="Domain\Constants.cs" />
+    <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
     <Compile Include="Framework\Converters\ShellMarginConverter.cs" />
     <Compile Include="Framework\Dialog\DialogService.cs" />
     <Compile Include="Framework\Dialog\IDialogService.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
     <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
     <Compile Include="Views\Common\DescriptionDetailsView.xaml.cs">
       <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
     </Compile>
@@ -167,6 +169,9 @@
     </Compile>
     <Compile Include="Views\Screens\CollectionsScreenView.xaml.cs">
       <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
+      <DependentUpon>SettingsScreenView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +239,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Screens\CollectionsScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\SettingsScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

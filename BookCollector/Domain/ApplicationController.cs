@@ -5,6 +5,7 @@ using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Shell;
+using MaterialDesignThemes.Wpf;
 
 namespace BookCollector.Domain
 {
@@ -14,6 +15,8 @@ namespace BookCollector.Domain
         private IApplicationModel application_model;
         private IShellFacade shell;
         private Dictionary<string, IScreen> screens;
+        private IWindowCommand collection_command;
+        private IWindowCommand settings_command;
 
         public ApplicationController(IEventAggregator event_aggregator, IApplicationModel application_model, IShellFacade shell_facade, IScreen[] all_screens)
         {
@@ -32,7 +35,8 @@ namespace BookCollector.Domain
             application_model.Load();
 
             // Setup shell and launch it
-            //SetupShell();
+            SetupShell();
+            SetCollectionCommandText();
             shell.Show();
         }
 
@@ -51,17 +55,23 @@ namespace BookCollector.Domain
                 case ApplicationMessage.MessageKind.NavigateTo:
                     NavigateTo(message.Text);
                     break;
+                case ApplicationMessage.MessageKind.CollectionChanged:
+                    CollectionChanged();
+                    break;
             }
         }
 
         private void SetupShell()
         {
-            throw new NotImplementedException();
+            var settings_view_model = screens[Constants.SettingsScreenDisplayName] as FlyoutBase;
+            shell.AddFlyout(settings_view_model);
 
-            /*
-             * Add window commands
-             * Add settings flyout
-             */
+            collection_command = new WindowCommand(string.Empty, () => NavigateTo(Constants.CollectionsScreenDisplayName));
+            shell.AddCommand(collection_command, ShellFacade.CommandPosition.Right);
+
+            var settings_icon = new PackIcon() { Kind = PackIconKind.Settings };
+            settings_command = new WindowCommand(settings_icon, () => settings_view_model.Toggle());
+            shell.AddCommand(settings_command, ShellFacade.CommandPosition.Left);
         }
 
         private void ShellLoaded()
@@ -82,8 +92,31 @@ namespace BookCollector.Domain
         {
             log.Info($"Navigating to {screen_name}");
 
+            var show_collection_command = true;
+            var is_fullscreen = false;
+            switch (screen_name)
+            {
+                case Constants.CollectionsScreenDisplayName:
+                    show_collection_command = false;
+                    break;
+            }
+
+            collection_command.IsVisible = show_collection_command;
+
             var screen = screens[screen_name];
-            shell.ShowMainContent(screen);
+            shell.ShowMainContent(screen, is_fullscreen);
+        }
+
+        private void CollectionChanged()
+        {
+            if (collection_command == null)
+                return;
+            SetCollectionCommandText();
+        }
+
+        private void SetCollectionCommandText()
+        {
+            collection_command.DisplayName = application_model.CurrentCollection?.Description.Name ?? "[No Name]";
         }
     }
 }

@@ -14,6 +14,10 @@
     <DataTemplate DataType="{x:Type svm:BooksScreenViewModel}">
         <sv:BooksScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type svm:SettingsScreenViewModel}">
+        <sv:SettingsScreenView/>
+    </DataTemplate>
     
     <!-- Dialogs -->
     <DataTemplate DataType="{x:Type dvm:DescriptionDialogViewModel}">
