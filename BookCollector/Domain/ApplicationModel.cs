@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BookCollector.Data;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Mapping;
@@ -60,6 +61,21 @@ namespace BookCollector.Domain
             log.Info("Saving");
 
             data_service.SaveSettings(Settings);
+            data_service.SaveCollection(CurrentCollection);
+        }
+
+        public void AddToCurrentCollection(List<Book> books)
+        {
+            log.Info($"Adding {books.Count} to current collection");
+
+            // Add books
+            CurrentCollection.Books.AddRange(books);
+            // Add new shelves
+            var new_shelves = books.SelectMany(b => b.Shelves)
+                                   .Distinct()
+                                   .Except(CurrentCollection.Shelves)
+                                   .ToList();
+            CurrentCollection.Shelves.AddRange(new_shelves);
         }
 
         public void LoadCurrentCollection(string path)
@@ -117,10 +133,8 @@ namespace BookCollector.Domain
         {
             log.Info($"Creating new collection description");
 
-            return new Description
-            {
-                ShelfCount = 1 // This accounts for the "all" shelf that is always added to a collection (see the AddCollection method)
-            };
+            // The 1 accounts for the "all" shelf that is always added to a collection (see the AddCollection method)
+            return new Description { ShelfCount = 1 };
         }
 
         public List<Description> GetAllCollectionDescriptions()

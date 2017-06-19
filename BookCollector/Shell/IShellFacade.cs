@@ -8,6 +8,6 @@ namespace BookCollector.Shell
         void AddFlyout(IFlyout flyout);
 
         void Show();
-        void ShowMainContent(IScreen content, bool is_fullscreen = false);
+        void ShowMainContent(IScreen content, bool is_fullscreen);
     }
 }

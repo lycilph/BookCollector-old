@@ -60,7 +60,7 @@
         <md:PopupBox Grid.Row="0"
                      Grid.RowSpan="2"
                      Grid.Column="2"
-                     Style="{StaticResource MaterialDesignMultiFloatingActionPopupBox}"
+                     Style="{StaticResource MaterialDesignMultiFloatingActionAccentPopupBox}"
                      HorizontalAlignment="Right"
                      VerticalAlignment="Bottom"
                      Margin="{StaticResource ActionButtonMargin}">

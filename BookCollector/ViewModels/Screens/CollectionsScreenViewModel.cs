@@ -8,6 +8,7 @@ using BookCollector.Framework.MVVM;
 using BookCollector.ViewModels.Common;
 using BookCollector.ViewModels.Dialogs;
 using MahApps.Metro.Controls.Dialogs;
+using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 
 namespace BookCollector.ViewModels.Screens
@@ -15,6 +16,7 @@ namespace BookCollector.ViewModels.Screens
     class CollectionsScreenViewModel : ScreenBase, IHandle<ApplicationMessage>
     {
         private IEventAggregator event_aggregator;
+        private ISnackbarMessageQueue message_queue;
         private IApplicationModel application_model;
         private IDialogService dialog_service;
 
@@ -74,9 +76,10 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _DeleteCommand, value); }
         }
 
-        public CollectionsScreenViewModel(IEventAggregator event_aggregator, IApplicationModel application_model, IDialogService dialog_service)
+        public CollectionsScreenViewModel(IEventAggregator event_aggregator, ISnackbarMessageQueue message_queue, IApplicationModel application_model, IDialogService dialog_service)
         {
             this.event_aggregator = event_aggregator;
+            this.message_queue = message_queue;
             this.application_model = application_model;
             this.dialog_service = dialog_service;
             DisplayName = Constants.CollectionsScreenDisplayName;
@@ -107,6 +110,10 @@ namespace BookCollector.ViewModels.Screens
                 SelectedCollectionDescription = CollectionDescriptions.SingleOrDefault(d => d.Filename == application_model.CurrentCollection.Description.Filename);
             else
                 SelectedCollectionDescription = CollectionDescriptions.FirstOrDefault();
+
+            // Show snack message if no collections were found
+            if (!CollectionDescriptions.Any())
+                message_queue.Enqueue("Welcome", "Add Collection", () => AddCollectionAsync());
         }
 
         public void Handle(ApplicationMessage message)

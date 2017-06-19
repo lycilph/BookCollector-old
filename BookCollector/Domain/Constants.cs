@@ -6,6 +6,7 @@
         public const string CollectionsScreenDisplayName = "Collections";
         public const string BooksScreenDisplayName = "Books";
         public const string SettingsScreenDisplayName = "Settings";
+        public const string ImportScreenDisplayName = "Import";
 
         public const string AddCollectionDialogTitle = "Add Collection";
         public const string EditCollectionDialogTitle = "Edit Collection";

@@ -63,6 +63,8 @@ namespace BookCollector.Domain
 
         private void SetupShell()
         {
+            log.Info("Setting up shell");
+
             var settings_view_model = screens[Constants.SettingsScreenDisplayName] as FlyoutBase;
             shell.AddFlyout(settings_view_model);
 
@@ -78,7 +80,10 @@ namespace BookCollector.Domain
         {
             log.Info("Shell loaded");
 
-            NavigateTo(Constants.CollectionsScreenDisplayName);
+            if (application_model.Settings.LoadCollectionOnStartup && application_model.CurrentCollection != null)
+                NavigateTo(Constants.BooksScreenDisplayName);
+            else
+                NavigateTo(Constants.CollectionsScreenDisplayName);
         }
 
         private void ShellClosing()
@@ -109,6 +114,8 @@ namespace BookCollector.Domain
 
         private void CollectionChanged()
         {
+            log.Info("Collection changed");
+
             if (collection_command == null)
                 return;
             SetCollectionCommandText();

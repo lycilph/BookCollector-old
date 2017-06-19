@@ -12,6 +12,10 @@
     <!-- Dialog buttons -->
     <sys:Double x:Key="DialogButtonHeight">35</sys:Double>
     
+    <!-- Gridsplitter -->
+    <Thickness x:Key="VerticalSplitterMargin">10,0</Thickness>
+    <sys:Double x:Key="VerticalSplitterWidth">5</sys:Double>
+    
     <!-- Action button -->
     <Thickness x:Key="ActionButtonMargin">16</Thickness>
 </ResourceDictionary>

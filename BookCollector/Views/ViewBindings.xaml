@@ -18,6 +18,10 @@
     <DataTemplate DataType="{x:Type svm:SettingsScreenViewModel}">
         <sv:SettingsScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type svm:ImportScreenViewModel}">
+        <sv:ImportScreenView/>
+    </DataTemplate>
     
     <!-- Dialogs -->
     <DataTemplate DataType="{x:Type dvm:DescriptionDialogViewModel}">
@@ -31,5 +35,13 @@
 
     <DataTemplate x:Key="DescriptionDetailsView">
         <cv:DescriptionDetailsView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type cvm:ImportedBookViewModel}">
+        <cv:ImportedBookView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type cvm:ImportedShelfViewModel}">
+        <cv:ImportedShelfView/>
     </DataTemplate>
 </ResourceDictionary>

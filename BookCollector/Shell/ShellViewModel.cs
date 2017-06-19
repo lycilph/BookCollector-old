@@ -2,6 +2,7 @@
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
+using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 using IScreen = BookCollector.Framework.MVVM.IScreen;
 
@@ -47,6 +48,13 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _ShellFlyouts, value); }
         }
 
+        private ISnackbarMessageQueue _MessageQueue;
+        public ISnackbarMessageQueue MessageQueue
+        {
+            get { return _MessageQueue; }
+            set { this.RaiseAndSetIfChanged(ref _MessageQueue, value); }
+        }
+
         private IScreen _MainContent;
         public IScreen MainContent
         {
@@ -68,16 +76,17 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _HeaderContent, value); }
         }
 
-        public ShellViewModel(IEventAggregator event_aggregator)
+        public ShellViewModel(IEventAggregator event_aggregator, ISnackbarMessageQueue message_queue)
         {
             this.event_aggregator = event_aggregator;
+            MessageQueue = message_queue;
 
             DisplayName = Constants.ShellDisplayName;
             IsEnabled = true;
             IsFullscreen = false;
         }
 
-        public void ShowMainContent(IScreen content, bool is_fullscreen = false)
+        public void ShowMainContent(IScreen content, bool is_fullscreen)
         {
             if (MainContent == content)
                 return;

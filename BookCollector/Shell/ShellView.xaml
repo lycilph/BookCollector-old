@@ -97,7 +97,10 @@
         </md:ColorZone>
 
         <!-- Lower part - Main content -->
-        <md:TransitioningContent Margin="{Binding IsFullscreen, Converter={StaticResource MarginConverter}}"
+        <Grid>
+            <md:TransitioningContent Margin="{Binding IsFullscreen, Converter={StaticResource MarginConverter}}"
                                  Content="{Binding MainContent}"/>
+            <md:Snackbar MessageQueue="{Binding MessageQueue}"/>
+        </Grid>
     </DockPanel>
 </ma:MetroWindow>

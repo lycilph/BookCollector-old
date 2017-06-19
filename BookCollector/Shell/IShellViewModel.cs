@@ -9,7 +9,7 @@ namespace BookCollector.Shell
         ReactiveList<IWindowCommand> RightShellCommands { get; }
         ReactiveList<IFlyout> ShellFlyouts { get; }
 
-        void ShowMainContent(IScreen content, bool is_fullscreen = false);
+        void ShowMainContent(IScreen content, bool is_fullscreen);
         void ShowMenuContent(IScreen content);
         void ShowHeaderContent(IScreen content);
     }

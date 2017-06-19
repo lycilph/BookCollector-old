@@ -34,7 +34,7 @@ namespace BookCollector.Shell
             shell_view.Show();
         }
 
-        public void ShowMainContent(IScreen content, bool is_fullscreen = false)
+        public void ShowMainContent(IScreen content, bool is_fullscreen)
         {
             shell_view_model.ShowMainContent(content, is_fullscreen);
         }

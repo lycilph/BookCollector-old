@@ -38,6 +38,9 @@
     <ApplicationIcon>Graphics\book_open_page_black.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -115,6 +118,11 @@
     <Compile Include="Data\Shelf.cs" />
     <Compile Include="Domain\ApplicationMessage.cs" />
     <Compile Include="Domain\Constants.cs" />
+    <Compile Include="Domain\Goodreads\GoodreadsBook.cs" />
+    <Compile Include="Domain\Goodreads\GoodreadsImporter.cs" />
+    <Compile Include="Domain\Goodreads\TrimmingCsvReader.cs" />
+    <Compile Include="Framework\Converters\BackgroundColorConverter.cs" />
+    <Compile Include="Framework\Converters\BindingProxy.cs" />
     <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
     <Compile Include="Framework\Converters\ShellMarginConverter.cs" />
     <Compile Include="Framework\Dialog\DialogService.cs" />
@@ -135,7 +143,6 @@
     <Compile Include="Domain\IApplicationModel.cs" />
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\IDataService.cs" />
-    <Compile Include="Services\ImportService.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Shell\FlyoutBase.cs" />
@@ -151,15 +158,24 @@
     <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="Shell\WindowCommand.cs" />
     <Compile Include="ViewModels\Common\DescriptionViewModel.cs" />
+    <Compile Include="ViewModels\Common\ImportedBookViewModel.cs" />
+    <Compile Include="ViewModels\Common\ImportedShelfViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
     <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
     <Compile Include="Views\Common\DescriptionDetailsView.xaml.cs">
       <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Common\DescriptionListView.xaml.cs">
       <DependentUpon>DescriptionListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\ImportedBookView.xaml.cs">
+      <DependentUpon>ImportedBookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\ImportedShelfView.xaml.cs">
+      <DependentUpon>ImportedShelfView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
       <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
@@ -169,6 +185,9 @@
     </Compile>
     <Compile Include="Views\Screens\CollectionsScreenView.xaml.cs">
       <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\ImportScreenView.xaml.cs">
+      <DependentUpon>ImportScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
       <DependentUpon>SettingsScreenView.xaml</DependentUpon>
@@ -230,6 +249,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Common\ImportedBookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\ImportedShelfView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Dialogs\DescriptionDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -239,6 +266,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Screens\CollectionsScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\ImportScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

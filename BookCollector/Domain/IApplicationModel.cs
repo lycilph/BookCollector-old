@@ -11,6 +11,8 @@ namespace BookCollector.Domain
         void Load();
         void Save();
 
+        void AddToCurrentCollection(List<Book> books);
+
         void LoadCurrentCollection(string path);
         void AddCollection(Description description);
         void UpdateCollection(Description description);
