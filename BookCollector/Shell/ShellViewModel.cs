@@ -136,18 +136,16 @@ namespace BookCollector.Shell
 
         public void ShowHeaderContent(IScreen content)
         {
-            throw new System.NotImplementedException();
+            if (HeaderContent == content)
+                return;
 
-            //if (HeaderContent == content)
-            //    return;
+            // Deactivate old content
+            HeaderContent?.Deactivate();
+            // Activate new content
+            content?.Activate();
 
-            //// Deactivate old content
-            //HeaderContent?.Deactivate();
-            //// Activate new content
-            //content?.Activate();
-
-            //// Show new content
-            //HeaderContent = content;
+            // Show new content
+            HeaderContent = content;
         }
     }
 }

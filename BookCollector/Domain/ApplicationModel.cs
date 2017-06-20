@@ -61,7 +61,9 @@ namespace BookCollector.Domain
             log.Info("Saving");
 
             data_service.SaveSettings(Settings);
-            data_service.SaveCollection(CurrentCollection);
+
+            if (CurrentCollection != null)
+                data_service.SaveCollection(CurrentCollection);
         }
 
         public void AddToCurrentCollection(List<Book> books)
@@ -76,6 +78,8 @@ namespace BookCollector.Domain
                                    .Except(CurrentCollection.Shelves)
                                    .ToList();
             CurrentCollection.Shelves.AddRange(new_shelves);
+            // Save collection
+            data_service.SaveCollection(CurrentCollection);
         }
 
         public void LoadCurrentCollection(string path)

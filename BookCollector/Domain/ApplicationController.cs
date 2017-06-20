@@ -97,6 +97,9 @@ namespace BookCollector.Domain
         {
             log.Info($"Navigating to {screen_name}");
 
+            var screen = screens[screen_name];
+            IScreen navigation = null;
+            IScreen search = null;
             var show_collection_command = true;
             var is_fullscreen = false;
             switch (screen_name)
@@ -104,16 +107,17 @@ namespace BookCollector.Domain
                 case Constants.CollectionsScreenDisplayName:
                     show_collection_command = false;
                     break;
+                case Constants.BooksScreenDisplayName:
+                    navigation = screens[Constants.NavigationScreenDisplayName];
+                    search = screens[Constants.SearchScreenDisplayName];
+                    break;
             }
 
             collection_command.IsVisible = show_collection_command;
 
-            var screen = screens[screen_name];
             shell.ShowMainContent(screen, is_fullscreen);
-
-            // Only show navigation menu on the books screen
-            var navigation = (screen_name == Constants.BooksScreenDisplayName ? screens[Constants.NavigationScreenDisplayName] : null);
             shell.ShowMenuContent(navigation);
+            shell.ShowHeaderContent(search);
         }
 
         private void CollectionChanged()

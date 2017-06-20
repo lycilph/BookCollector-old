@@ -36,6 +36,7 @@ namespace BookCollector.Domain
             Bind<IScreen>().To<SettingsScreenViewModel>().InSingletonScope();
             Bind<IScreen>().To<ImportScreenViewModel>().InSingletonScope();
             Bind<IScreen>().To<NavigationScreenViewModel>().InSingletonScope();
+            Bind<IScreen>().To<SearchScreenViewModel>().InSingletonScope();
         }
     }
 }

@@ -54,7 +54,7 @@
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
@@ -144,6 +144,12 @@
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Services\IDataService.cs" />
     <Compile Include="Services\IThemeService.cs" />
+    <Compile Include="Services\Search\Document.cs" />
+    <Compile Include="Services\Search\SearchExtensions.cs" />
+    <Compile Include="Services\Search\PorterStemmer.cs" />
+    <Compile Include="Services\Search\SearchEngine.cs" />
+    <Compile Include="Services\Search\SearchResult.cs" />
+    <Compile Include="Services\Search\StopWordHandler.cs" />
     <Compile Include="Services\ThemeService.cs" />
     <Compile Include="Shell\FlyoutBase.cs" />
     <Compile Include="Shell\IFlyout.cs" />
@@ -167,6 +173,7 @@
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\SearchScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
     <Compile Include="Views\Common\BookDetailsView.xaml.cs">
       <DependentUpon>BookDetailsView.xaml</DependentUpon>
@@ -204,6 +211,9 @@
     <Compile Include="Views\Screens\NavigationScreenView.xaml.cs">
       <DependentUpon>NavigationScreenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Screens\SearchScreenView.xaml.cs">
+      <DependentUpon>SearchScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
       <DependentUpon>SettingsScreenView.xaml</DependentUpon>
     </Compile>
@@ -237,7 +247,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -246,7 +258,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="stopwords_en.txt" />
+  </ItemGroup>
   <ItemGroup>
     <Page Include="Shell\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -301,6 +315,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Screens\NavigationScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\SearchScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

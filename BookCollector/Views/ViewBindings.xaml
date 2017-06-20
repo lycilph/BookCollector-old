@@ -26,6 +26,10 @@
     <DataTemplate DataType="{x:Type svm:NavigationScreenViewModel}">
         <sv:NavigationScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type svm:SearchScreenViewModel}">
+        <sv:SearchScreenView/>
+    </DataTemplate>
     
     <!-- Dialogs -->
     <DataTemplate DataType="{x:Type dvm:DescriptionDialogViewModel}">

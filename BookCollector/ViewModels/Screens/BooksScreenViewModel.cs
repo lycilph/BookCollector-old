@@ -72,6 +72,8 @@ namespace BookCollector.ViewModels.Screens
                 return book.Shelves.Any(s => s.Name == SelectedShelf.Name);
             };
 
+            Books.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending));
+
             Shelves = application_model.CurrentCollection.Shelves.Select(s => new ShelfViewModel(s)).ToReactiveList();
             SelectedShelf = Shelves.FirstOrDefault();
 

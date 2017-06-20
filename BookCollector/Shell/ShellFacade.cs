@@ -43,5 +43,10 @@ namespace BookCollector.Shell
         {
             shell_view_model.ShowMenuContent(content);
         }
+
+        public void ShowHeaderContent(IScreen content)
+        {
+            shell_view_model.ShowHeaderContent(content);
+        }
     }
 }
