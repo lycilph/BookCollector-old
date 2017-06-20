@@ -9,5 +9,6 @@ namespace BookCollector.Shell
 
         void Show();
         void ShowMainContent(IScreen content, bool is_fullscreen);
+        void ShowMenuContent(IScreen content);
     }
 }

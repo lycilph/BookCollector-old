@@ -9,7 +9,7 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance vm:SettingsScreenViewModel}"
-             MinWidth="212">
+             MinWidth="{StaticResource OverlayMinWidth}">
     <StackPanel Margin="32">
         <Grid>
             <Grid.ColumnDefinitions>

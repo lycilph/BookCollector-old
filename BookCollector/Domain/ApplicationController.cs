@@ -110,6 +110,10 @@ namespace BookCollector.Domain
 
             var screen = screens[screen_name];
             shell.ShowMainContent(screen, is_fullscreen);
+
+            // Only show navigation menu on the books screen
+            var navigation = (screen_name == Constants.BooksScreenDisplayName ? screens[Constants.NavigationScreenDisplayName] : null);
+            shell.ShowMenuContent(navigation);
         }
 
         private void CollectionChanged()

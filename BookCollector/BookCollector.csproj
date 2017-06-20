@@ -166,6 +166,7 @@
     <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
     <Compile Include="Views\Common\BookDetailsView.xaml.cs">
       <DependentUpon>BookDetailsView.xaml</DependentUpon>
@@ -199,6 +200,9 @@
     </Compile>
     <Compile Include="Views\Screens\ImportScreenView.xaml.cs">
       <DependentUpon>ImportScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\NavigationScreenView.xaml.cs">
+      <DependentUpon>NavigationScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
       <DependentUpon>SettingsScreenView.xaml</DependentUpon>
@@ -293,6 +297,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Screens\ImportScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\NavigationScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

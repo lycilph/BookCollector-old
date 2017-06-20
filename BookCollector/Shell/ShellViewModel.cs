@@ -1,4 +1,5 @@
-﻿using BookCollector.Domain;
+﻿using System;
+using BookCollector.Domain;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
@@ -76,6 +77,13 @@ namespace BookCollector.Shell
             set { this.RaiseAndSetIfChanged(ref _HeaderContent, value); }
         }
 
+        private bool _IsMenuOpen;
+        public bool IsMenuOpen
+        {
+            get { return _IsMenuOpen; }
+            set { this.RaiseAndSetIfChanged(ref _IsMenuOpen, value); }
+        }
+
         public ShellViewModel(IEventAggregator event_aggregator, ISnackbarMessageQueue message_queue)
         {
             this.event_aggregator = event_aggregator;
@@ -84,6 +92,16 @@ namespace BookCollector.Shell
             DisplayName = Constants.ShellDisplayName;
             IsEnabled = true;
             IsFullscreen = false;
+
+            // Handle activation/deactivation of menu content
+            this.WhenAnyValue(x => x.IsMenuOpen)
+                .Subscribe(open =>
+                {
+                    if (open)
+                        MenuContent?.Activate();
+                    else
+                        MenuContent?.Deactivate();
+                });
         }
 
         public void ShowMainContent(IScreen content, bool is_fullscreen)
@@ -98,6 +116,8 @@ namespace BookCollector.Shell
 
             // Configure main content
             IsFullscreen = is_fullscreen;
+            // Configure menu content
+            IsMenuOpen = false;
 
             // Show new content
             MainContent = content;
@@ -105,18 +125,13 @@ namespace BookCollector.Shell
 
         public void ShowMenuContent(IScreen content)
         {
-            throw new System.NotImplementedException();
+            if (MenuContent == content)
+                return;
 
-            //if (MenuContent == content)
-            //    return;
+            // Activation/deactivation is handled through the IsMenuOpen property
 
-            //// Deactivate old content
-            //MenuContent?.Deactivate();
-            //// Activate new content
-            //content?.Activate();
-
-            //// Show new content
-            //MenuContent = content;
+            // Set new content
+            MenuContent = content;
         }
 
         public void ShowHeaderContent(IScreen content)

@@ -69,38 +69,67 @@
             </ma:FlyoutsControl.ItemContainerStyle>
         </ma:FlyoutsControl>
     </ma:MetroWindow.Flyouts>
-    
-    <DockPanel>
-        <!-- Top part - Title and extras -->
-        <md:ColorZone DockPanel.Dock="Top"
-                      Padding="16"
-                      Mode="PrimaryMid"
-                      md:ShadowAssist.ShadowDepth="Depth4"
-                      Visibility="{Binding IsFullscreen, Converter={StaticResource InvertedVisibilityConverter}}">
-            <DockPanel>
-                <!-- Menu toggle -->
-                <ToggleButton DockPanel.Dock="Left"
-                              Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                              IsEnabled="{Binding MenuContent, Converter={StaticResource NullToEnabledConverter}}"/>
-                
-                <!-- Extra content -->
-                <ContentControl DockPanel.Dock="Right"
-                                Margin="0,0,32,0"
-                                Content="{Binding HeaderContent}"/>
 
-                <!-- Screen Title -->
-                <TextBlock VerticalAlignment="Center" 
+    <md:DrawerHost IsLeftDrawerOpen="{Binding IsMenuOpen}">
+        <md:DrawerHost.LeftDrawerContent>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!-- Menu toggle button -->
+                <ToggleButton Grid.Row="0"
+                              HorizontalAlignment="Right"
+                              Margin="16"
+                              Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                              IsChecked="{Binding IsMenuOpen}"/>
+
+                <TextBlock Grid.Row="1"
                            Margin="32,0"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
-                           Text="{Binding MainContent.DisplayName}"/>
-            </DockPanel>
-        </md:ColorZone>
+                           Text="{Binding MenuContent.DisplayName}"/>
 
-        <!-- Lower part - Main content -->
-        <Grid>
-            <md:TransitioningContent Margin="{Binding IsFullscreen, Converter={StaticResource MarginConverter}}"
-                                 Content="{Binding MainContent}"/>
-            <md:Snackbar MessageQueue="{Binding MessageQueue}"/>
-        </Grid>
-    </DockPanel>
+                <!-- Menu content -->
+                <ContentControl Grid.Row="2"
+                                Content="{Binding MenuContent}"/>
+            </Grid>
+        </md:DrawerHost.LeftDrawerContent>
+        
+        <DockPanel>
+            <!-- Top part - Title and extras -->
+            <md:ColorZone DockPanel.Dock="Top"
+                          Padding="16"
+                          Mode="PrimaryMid"
+                          md:ShadowAssist.ShadowDepth="Depth4"
+                          Visibility="{Binding IsFullscreen, Converter={StaticResource InvertedVisibilityConverter}}">
+                <DockPanel>
+                    <!-- Menu toggle -->
+                    <ToggleButton DockPanel.Dock="Left"
+                                  Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                  IsChecked="{Binding  IsMenuOpen}"
+                                  IsEnabled="{Binding MenuContent, Converter={StaticResource NullToEnabledConverter}}"/>
+
+                    <!-- Extra content -->
+                    <ContentControl DockPanel.Dock="Right"
+                                    Margin="0,0,32,0"
+                                    Content="{Binding HeaderContent}"/>
+
+                    <!-- Screen Title -->
+                    <TextBlock VerticalAlignment="Center" 
+                               Margin="32,0"
+                               Style="{StaticResource MaterialDesignHeadlineTextBlock}"
+                               Text="{Binding MainContent.DisplayName}"/>
+                </DockPanel>
+            </md:ColorZone>
+
+            <!-- Lower part - Main content -->
+            <Grid>
+                <md:TransitioningContent Margin="{Binding IsFullscreen, Converter={StaticResource MarginConverter}}"
+                                         Content="{Binding MainContent}"/>
+                <md:Snackbar MessageQueue="{Binding MessageQueue}"/>
+            </Grid>
+        </DockPanel>
+    </md:DrawerHost>
 </ma:MetroWindow>

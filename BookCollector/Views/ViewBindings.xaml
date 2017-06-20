@@ -22,6 +22,10 @@
     <DataTemplate DataType="{x:Type svm:ImportScreenViewModel}">
         <sv:ImportScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type svm:NavigationScreenViewModel}">
+        <sv:NavigationScreenView/>
+    </DataTemplate>
     
     <!-- Dialogs -->
     <DataTemplate DataType="{x:Type dvm:DescriptionDialogViewModel}">
