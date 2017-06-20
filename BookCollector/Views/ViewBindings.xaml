@@ -37,6 +37,18 @@
         <cv:DescriptionDetailsView/>
     </DataTemplate>
 
+    <DataTemplate x:Key="BookListView">
+        <cv:BookListView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BookDetailsView">
+        <cv:BookDetailsView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ShelfListView">
+        <cv:ShelfListView/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type cvm:ImportedBookViewModel}">
         <cv:ImportedBookView/>
     </DataTemplate>

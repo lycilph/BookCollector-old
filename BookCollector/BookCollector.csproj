@@ -157,14 +157,22 @@
     </Compile>
     <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="Shell\WindowCommand.cs" />
+    <Compile Include="ViewModels\Common\BookViewModel.cs" />
     <Compile Include="ViewModels\Common\DescriptionViewModel.cs" />
     <Compile Include="ViewModels\Common\ImportedBookViewModel.cs" />
     <Compile Include="ViewModels\Common\ImportedShelfViewModel.cs" />
+    <Compile Include="ViewModels\Common\ShelfViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
     <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
+    <Compile Include="Views\Common\BookDetailsView.xaml.cs">
+      <DependentUpon>BookDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\BookListView.xaml.cs">
+      <DependentUpon>BookListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Common\DescriptionDetailsView.xaml.cs">
       <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
     </Compile>
@@ -176,6 +184,9 @@
     </Compile>
     <Compile Include="Views\Common\ImportedShelfView.xaml.cs">
       <DependentUpon>ImportedShelfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\ShelfListView.xaml.cs">
+      <DependentUpon>ShelfListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
       <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
@@ -241,6 +252,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Common\BookDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\BookListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Common\DescriptionDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -254,6 +273,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Common\ImportedShelfView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\ShelfListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

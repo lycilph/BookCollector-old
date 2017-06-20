@@ -11,10 +11,10 @@
         <conv:BackgroundColorConverter x:Key="SelectedConverter"/>
     </UserControl.Resources>
 
-    <Border Padding="8"
+    <Border Padding="{StaticResource ListItemPadding}"
             Background="{Binding Selected, Converter={StaticResource SelectedConverter}, ConverterParameter={StaticResource proxy}}"
             BorderBrush="{StaticResource MaterialDesignDivider}" 
-            BorderThickness="0,0,0,1">
+            BorderThickness="{StaticResource ListItemBorderThickness}">
         <DockPanel>
             <CheckBox DockPanel.Dock="Left"
                       VerticalAlignment="Center"

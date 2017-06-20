@@ -6,9 +6,72 @@
              xmlns:vm="clr-namespace:BookCollector.ViewModels.Screens"
              mc:Ignorable="d" 
              d:DesignHeight="300"
-             d:DesignWidth="300"
+             d:DesignWidth="700"
              d:DataContext="{d:DesignInstance vm:BooksScreenViewModel}">
-    <StackPanel>
-        <TextBlock Text="Books Screen"/>
-    </StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="1*" MinWidth="200"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="0"
+                   Text="Shelves"
+                   Margin="0,0,0,8"
+                   Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+
+        <ListBox Grid.Row="1"
+                 Grid.Column="0"
+                 ItemsSource="{Binding Shelves}"
+                 SelectedItem="{Binding SelectedShelf}"
+                 ItemTemplate="{StaticResource ShelfListView}"
+                 HorizontalContentAlignment="Stretch"/>
+
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      Margin="{StaticResource VerticalSplitterMargin}"
+                      Width="{StaticResource VerticalSplitterWidth}"
+                      Style="{StaticResource MaterialDesignGridSplitter}"/>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="2"
+                   Text="Books"
+                   Margin="0,0,0,8"
+                   Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+
+        <ListBox Grid.Row="1"
+                 Grid.Column="2"
+                 ItemsSource="{Binding Books}"
+                 SelectedItem="{Binding SelectedBook}"
+                 ItemTemplate="{StaticResource BookListView}"/>
+
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="3"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      Margin="{StaticResource VerticalSplitterMargin}"
+                      Width="{StaticResource VerticalSplitterWidth}"
+                      Style="{StaticResource MaterialDesignGridSplitter}"/>
+
+        <TextBlock Grid.Row="0"
+                   Grid.Column="4"
+                   Text="Details"
+                   Margin="0,0,0,8"
+                   Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+
+        <ContentControl Grid.Row="1"
+                        Grid.Column="4"
+                        Content="{Binding SelectedBook}"
+                        ContentTemplate="{StaticResource BookDetailsView}"/>
+    </Grid>
 </UserControl>
