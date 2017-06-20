@@ -49,10 +49,11 @@
                    Margin="0,0,0,8"
                    Style="{StaticResource MaterialDesignTitleTextBlock}"/>
 
-        <ListBox Grid.Row="1"
+        <ListBox x:Name="books_list"
+                 Grid.Row="1"
                  Grid.Column="2"
                  ItemsSource="{Binding Books}"
-                 SelectedItem="{Binding SelectedBook}"
+                 IsSynchronizedWithCurrentItem="True"
                  ItemTemplate="{StaticResource BookListView}"/>
 
         <GridSplitter Grid.Row="1"
@@ -71,7 +72,7 @@
 
         <ContentControl Grid.Row="1"
                         Grid.Column="4"
-                        Content="{Binding SelectedBook}"
+                        Content="{Binding ElementName=books_list, Path=SelectedItem}"
                         ContentTemplate="{StaticResource BookDetailsView}"/>
     </Grid>
 </UserControl>

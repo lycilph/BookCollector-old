@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Data;
 using BookCollector.Domain;
 using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Messaging;
@@ -29,18 +32,11 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _SelectedShelf, value); }
         }
 
-        private ReactiveList<BookViewModel> _Books;
-        public ReactiveList<BookViewModel> Books
+        private ICollectionView _Books;
+        public ICollectionView Books
         {
             get { return _Books; }
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
-        }
-
-        private BookViewModel _SelectedBook;
-        public BookViewModel SelectedBook
-        {
-            get { return _SelectedBook; }
-            set { this.RaiseAndSetIfChanged(ref _SelectedBook, value); }
         }
 
         public BooksScreenViewModel(IApplicationModel application_model, IEventAggregator event_aggregator, ISnackbarMessageQueue message_queue)
@@ -50,19 +46,36 @@ namespace BookCollector.ViewModels.Screens
             this.message_queue = message_queue;
 
             DisplayName = Constants.BooksScreenDisplayName;
+
+            this.WhenAnyValue(x => x.SelectedShelf)
+                .Subscribe(_ => 
+                {
+                    Books?.Refresh();
+                    Books?.MoveCurrentToFirst();
+                });
         }
 
         public override void Activate()
         {
             base.Activate();
 
-            Books = application_model.CurrentCollection.Books.Select(b => new BookViewModel(b)).ToReactiveList();
-            SelectedBook = Books.FirstOrDefault();
+            var vms = application_model.CurrentCollection.Books.Select(b => new BookViewModel(b));
+            Books = CollectionViewSource.GetDefaultView(vms);
+            Books.MoveCurrentToFirst();
+
+            Books.Filter = (o) =>
+            {
+                var book = o as BookViewModel;
+                if (book == null || SelectedShelf == null)
+                    return false;
+
+                return book.Shelves.Any(s => s.Name == SelectedShelf.Name);
+            };
 
             Shelves = application_model.CurrentCollection.Shelves.Select(s => new ShelfViewModel(s)).ToReactiveList();
             SelectedShelf = Shelves.FirstOrDefault();
-            
-            if (!Books.Any())
+
+            if (!application_model.CurrentCollection.Books.Any())
                 message_queue.Enqueue("No Books?", "Import Here", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
         }
     }
