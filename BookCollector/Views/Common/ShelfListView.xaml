@@ -12,7 +12,18 @@
             BorderBrush="{StaticResource MaterialDesignDivider}" 
             BorderThickness="{StaticResource ListItemBorderThickness}"
             HorizontalAlignment="Stretch">
-        <TextBlock Text="{Binding Name}"
-                   HorizontalAlignment="Stretch"/>
+        <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="{Binding Name}"
+                       HorizontalAlignment="Left"/>
+            <TextBlock Grid.Column="1"
+                       Text="{Binding BooksCount}"
+                       HorizontalAlignment="Right"/>
+        </Grid>
     </Border>
 </UserControl>

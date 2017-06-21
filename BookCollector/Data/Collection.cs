@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Linq;
+using System.Collections.Generic;
 using BookCollector.Framework.MVVM;
 
 namespace BookCollector.Data
@@ -10,5 +11,10 @@ namespace BookCollector.Data
         public List<Shelf> Shelves { get; set; } = new List<Shelf>();
         public Book SelectedBook { get; set; }
         public Shelf SelectedShelf { get; set; }
+
+        public int BooksOnShelf(Shelf shelf)
+        {
+            return Books.Count(b => b.Shelves.Contains(shelf));
+        }
     }
 }

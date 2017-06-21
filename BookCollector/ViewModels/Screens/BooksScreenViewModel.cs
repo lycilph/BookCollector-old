@@ -73,18 +73,19 @@ namespace BookCollector.ViewModels.Screens
             var vms = application_model.CurrentCollection.Books.Select(b => new BookViewModel(b));
             Books = CollectionViewSource.GetDefaultView(vms);
             Books.MoveCurrentToFirst();
-            Books.Filter = FilterBook;
+            Books.Filter = Filter;
 
             Books.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending));
 
             Shelves = application_model.CurrentCollection.Shelves.Select(s => new ShelfViewModel(s)).ToReactiveList();
+            Shelves.Apply(s => s.BooksCount = application_model.CurrentCollection.BooksOnShelf(s.Unwrap()));
             SelectedShelf = Shelves.FirstOrDefault();
 
             if (!application_model.CurrentCollection.Books.Any())
                 message_queue.Enqueue("No Books?", "Import Here", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
         }
 
-        private bool FilterBook(object o)
+        private bool Filter(object o)
         {
             var book = o as BookViewModel;
             if (book == null || SelectedShelf == null)
@@ -107,6 +108,7 @@ namespace BookCollector.ViewModels.Screens
                 log.Info($"Search took {sw.ElapsedMilliseconds} ms and gave {(search_results == null ? 0 : search_results.Count)} results");
 
                 Books?.Refresh();
+                Books?.MoveCurrentToFirst();
             }
         }
     }

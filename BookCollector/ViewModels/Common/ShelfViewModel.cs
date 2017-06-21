@@ -7,6 +7,8 @@ namespace BookCollector.ViewModels.Common
     {
         public string Name { get { return obj.Name; } }
 
+        public int BooksCount { get; set; }
+
         public ShelfViewModel(Shelf obj) : base(obj) { }
     }
 }
