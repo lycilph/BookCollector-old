@@ -81,12 +81,14 @@ namespace BookCollector.Domain.Goodreads
 
             // Update the shelves for each book
             var all_shelf = collection.Shelves.Single(s => s.Name == Constants.AllShelfName);
+            var all_shelves = collection.Shelves.Concat(shelves).ToList();
             books.Apply(b =>
             {
                 var goodreads_book = mapping[b];
                 var shelf_names = goodreads_book.Shelves;
-                var shelves_for_book = shelves.Where(s => shelf_names.Contains(s.Name)).ToList();
-                shelves_for_book.Add(all_shelf);
+                var shelves_for_book = all_shelves.Where(s => shelf_names.Contains(s.Name))
+                                                  .AddTo(all_shelf)
+                                                  .ToList();
 
                 b.Shelves.AddRange(shelves_for_book);
             });
