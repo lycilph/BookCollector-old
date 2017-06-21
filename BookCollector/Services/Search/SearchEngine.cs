@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BookCollector.Data;
+using BookCollector.Framework.Logging;
 
 namespace BookCollector.Services.Search
 {
-    public class SearchEngine
+    public class SearchEngine : ISearchEngine
     {
-        private static readonly StopWordHandler stopword_handler = new StopWordHandler();
-        private static readonly PorterStemmer stemmer = new PorterStemmer();
+        private ILog log = LogManager.GetCurrentClassLogger();
+
+        private readonly StopWordHandler stopword_handler = new StopWordHandler();
+        private readonly PorterStemmer stemmer = new PorterStemmer();
 
         private List<Document> documents = new List<Document>();
-        public IDictionary<string, double> InverseDocumentFrequency { get; private set; }
-
+        private IDictionary<string, double> inverse_document_frequency;
 
         public SearchEngine() { }
         public SearchEngine(List<Book> books)
@@ -22,17 +25,31 @@ namespace BookCollector.Services.Search
 
         public void Index(List<Book> books)
         {
+            var sw = Stopwatch.StartNew();
+
             documents = books.Select(b => GetDocument(b))
                              .ToList();
             
             CalculateDocumentFrequencies();
+
+            sw.Stop();
+            log.Info($"Indexing collection took {sw.ElapsedMilliseconds} ms");
         }
 
         public List<SearchResult> Search(string query)
         {
+            // Return null result if query is empty
+            if (string.IsNullOrWhiteSpace(query))
+                return null;
+
             var query_document = GetDocument(query);
-            var query_terms = query_document.Terms;
-            var query_idf = query_terms.Select(t => InverseDocumentFrequency[t]);
+            var query_terms = query_document.Terms.Where(t => inverse_document_frequency.ContainsKey(t));
+
+            // Return empty list if no documents contains the query terms
+            if (!query_terms.Any())
+                return new List<SearchResult>();
+
+            var query_idf = query_terms.Select(t => inverse_document_frequency[t]);
             var query_vector = query_document.TF.Zip(query_idf, (tf, idf) => tf * idf).Normalize();
 
             var results = new List<SearchResult>();
@@ -55,7 +72,7 @@ namespace BookCollector.Services.Search
             var unique_terms = documents.SelectMany(d => d.Terms)
                                         .Distinct()
                                         .ToList();
-            InverseDocumentFrequency = unique_terms.ToDictionary(t => t, t => CalculateInverseDocumentFrequency(t));
+            inverse_document_frequency = unique_terms.ToDictionary(t => t, t => CalculateInverseDocumentFrequency(t));
         }
 
         private double CalculateInverseDocumentFrequency(string term)

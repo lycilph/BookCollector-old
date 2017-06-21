@@ -3,6 +3,7 @@ using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Services;
+using BookCollector.Services.Search;
 using BookCollector.Shell;
 using BookCollector.ViewModels.Screens;
 using MaterialDesignThemes.Wpf;
@@ -23,6 +24,7 @@ namespace BookCollector.Domain
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
             Bind<IDataService>().To<DataService>().InSingletonScope();
             Bind<IThemeService>().To<ThemeService>().InSingletonScope();
+            Bind<ISearchEngine>().To<SearchEngine>().InSingletonScope();
 
             Bind<IApplicationController>().To<ApplicationController>().InSingletonScope();
             Bind<IApplicationModel>().To<ApplicationModel>().InSingletonScope();

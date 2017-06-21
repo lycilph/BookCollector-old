@@ -7,7 +7,7 @@
             // Shell messages
             ShellLoaded, ShellClosing,
             // Navigation and control messages
-            NavigateTo, CollectionChanged
+            NavigateTo, CollectionChanged, SearchTextChanged
         };
 
         public MessageKind Kind { get; private set; }
@@ -38,6 +38,11 @@
         public static ApplicationMessage CollectionChanged()
         {
             return new ApplicationMessage(MessageKind.CollectionChanged);
+        }
+
+        public static ApplicationMessage SearchTextChanged(string text)
+        {
+            return new ApplicationMessage(MessageKind.SearchTextChanged, text);
         }
     }
 }

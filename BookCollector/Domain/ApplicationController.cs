@@ -4,6 +4,7 @@ using System.Linq;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
+using BookCollector.Services.Search;
 using BookCollector.Shell;
 using MaterialDesignThemes.Wpf;
 
@@ -17,10 +18,16 @@ namespace BookCollector.Domain
         private Dictionary<string, IScreen> screens;
         private IWindowCommand collection_command;
         private IWindowCommand settings_command;
+        private ISearchEngine search_engine;
 
-        public ApplicationController(IEventAggregator event_aggregator, IApplicationModel application_model, IShellFacade shell_facade, IScreen[] all_screens)
+        public ApplicationController(IEventAggregator event_aggregator,
+                                     IApplicationModel application_model, 
+                                     IShellFacade shell_facade, 
+                                     IScreen[] all_screens, 
+                                     ISearchEngine search_engine)
         {
             this.application_model = application_model;
+            this.search_engine = search_engine;
             shell = shell_facade;
             screens = all_screens.ToDictionary(s => s.DisplayName);
 
@@ -57,6 +64,9 @@ namespace BookCollector.Domain
                     break;
                 case ApplicationMessage.MessageKind.CollectionChanged:
                     CollectionChanged();
+                    break;
+                default:
+                    log.Info($"No action for message: {message.Kind}");
                     break;
             }
         }
@@ -124,9 +134,12 @@ namespace BookCollector.Domain
         {
             log.Info("Collection changed");
 
-            if (collection_command == null)
-                return;
-            SetCollectionCommandText();
+            if (collection_command != null)
+                SetCollectionCommandText();
+
+            // Reindex search engine
+            if (application_model.CurrentCollection != null)
+                search_engine.Index(application_model.CurrentCollection.Books);
         }
 
         private void SetCollectionCommandText()

@@ -145,6 +145,7 @@
     <Compile Include="Services\IDataService.cs" />
     <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\Search\Document.cs" />
+    <Compile Include="Services\Search\ISearchEngine.cs" />
     <Compile Include="Services\Search\SearchExtensions.cs" />
     <Compile Include="Services\Search\PorterStemmer.cs" />
     <Compile Include="Services\Search\SearchEngine.cs" />

@@ -80,6 +80,8 @@ namespace BookCollector.Domain
             CurrentCollection.Shelves.AddRange(new_shelves);
             // Save collection
             data_service.SaveCollection(CurrentCollection);
+            // This should also trigger a CollectionChanged event
+            event_aggregator.Publish(ApplicationMessage.CollectionChanged());
         }
 
         public void LoadCurrentCollection(string path)
