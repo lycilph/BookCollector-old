@@ -34,6 +34,7 @@ namespace BookCollector.Domain.Goodreads
 
             ParseFile(filename);
             MapBooks();
+            UpdateBookHistory();
             HandleShelves();
 
             log.Info($"Imported {books.Count} books");
@@ -66,6 +67,11 @@ namespace BookCollector.Domain.Goodreads
         {
             mapping = goodreads_books.ToDictionary(b => Mapper.Map<Book>(b));
             books = mapping.Keys.ToList();
+        }
+
+        private void UpdateBookHistory()
+        {
+            books.Apply(b => b.History.Add($"Imported on the {DateTime.Now.ToShortDateString()}"));
         }
 
         private void HandleShelves()
