@@ -198,6 +198,9 @@
     <Compile Include="Views\Common\ShelfListView.xaml.cs">
       <DependentUpon>ShelfListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Common\ShelfSelectionView.xaml.cs">
+      <DependentUpon>ShelfSelectionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
       <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
     </Compile>
@@ -300,6 +303,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Common\ShelfListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\ShelfSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -49,6 +49,7 @@
             <!-- Converters -->
             <mdconverters:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
             <mdconverters:BooleanToVisibilityConverter x:Key="InvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible"/>
+            <mdconverters:NotConverter x:Key="NotConverter"/>
             <converters:NullToEnabledConverter x:Key="NullToEnabledConverter"/>
         </ResourceDictionary>
     </Application.Resources>

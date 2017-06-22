@@ -122,6 +122,11 @@ namespace BookCollector.Domain
             Settings.LastCollectionFilename = CurrentCollection.Description.Filename;
         }
 
+        public void SaveCurrentCollection()
+        {
+            data_service.SaveCollection(CurrentCollection);
+        }
+
         public void AddCollection(Description description)
         {
             log.Info($"Adding collection {description.Filename ?? "[Empty filename]"}");

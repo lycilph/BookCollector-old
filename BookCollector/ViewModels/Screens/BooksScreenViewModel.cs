@@ -31,7 +31,6 @@ namespace BookCollector.ViewModels.Screens
         private IDialogService dialog_service;
         private List<SearchResult> search_results;
 
-
         private ReactiveList<ShelfViewModel> _Shelves;
         public ReactiveList<ShelfViewModel> Shelves
         {
@@ -111,7 +110,6 @@ namespace BookCollector.ViewModels.Screens
             SortAscending = true;
 
             var can_edit_or_delete = this.WhenAny(x => x.SelectedShelf, x => x.Value != null && x.Value.Locked == false);
-
             AddCommand = ReactiveCommand.Create(AddShelfAsync);
             DeleteCommand = ReactiveCommand.Create(DeleteShelfAsync, can_edit_or_delete);
             EditCommand = ReactiveCommand.Create(EditShelfAsync, can_edit_or_delete);
@@ -125,6 +123,10 @@ namespace BookCollector.ViewModels.Screens
                     Books?.Refresh();
                     Books?.MoveCurrentToFirst();
                 });
+
+            this.WhenAnyObservable(x => x.Shelves.ItemChanged)
+                .Where(x => x.PropertyName == "IsChecked")
+                .Subscribe(_ => UpdateShelvesForSelectedBook());
         }
 
         public override void Activate()
@@ -134,15 +136,26 @@ namespace BookCollector.ViewModels.Screens
             var vms = application_model.CurrentCollection.Books.Select(b => new BookViewModel(b));
             Books = CollectionViewSource.GetDefaultView(vms);
             Books.Filter = Filter;
+            Books.CurrentChanged += UpdateSelectedShelves;
 
             UpdateSorting();
 
             Shelves = application_model.CurrentCollection.Shelves.Select(s => new ShelfViewModel(s)).ToReactiveList();
-            Shelves.Apply(s => s.BooksCount = application_model.CurrentCollection.BooksOnShelf(s.Unwrap()));
+            Shelves.ChangeTrackingEnabled = true;
             SelectedShelf = Shelves.FirstOrDefault();
+
+            UpdateShelvesBookCount();
 
             if (!application_model.CurrentCollection.Books.Any())
                 message_queue.Enqueue("No Books?", "Import Here", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+
+            // Save current collection to persist shelf changes
+            application_model.SaveCurrentCollection();
         }
 
         public void Handle(ApplicationMessage message)
@@ -160,6 +173,18 @@ namespace BookCollector.ViewModels.Screens
             }
         }
 
+        private void UpdateShelvesBookCount()
+        {
+            Shelves.Apply(s => s.BooksCount = application_model.CurrentCollection.BooksOnShelf(s.Unwrap()));
+        }
+
+        private void UpdateCurrentBookInformation()
+        {
+            var book = Books.CurrentItem as BookViewModel;
+            if (book != null)
+                book.ShelvesAsText = string.Join(", ", book.Shelves.Select(s => s.Name));
+        }
+
         private void UpdateSorting()
         {
             if (Books == null)
@@ -173,6 +198,55 @@ namespace BookCollector.ViewModels.Screens
             Books.SortDescriptions.Clear();
             Books.SortDescriptions.Add(new SortDescription(primary_sort_property, direction));
             Books.SortDescriptions.Add(new SortDescription(secondary_sort_property, direction));
+        }
+
+        // Update the shelves IsChecked property for the currently selected book
+        private void UpdateSelectedShelves(object sender, EventArgs e)
+        {
+            if (Shelves == null)
+                return;
+
+            if (Books == null || Books.CurrentItem == null)
+            {
+                Shelves.Apply(s => s.IsChecked = false);
+                return;
+            }
+
+            var book = Books.CurrentItem as BookViewModel;
+            if (book == null)
+                return;
+
+            Shelves.Apply(s => s.IsChecked = book.Shelves.Contains(s.Unwrap()));
+            UpdateCurrentBookInformation();
+        }
+
+        private void UpdateShelvesForSelectedBook()
+        {
+            if (Books == null || Books.CurrentItem == null)
+                return;
+
+            var book = Books.CurrentItem as BookViewModel;
+            if (book == null)
+                return;
+
+            var shelves_list = Shelves.Where(s => s.IsChecked).Select(s => s.Unwrap()).ToList();
+            var books_list = book.Shelves.ToList();
+            var is_equal = new HashSet<Shelf>(books_list).SetEquals(shelves_list);
+            if (!is_equal)
+            {
+                log.Info($"Shelves changed for: {book.Title}");
+
+                // Add shelves to book
+                shelves_list.Except(books_list)
+                            .Apply(s => book.Shelves.Add(s));
+
+                // Remove shelves from book
+                books_list.Except(shelves_list)
+                          .Apply(s => book.Shelves.Remove(s));
+
+                UpdateShelvesBookCount();
+                UpdateCurrentBookInformation();
+            }
         }
 
         private bool Filter(object o)

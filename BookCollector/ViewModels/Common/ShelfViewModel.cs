@@ -20,7 +20,20 @@ namespace BookCollector.ViewModels.Common
             }
         }
 
-        public int BooksCount { get; set; }
+        private bool _IsChecked;
+        public bool IsChecked
+        {
+            get { return _IsChecked; }
+            set { this.RaiseAndSetIfChanged(ref _IsChecked, value); }
+        }
+
+        private int _BooksCount;
+        public int BooksCount
+        {
+            get { return _BooksCount; }
+            set { this.RaiseAndSetIfChanged(ref _BooksCount, value); }
+        }
+
         public bool Locked { get { return obj.Locked; } }
 
         public ShelfViewModel(Shelf obj) : base(obj) { }

@@ -61,6 +61,10 @@
         <cv:ShelfListView/>
     </DataTemplate>
 
+    <DataTemplate x:Key="ShelfSelectionListView">
+        <cv:ShelfSelectionView/>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type cvm:ImportedBookViewModel}">
         <cv:ImportedBookView/>
     </DataTemplate>
