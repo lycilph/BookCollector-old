@@ -29,12 +29,33 @@
                    Margin="0,0,0,8"
                    Style="{StaticResource MaterialDesignTitleTextBlock}"/>
 
-        <ListBox Grid.Row="1"
-                 Grid.Column="0"
-                 ItemsSource="{Binding Shelves}"
-                 SelectedItem="{Binding SelectedShelf}"
-                 ItemTemplate="{StaticResource ShelfListView}"
-                 HorizontalContentAlignment="Stretch"/>
+        <Grid Grid.Row="1"
+              Grid.Column="0">
+            <ListBox ItemsSource="{Binding Shelves}"
+                     SelectedItem="{Binding SelectedShelf}"
+                     ItemTemplate="{StaticResource ShelfListView}"
+                     HorizontalContentAlignment="Stretch"/>
+            
+           <md:PopupBox Style="{StaticResource MaterialDesignMultiFloatingActionAccentPopupBox}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Margin="{StaticResource ActionButtonMargin}">
+                <StackPanel>
+                    <Button ToolTip="Edit"
+                            Command="{Binding EditCommand}">
+                        <md:PackIcon Kind="Pencil"/>
+                    </Button>
+                    <Button ToolTip="Add"
+                            Command="{Binding AddCommand}">
+                        <md:PackIcon Kind="PlusCircle"/>
+                    </Button>
+                    <Button ToolTip="Delete"
+                            Command="{Binding DeleteCommand}">
+                        <md:PackIcon Kind="MinusCircle"/>
+                    </Button>
+                </StackPanel>
+            </md:PopupBox>
+        </Grid>
 
         <GridSplitter Grid.Row="1"
                       Grid.Column="1"

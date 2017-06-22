@@ -179,9 +179,11 @@ namespace BookCollector.ViewModels.Screens
             if (result != MessageDialogResult.Affirmative)
                 return;
 
+            // Find current index of selected collection
             var collection_to_remove = SelectedCollectionDescription;
             var collection_index = CollectionDescriptions.Select((collection, index) => new { collection, index }).First(p => p.collection == SelectedCollectionDescription).index;
 
+            // Select new item
             if (CollectionDescriptions.Count == 1)
             {
                 SelectedCollectionDescription = null;
@@ -194,6 +196,7 @@ namespace BookCollector.ViewModels.Screens
                     SelectedCollectionDescription = CollectionDescriptions.ElementAt(collection_index - 1);
             }
 
+            // Remove item
             CollectionDescriptions.Remove(collection_to_remove);
             application_model.DeleteCollection(collection_to_remove.Unwrap());
         }

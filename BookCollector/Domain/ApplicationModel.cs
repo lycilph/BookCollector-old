@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BookCollector.Data;
+using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Mapping;
 using BookCollector.Framework.Messaging;
@@ -68,7 +69,7 @@ namespace BookCollector.Domain
 
         public void AddToCurrentCollection(List<Book> books)
         {
-            log.Info($"Adding {books.Count} to current collection");
+            log.Info($"Adding {books.Count} books to current collection");
 
             // Add books
             CurrentCollection.Books.AddRange(books);
@@ -82,6 +83,29 @@ namespace BookCollector.Domain
             data_service.SaveCollection(CurrentCollection);
             // This should also trigger a CollectionChanged event
             event_aggregator.Publish(ApplicationMessage.CollectionChanged());
+        }
+
+        public void AddToCurrentCollection(Shelf shelf)
+        {
+            log.Info($"Adding shelf {shelf.Name} to current collection");
+
+            // Add shelf
+            CurrentCollection.Shelves.Add(shelf);
+            // Save collection
+            data_service.SaveCollection(CurrentCollection);
+        }
+
+        public void RemoveFromCurrentCollection(Shelf shelf)
+        {
+            log.Info($"Removing shelf {shelf.Name} from current collection");
+
+            // Remove shelf
+            CurrentCollection.Shelves.Remove(shelf);
+            // Remove shelf from all books
+            CurrentCollection.Books.Where(b => b.Shelves.Contains(shelf))
+                                   .Apply(b => b.Shelves.Remove(shelf));
+            // Save collection
+            data_service.SaveCollection(CurrentCollection);
         }
 
         public void LoadCurrentCollection(string path)

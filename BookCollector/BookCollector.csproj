@@ -170,6 +170,7 @@
     <Compile Include="ViewModels\Common\ImportedShelfViewModel.cs" />
     <Compile Include="ViewModels\Common\ShelfViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ShelfDialogViewModel.cs" />
     <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
@@ -199,6 +200,9 @@
     </Compile>
     <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
       <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ShelfDialogView.xaml.cs">
+      <DependentUpon>ShelfDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Screens\BooksScreenView.xaml.cs">
       <DependentUpon>BooksScreenView.xaml</DependentUpon>
@@ -300,6 +304,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\DescriptionDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ShelfDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

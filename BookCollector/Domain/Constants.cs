@@ -13,6 +13,9 @@
         public const string AddCollectionDialogTitle = "Add Collection";
         public const string EditCollectionDialogTitle = "Edit Collection";
 
+        public const string AddShelfDialogTitle = "Add Shelf";
+        public const string EditShelfDialogTitle = "Edit Shelf";
+
         public const string AllShelfName = "All";
         public const string AllShelfDescription = "Shelf with all books";
     }

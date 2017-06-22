@@ -36,6 +36,10 @@
         <dv:DescriptionDialogView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type dvm:ShelfDialogViewModel}">
+        <dv:ShelfDialogView/>
+    </DataTemplate>
+
     <!-- Common -->
     <DataTemplate x:Key="DescriptionListView">
         <cv:DescriptionListView/>
