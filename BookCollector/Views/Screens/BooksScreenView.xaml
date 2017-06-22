@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:vm="clr-namespace:BookCollector.ViewModels.Screens"
              mc:Ignorable="d" 
              d:DesignHeight="300"
@@ -43,11 +44,39 @@
                       Width="{StaticResource VerticalSplitterWidth}"
                       Style="{StaticResource MaterialDesignGridSplitter}"/>
 
-        <TextBlock Grid.Row="0"
-                   Grid.Column="2"
-                   Text="Books"
-                   Margin="0,0,0,8"
-                   Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+        <Grid Grid.Row="0"
+              Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Books"
+                       Margin="0,0,0,8"
+                       Style="{StaticResource MaterialDesignTitleTextBlock}"/>
+
+            <ToggleButton Grid.Column="1"
+                          Margin="8,0"
+                          Style="{StaticResource MaterialDesignActionToggleButton}"
+                          ToolTip="Sort direction"
+                          IsChecked="{Binding SortAscending}">
+                <ToggleButton.Content>
+                    <md:PackIcon Kind="SortDescending"/>
+                </ToggleButton.Content>
+                <md:ToggleButtonAssist.OnContent>
+                    <md:PackIcon Kind="SortAscending"/>
+                </md:ToggleButtonAssist.OnContent>
+            </ToggleButton>
+
+            <ComboBox Grid.Column="2"
+                      IsReadOnly="True"
+                      ToolTip="Field to sort by"
+                      MinWidth="{StaticResource MinButtonWidth}"
+                      ItemsSource="{Binding SortProperties}"
+                      SelectedItem="{Binding SelectedSortProperty}"/>
+        </Grid>
 
         <ListBox x:Name="books_list"
                  Grid.Row="1"

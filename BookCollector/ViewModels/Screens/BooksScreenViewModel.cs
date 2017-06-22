@@ -23,7 +23,6 @@ namespace BookCollector.ViewModels.Screens
         private IEventAggregator event_aggregator;
         private ISnackbarMessageQueue message_queue;
         private ISearchEngine search_engine;
-
         private List<SearchResult> search_results;
 
         private ReactiveList<ShelfViewModel> _Shelves;
@@ -47,6 +46,27 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
         }
 
+        private ReactiveList<string> _SortProperties;
+        public ReactiveList<string> SortProperties
+        {
+            get { return _SortProperties; }
+            set { this.RaiseAndSetIfChanged(ref _SortProperties, value); }
+        }
+
+        private string _SelectedSortProperty;
+        public string SelectedSortProperty
+        {
+            get { return _SelectedSortProperty; }
+            set { this.RaiseAndSetIfChanged(ref _SelectedSortProperty, value); }
+        }
+
+        private bool _SortAscending;
+        public bool SortAscending
+        {
+            get { return _SortAscending; }
+            set { this.RaiseAndSetIfChanged(ref _SortAscending, value); }
+        }
+
         public BooksScreenViewModel(IApplicationModel application_model, IEventAggregator event_aggregator, ISnackbarMessageQueue message_queue, ISearchEngine search_engine)
         {
             this.application_model = application_model;
@@ -54,9 +74,15 @@ namespace BookCollector.ViewModels.Screens
             this.message_queue = message_queue;
             this.search_engine = search_engine;
 
+            DisplayName = Constants.BooksScreenDisplayName;
             event_aggregator.Subscribe(this);
 
-            DisplayName = Constants.BooksScreenDisplayName;
+            SortProperties = new ReactiveList<string> { "Title", "Authors" };
+            SelectedSortProperty = SortProperties.First();
+            SortAscending = true;
+
+            this.WhenAnyValue(x => x.SelectedSortProperty, x => x.SortAscending)
+                .Subscribe(_ => UpdateSorting());
 
             this.WhenAnyValue(x => x.SelectedShelf)
                 .Subscribe(_ => 
@@ -72,10 +98,9 @@ namespace BookCollector.ViewModels.Screens
 
             var vms = application_model.CurrentCollection.Books.Select(b => new BookViewModel(b));
             Books = CollectionViewSource.GetDefaultView(vms);
-            Books.MoveCurrentToFirst();
             Books.Filter = Filter;
 
-            Books.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending));
+            UpdateSorting();
 
             Shelves = application_model.CurrentCollection.Shelves.Select(s => new ShelfViewModel(s)).ToReactiveList();
             Shelves.Apply(s => s.BooksCount = application_model.CurrentCollection.BooksOnShelf(s.Unwrap()));
@@ -83,6 +108,21 @@ namespace BookCollector.ViewModels.Screens
 
             if (!application_model.CurrentCollection.Books.Any())
                 message_queue.Enqueue("No Books?", "Import Here", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
+        }
+
+        private void UpdateSorting()
+        {
+            if (Books == null)
+                return;
+
+            var direction = (SortAscending ? ListSortDirection.Ascending : ListSortDirection.Descending);
+
+            var primary_sort_property = SelectedSortProperty;
+            var secondary_sort_property = SortProperties.First(p => p != primary_sort_property);
+
+            Books.SortDescriptions.Clear();
+            Books.SortDescriptions.Add(new SortDescription(primary_sort_property, direction));
+            Books.SortDescriptions.Add(new SortDescription(secondary_sort_property, direction));
         }
 
         private bool Filter(object o)
