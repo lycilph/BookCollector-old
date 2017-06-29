@@ -4,12 +4,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
 using BookCollector.Domain;
-using BookCollector.Domain.Goodreads;
 using BookCollector.Framework.Extensions;
-using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
-using BookCollector.ViewModels.Common;
+using BookCollector.Models;
+using BookCollector.ViewModels.Data;
 using Microsoft.Win32;
 using ReactiveUI;
 
@@ -17,25 +16,11 @@ namespace BookCollector.ViewModels.Screens
 {
     public class ImportScreenViewModel : ScreenBase
     {
-        private ILog log = LogManager.GetCurrentClassLogger();
         private IEventAggregator event_aggregator;
-        private IApplicationModel application_model;
+        private ICollectionModel collection_model;
+        private IImporter importer;
 
-        private ReactiveList<ImportedBookViewModel> _Books = new ReactiveList<ImportedBookViewModel>();
-        public ReactiveList<ImportedBookViewModel> Books
-        {
-            get { return _Books; }
-            set { this.RaiseAndSetIfChanged(ref _Books, value); }
-        }
-
-        private ReactiveList<ImportedShelfViewModel> _Shelves = new ReactiveList<ImportedShelfViewModel>();
-        public ReactiveList<ImportedShelfViewModel> Shelves
-        {
-            get { return _Shelves; }
-            set { this.RaiseAndSetIfChanged(ref _Shelves, value); }
-        }
-
-        private string _FilenameShort;
+        private string _FilenameShort = string.Empty;
         public string FilenameShort
         {
             get { return _FilenameShort; }
@@ -63,11 +48,18 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _SelectedBooksText, value); }
         }
 
-        private string _ShelvesText;
-        public string ShelvesText
+        private ReactiveList<ImportBookViewModel> _Books = new ReactiveList<ImportBookViewModel>();
+        public ReactiveList<ImportBookViewModel> Books
         {
-            get { return _ShelvesText; }
-            set { this.RaiseAndSetIfChanged(ref _ShelvesText, value); }
+            get { return _Books; }
+            set { this.RaiseAndSetIfChanged(ref _Books, value); }
+        }
+
+        private ReactiveList<ImportShelfViewModel> _Shelves = new ReactiveList<ImportShelfViewModel>();
+        public ReactiveList<ImportShelfViewModel> Shelves
+        {
+            get { return _Shelves; }
+            set { this.RaiseAndSetIfChanged(ref _Shelves, value); }
         }
 
         private ReactiveCommand _PickFileCommand;
@@ -112,23 +104,26 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _CancelCommand, value); }
         }
 
-        public ImportScreenViewModel(IApplicationModel application_model, IEventAggregator event_aggregator)
+        public ImportScreenViewModel(IEventAggregator event_aggregator, ICollectionModel collection_model, IImporter importer)
         {
-            this.application_model = application_model;
-            this.event_aggregator = event_aggregator;
             DisplayName = Constants.ImportScreenDisplayName;
+            this.event_aggregator = event_aggregator;
+            this.collection_model = collection_model;
+            this.importer = importer;
 
-            // Update the short filename, when the full filename is changed
-            this.WhenAnyValue(x => x.Filename)
-                .Subscribe(f => FilenameShort = Path.GetFileName(Filename));
+            PickFileCommand = ReactiveCommand.Create(PickFile);
 
             var have_books = this.WhenAny(x => x.Books, x => x.Value != null && x.Value.Any());
+            SelectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = true), have_books);
+            DeselectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = false), have_books);
+            SelectBySimilarityCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = b.SimilarityScore <= Similarity), have_books);
 
-            var list_changed = this.WhenAny(x => x.Books, x => x.Value != null && x.Value.Any(b => b.Selected));
-            var item_changed = this.WhenAnyObservable(x => x.Books.ItemChanged)
-                                   .Where(x => x.PropertyName == "Selected")
-                                   .Select(x => Books.Any(b => b.Selected));
-            var have_selected_books = Observable.Merge(list_changed, item_changed);
+            var have_selected_books = Observable.Merge(this.WhenAny(x => x.Books, x => x.Value.Any(b => b.Selected)),
+                                                       this.WhenAnyObservable(x => x.Books.ItemChanged)
+                                                           .Where(x => x.PropertyName == "Selected")
+                                                           .Select(x => Books.Any(b => b.Selected)));
+            ImportCommand = ReactiveCommand.Create(Import, have_selected_books);
+            CancelCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.BooksScreenDisplayName)));
 
             have_selected_books.Subscribe(_ =>
             {
@@ -136,23 +131,18 @@ namespace BookCollector.ViewModels.Screens
                 UpdateSelectedShelves();
             });
 
-            PickFileCommand = ReactiveCommand.Create(PickFile);
-
-            SelectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = true), have_books);
-            DeselectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = false), have_books);
-            SelectBySimilarityCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = b.Similarity <= Similarity), have_books);
-
-            ImportCommand = ReactiveCommand.Create(Import, have_selected_books);
-            CancelCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.BooksScreenDisplayName)));
+            // Update the short filename, when the full filename is changed
+            this.WhenAnyValue(x => x.Filename)
+                .Subscribe(f => FilenameShort = Path.GetFileName(Filename));
         }
 
         public override void Activate()
         {
             base.Activate();
 
-            Books = new ReactiveList<ImportedBookViewModel>();
-            Shelves = new ReactiveList<ImportedShelfViewModel>();
             Filename = string.Empty;
+            Books = new ReactiveList<ImportBookViewModel>();
+            Shelves = new ReactiveList<ImportShelfViewModel>();
         }
 
         private void UpdateSelectedBooksText()
@@ -167,29 +157,11 @@ namespace BookCollector.ViewModels.Screens
 
         private void UpdateSelectedShelves()
         {
-            if (!Books.Any())
-            {
-                ShelvesText = "No shelves";
-                return;
-            }
-            else
-                ShelvesText = "New shelves found";
-
             var selected_shelves = Books.Where(b => b.Selected)
-                                        .SelectMany(b => b.Shelves)
+                                        .SelectMany(b => b.Obj.Shelves)
                                         .Distinct()
                                         .ToList();
-            Shelves.Apply(s => s.Enabled = selected_shelves.Contains(s.Unwrap()));
-        }
-
-        private void Import()
-        {
-            var books_to_import = Books.Where(b => b.Selected)
-                                       .Select(b => b.Unwrap())
-                                       .ToList();
-
-            application_model.AddToCurrentCollection(books_to_import);
-            event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.BooksScreenDisplayName));
+            Shelves.Apply(s => s.Enabled = selected_shelves.Contains(s.Obj));
         }
 
         private void PickFile()
@@ -205,12 +177,36 @@ namespace BookCollector.ViewModels.Screens
             if (result == true)
             {
                 Filename = ofd.FileName;
-
-                var importer = new GoodreadsImporter(Filename, application_model.CurrentCollection);
-                Books = importer.GetViewModels();
-                Books.ChangeTrackingEnabled = true;
-                Shelves = importer.ImportedShelves.Select(s => new ImportedShelfViewModel(s)).ToReactiveList();
+                ParseFile();
             }
+        }
+
+        private void ParseFile()
+        {
+            var imported_books = importer.Import(Filename);
+
+            var similarities = collection_model.CalculateBookSimilarities(imported_books, collection_model.CurrentCollection.Books);
+            Books = similarities.Select(s => new ImportBookViewModel(s.Book)
+            {
+                SimilarityScore = s.Score,
+                SimilarityText = s.Text,
+                SimilarityTextShort = s.TextShort
+            })
+            .ToReactiveList(true);
+
+            Shelves = Books.SelectMany(b => b.Obj.Shelves)
+                           .Distinct()
+                           .Select(s => new ImportShelfViewModel(s))
+                           .ToReactiveList();
+        }
+
+        private void Import()
+        {
+            var books_to_import = Books.Where(b => b.Selected)
+                                       .Select(b => b.Obj)
+                                       .ToList();
+            collection_model.Import(books_to_import);
+            event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.BooksScreenDisplayName));
         }
     }
 }

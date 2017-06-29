@@ -4,10 +4,8 @@
     {
         public enum MessageKind
         {
-            // Shell messages
-            ShellLoaded, ShellClosing,
-            // Navigation and control messages
-            NavigateTo, CollectionChanged, SearchTextChanged
+            NavigateTo
+            //CollectionChanged, SearchTextChanged
         };
 
         public MessageKind Kind { get; private set; }
@@ -20,29 +18,19 @@
             Text = text;
         }
 
-        public static ApplicationMessage ShellLoaded()
-        {
-            return new ApplicationMessage(MessageKind.ShellLoaded);
-        }
-
-        public static ApplicationMessage ShellClosing()
-        {
-            return new ApplicationMessage(MessageKind.ShellClosing);
-        }
-
         public static ApplicationMessage NavigateTo(string screen)
         {
             return new ApplicationMessage(MessageKind.NavigateTo, screen);
         }
 
-        public static ApplicationMessage CollectionChanged()
-        {
-            return new ApplicationMessage(MessageKind.CollectionChanged);
-        }
+        //public static ApplicationMessage CollectionChanged()
+        //{
+        //    return new ApplicationMessage(MessageKind.CollectionChanged);
+        //}
 
-        public static ApplicationMessage SearchTextChanged(string text)
-        {
-            return new ApplicationMessage(MessageKind.SearchTextChanged, text);
-        }
+        //public static ApplicationMessage SearchTextChanged(string text)
+        //{
+        //    return new ApplicationMessage(MessageKind.SearchTextChanged, text);
+        //}
     }
 }

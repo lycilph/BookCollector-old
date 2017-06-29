@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ReactiveUI;
 
 namespace BookCollector.Framework.Extensions
 {
@@ -19,6 +20,11 @@ namespace BookCollector.Framework.Extensions
             var list = source.ToList();
             list.Add(element);
             return list;
+        }
+
+        public static ReactiveList<T> ToReactiveList<T>(this IEnumerable<T> source, bool enable_change_tracking = false)
+        {
+            return new ReactiveList<T>(source) { ChangeTrackingEnabled = enable_change_tracking };
         }
     }
 }

@@ -28,7 +28,7 @@
                     Content="..."
                     ToolTip="Pick a file to import"
                     Command="{Binding PickFileCommand}"
-                    Margin="{StaticResource ButtonLeftMargin}"
+                    Margin="{StaticResource ControlLeftMargin}"
                     VerticalAlignment="Center"/>
             <TextBox Grid.Row="1"
                      Text="{Binding FilenameShort}"
@@ -83,12 +83,14 @@
                         IsSnapToTickEnabled="True"/>
             </DockPanel>
 
+            <TextBlock Text="{Binding SelectedBooksText}" Margin="16,16,16,0"/>
+
             <Separator Margin="8,16" Style="{StaticResource MaterialDesignDarkSeparator}"/>
 
-            <!-- Details + shelves -->
-            <TextBlock Text="{Binding SelectedBooksText}" Margin="16,0"/>
-
-            <TextBlock Text="{Binding ShelvesText}" Margin="16,16,16,0"/>
+            <!-- Shelves -->
+            <TextBlock Text="Shelves" 
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"
+                       Margin="16,0"/>
             <ItemsControl Margin="16,8,16,0" ItemsSource="{Binding Shelves}"/>
         </StackPanel>
 
@@ -104,7 +106,7 @@
                     Style="{StaticResource MaterialDesignFlatButton}"/>
             <Button Content="Cancel"
                     Command="{Binding CancelCommand}"
-                    Margin="{StaticResource ButtonLeftMargin}"
+                    Margin="{StaticResource ControlLeftMargin}"
                     MinWidth="{StaticResource MinButtonWidth}"
                     Style="{StaticResource MaterialDesignFlatButton}"/>
         </StackPanel>

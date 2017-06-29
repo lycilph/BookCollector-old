@@ -4,7 +4,7 @@ namespace BookCollector.Framework.MVVM
 {
     public class ScreenBase : ReactiveObject, IScreen
     {
-        private string _DisplayName;
+        private string _DisplayName = string.Empty;
         public string DisplayName
         {
             get { return _DisplayName; }

@@ -20,12 +20,12 @@ namespace BookCollector.Shell
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            event_aggregator.Publish(ApplicationMessage.ShellLoaded());
+            event_aggregator.Publish(ShellMessages.ShellLoaded());
         }
 
         private void OnClosing(object sender, CancelEventArgs e)
         {
-            event_aggregator.Publish(ApplicationMessage.ShellClosing());
+            event_aggregator.Publish(ShellMessages.ShellClosing());
         }
     }
 }

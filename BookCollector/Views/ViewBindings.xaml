@@ -1,75 +1,20 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:svm="clr-namespace:BookCollector.ViewModels.Screens"
-                    xmlns:cvm="clr-namespace:BookCollector.ViewModels.Common"
-                    xmlns:dvm="clr-namespace:BookCollector.ViewModels.Dialogs"
-                    xmlns:sv="clr-namespace:BookCollector.Views.Screens"
-                    xmlns:cv="clr-namespace:BookCollector.Views.Common"
-                    xmlns:dv="clr-namespace:BookCollector.Views.Dialogs">
+                    xmlns:screen_view_models="clr-namespace:BookCollector.ViewModels.Screens"
+                    xmlns:data_view_models="clr-namespace:BookCollector.ViewModels.Data"
+                    xmlns:screen_views="clr-namespace:BookCollector.Views.Screens"
+                    xmlns:data_views="clr-namespace:BookCollector.Views.Data">
     <!-- Screens -->
-    <DataTemplate DataType="{x:Type svm:CollectionsScreenViewModel}">
-        <sv:CollectionsScreenView/>
+    <DataTemplate DataType="{x:Type screen_view_models:ImportScreenViewModel}">
+        <screen_views:ImportScreenView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type svm:BooksScreenViewModel}">
-        <sv:BooksScreenView/>
+    <!-- Data -->
+    <DataTemplate DataType="{x:Type data_view_models:ImportBookViewModel}">
+        <data_views:ImportBookView/>
     </DataTemplate>
 
-    <DataTemplate DataType="{x:Type svm:SettingsScreenViewModel}">
-        <sv:SettingsScreenView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type svm:ImportScreenViewModel}">
-        <sv:ImportScreenView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type svm:NavigationScreenViewModel}">
-        <sv:NavigationScreenView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type svm:SearchScreenViewModel}">
-        <sv:SearchScreenView/>
-    </DataTemplate>
-    
-    <!-- Dialogs -->
-    <DataTemplate DataType="{x:Type dvm:DescriptionDialogViewModel}">
-        <dv:DescriptionDialogView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type dvm:ShelfDialogViewModel}">
-        <dv:ShelfDialogView/>
-    </DataTemplate>
-
-    <!-- Common -->
-    <DataTemplate x:Key="DescriptionListView">
-        <cv:DescriptionListView/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="DescriptionDetailsView">
-        <cv:DescriptionDetailsView/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="BookListView">
-        <cv:BookListView/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="BookDetailsView">
-        <cv:BookDetailsView/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="ShelfListView">
-        <cv:ShelfListView/>
-    </DataTemplate>
-
-    <DataTemplate x:Key="ShelfSelectionListView">
-        <cv:ShelfSelectionView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type cvm:ImportedBookViewModel}">
-        <cv:ImportedBookView/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type cvm:ImportedShelfViewModel}">
-        <cv:ImportedShelfView/>
+    <DataTemplate DataType="{x:Type data_view_models:ImportShelfViewModel}">
+        <data_views:ImportShelfView/>
     </DataTemplate>
 </ResourceDictionary>

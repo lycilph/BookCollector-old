@@ -104,7 +104,7 @@ namespace BookCollector.Shell
                 });
         }
 
-        public void ShowMainContent(IScreen content, bool is_fullscreen)
+        public void ShowMainContent(IScreen content)
         {
             if (MainContent == content)
                 return;
@@ -114,9 +114,7 @@ namespace BookCollector.Shell
             // Activate new content
             content?.Activate();
 
-            // Configure main content
-            IsFullscreen = is_fullscreen;
-            // Configure menu content
+            // Reset menu content
             IsMenuOpen = false;
 
             // Show new content

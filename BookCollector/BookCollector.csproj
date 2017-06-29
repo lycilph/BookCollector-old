@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{439D2E9A-97E6-4E89-8433-78D4BDD6759D}</ProjectGuid>
+    <ProjectGuid>{F581CA3A-B46D-47A2-93D5-254959BCFB34}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BookCollector</RootNamespace>
     <AssemblyName>BookCollector</AssemblyName>
@@ -13,7 +13,6 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +33,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Graphics\book_open_page_black.ico</ApplicationIcon>
   </PropertyGroup>
@@ -53,20 +72,14 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI, Version=7.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.7.4.0\lib\Net45\ReactiveUI.dll</HintPath>
     </Reference>
-    <Reference Include="Splat, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Splat.1.4.0\lib\Net45\Splat.dll</HintPath>
+    <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -107,6 +120,61 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\SimilarityInformation.cs" />
+    <Compile Include="Domain\ApplicationController.cs" />
+    <Compile Include="Domain\ApplicationMessage.cs" />
+    <Compile Include="Domain\ApplicationNinjectModule.cs" />
+    <Compile Include="Domain\ApplicationObjectMapping.cs" />
+    <Compile Include="Domain\Bootstrapper.cs" />
+    <Compile Include="Domain\Goodreads\GoodreadsBook.cs" />
+    <Compile Include="Domain\Goodreads\GoodreadsImporter.cs" />
+    <Compile Include="Domain\IImporter.cs" />
+    <Compile Include="Domain\Goodreads\TrimmingCsvReader.cs" />
+    <Compile Include="Domain\IApplicationController.cs" />
+    <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Framework\Logging\DebugLog.cs" />
+    <Compile Include="Framework\Logging\ILog.cs" />
+    <Compile Include="Framework\Logging\LogManager.cs" />
+    <Compile Include="Framework\Logging\NullLog.cs" />
+    <Compile Include="Framework\Mapping\Mapper.cs" />
+    <Compile Include="Framework\Mapping\MapperInstance.cs" />
+    <Compile Include="Framework\Messaging\EventAggregator.cs" />
+    <Compile Include="Framework\Messaging\IEventAggregator.cs" />
+    <Compile Include="Framework\Messaging\IHandle.cs" />
+    <Compile Include="Framework\Messaging\MessageHandler.cs" />
+    <Compile Include="Framework\MVVM\IScreen.cs" />
+    <Compile Include="Framework\MVVM\ItemViewModel.cs" />
+    <Compile Include="Framework\MVVM\ScreenBase.cs" />
+    <Compile Include="Framework\MVVM\ScreenConfiguration.cs" />
+    <Compile Include="Models\ApplicationModel.cs" />
+    <Compile Include="Models\IApplicationModel.cs" />
+    <Compile Include="Models\SettingsModel.cs" />
+    <Compile Include="Services\ConfigurationService.cs" />
+    <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\IConfigurationService.cs" />
+    <Compile Include="Services\INavigationService.cs" />
+    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Shell\FlyoutBase.cs" />
+    <Compile Include="Shell\IFlyout.cs" />
+    <Compile Include="Domain\IShellFacade.cs" />
+    <Compile Include="Shell\IShellView.cs" />
+    <Compile Include="Shell\IShellViewModel.cs" />
+    <Compile Include="Shell\IWindowCommand.cs" />
+    <Compile Include="Domain\ShellFacade.cs" />
+    <Compile Include="Shell\ShellMessages.cs" />
+    <Compile Include="Shell\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Shell\ShellViewModel.cs" />
+    <Compile Include="Shell\WindowCommand.cs" />
+    <Compile Include="ViewModels\Data\ImportBookViewModel.cs" />
+    <Compile Include="ViewModels\Data\ImportShelfViewModel.cs" />
+    <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
+    <Compile Include="ViewModels\Data\ShelfSelectionViewModel.cs" />
+    <Compile Include="ViewModels\Data\BookViewModel.cs" />
+    <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
+    <Compile Include="ViewModels\Data\ShelfViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -114,130 +182,25 @@
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\Collection.cs" />
     <Compile Include="Data\Description.cs" />
-    <Compile Include="Data\Settings.cs" />
     <Compile Include="Data\Shelf.cs" />
-    <Compile Include="Domain\ApplicationMessage.cs" />
+    <Compile Include="Models\CollectionModel.cs" />
     <Compile Include="Domain\Constants.cs" />
-    <Compile Include="Domain\Goodreads\GoodreadsBook.cs" />
-    <Compile Include="Domain\Goodreads\GoodreadsImporter.cs" />
-    <Compile Include="Domain\Goodreads\TrimmingCsvReader.cs" />
-    <Compile Include="Framework\Converters\BackgroundColorConverter.cs" />
-    <Compile Include="Framework\Converters\BindingProxy.cs" />
-    <Compile Include="Framework\Converters\NullToEnabledConverter.cs" />
-    <Compile Include="Framework\Converters\ShellMarginConverter.cs" />
-    <Compile Include="Framework\Dialog\DialogService.cs" />
-    <Compile Include="Framework\Dialog\IDialogService.cs" />
-    <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Framework\Extensions\JsonExtensions.cs" />
-    <Compile Include="Framework\Extensions\ReactiveListExtensions.cs" />
-    <Compile Include="Framework\Extensions\StringExtensions.cs" />
-    <Compile Include="Framework\Messaging\EventAggregator.cs" />
-    <Compile Include="Framework\Messaging\IEventAggregator.cs" />
-    <Compile Include="Framework\Messaging\IHandle.cs" />
-    <Compile Include="Framework\Messaging\MessageHandler.cs" />
-    <Compile Include="Framework\MVVM\DirtyTrackingBase.cs" />
-    <Compile Include="Framework\MVVM\IScreen.cs" />
-    <Compile Include="Framework\MVVM\ItemViewModel.cs" />
-    <Compile Include="Framework\MVVM\ScreenBase.cs" />
-    <Compile Include="Domain\ApplicationModel.cs" />
-    <Compile Include="Domain\IApplicationModel.cs" />
-    <Compile Include="Services\DataService.cs" />
-    <Compile Include="Services\IDataService.cs" />
-    <Compile Include="Services\IThemeService.cs" />
-    <Compile Include="Services\Search\Document.cs" />
-    <Compile Include="Services\Search\ISearchEngine.cs" />
-    <Compile Include="Services\Search\SearchExtensions.cs" />
-    <Compile Include="Services\Search\PorterStemmer.cs" />
-    <Compile Include="Services\Search\SearchEngine.cs" />
-    <Compile Include="Services\Search\SearchResult.cs" />
-    <Compile Include="Services\Search\StopWordHandler.cs" />
-    <Compile Include="Services\ThemeService.cs" />
-    <Compile Include="Shell\FlyoutBase.cs" />
-    <Compile Include="Shell\IFlyout.cs" />
-    <Compile Include="Shell\IShellFacade.cs" />
-    <Compile Include="Shell\IShellView.cs" />
-    <Compile Include="Shell\IShellViewModel.cs" />
-    <Compile Include="Shell\IWindowCommand.cs" />
-    <Compile Include="Shell\ShellFacade.cs" />
-    <Compile Include="Shell\ShellView.xaml.cs">
-      <DependentUpon>ShellView.xaml</DependentUpon>
+    <Compile Include="Models\ICollectionModel.cs" />
+    <Compile Include="Views\Converters\BackgroundColorConverter.cs" />
+    <Compile Include="Views\Converters\BindingProxy.cs" />
+    <Compile Include="Views\Converters\NullToEnabledConverter.cs" />
+    <Compile Include="Views\Converters\ShellMarginConverter.cs" />
+    <Compile Include="Views\Data\ImportBookView.xaml.cs">
+      <DependentUpon>ImportBookView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Shell\ShellViewModel.cs" />
-    <Compile Include="Shell\WindowCommand.cs" />
-    <Compile Include="ViewModels\Common\BookViewModel.cs" />
-    <Compile Include="ViewModels\Common\DescriptionViewModel.cs" />
-    <Compile Include="ViewModels\Common\ImportedBookViewModel.cs" />
-    <Compile Include="ViewModels\Common\ImportedShelfViewModel.cs" />
-    <Compile Include="ViewModels\Common\ShelfViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\ShelfDialogViewModel.cs" />
-    <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\SearchScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
-    <Compile Include="Views\Common\BookDetailsView.xaml.cs">
-      <DependentUpon>BookDetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\BookListView.xaml.cs">
-      <DependentUpon>BookListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\DescriptionDetailsView.xaml.cs">
-      <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\DescriptionListView.xaml.cs">
-      <DependentUpon>DescriptionListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\ImportedBookView.xaml.cs">
-      <DependentUpon>ImportedBookView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\ImportedShelfView.xaml.cs">
-      <DependentUpon>ImportedShelfView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\ShelfListView.xaml.cs">
-      <DependentUpon>ShelfListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Common\ShelfSelectionView.xaml.cs">
-      <DependentUpon>ShelfSelectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
-      <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Dialogs\ShelfDialogView.xaml.cs">
-      <DependentUpon>ShelfDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\BooksScreenView.xaml.cs">
-      <DependentUpon>BooksScreenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\CollectionsScreenView.xaml.cs">
-      <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    <Compile Include="Views\Data\ImportShelfView.xaml.cs">
+      <DependentUpon>ImportShelfView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Screens\ImportScreenView.xaml.cs">
       <DependentUpon>ImportScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Screens\NavigationScreenView.xaml.cs">
-      <DependentUpon>NavigationScreenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\SearchScreenView.xaml.cs">
-      <DependentUpon>SearchScreenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
-      <DependentUpon>SettingsScreenView.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\ApplicationController.cs" />
-    <Compile Include="Domain\ApplicationNinjectModule.cs" />
-    <Compile Include="Domain\ApplicationObjectMapping.cs" />
-    <Compile Include="Domain\Bootstrapper.cs" />
-    <Compile Include="Domain\IApplicationController.cs" />
-    <Compile Include="Framework\Logging\DebugLog.cs" />
-    <Compile Include="Framework\Logging\ILog.cs" />
-    <Compile Include="Framework\Logging\LogManager.cs" />
-    <Compile Include="Framework\Logging\NullLog.cs" />
-    <Compile Include="Framework\Mapping\Mapper.cs" />
-    <Compile Include="Framework\Mapping\MapperInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -255,9 +218,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -267,7 +228,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="stopwords_en.txt" />
+    <Folder Include="ViewModels\Dialogs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Graphics\book_open_page_black.ico" />
+    <Resource Include="Graphics\book_open_page_black_48dp.png" />
+    <Resource Include="Graphics\book_open_page_grey600_48dp.png" />
+    <Resource Include="Graphics\book_open_page_white.ico" />
+    <Resource Include="Graphics\book_open_page_white_48dp.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Shell\ShellView.xaml">
@@ -278,81 +246,22 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Common\BookDetailsView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Data\ImportBookView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Common\BookListView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Data\ImportShelfView.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\DescriptionDetailsView.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\DescriptionListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\ImportedBookView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\ImportedShelfView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\ShelfListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Common\ShelfSelectionView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Dialogs\DescriptionDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Dialogs\ShelfDialogView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Screens\BooksScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Screens\CollectionsScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Screens\ImportScreenView.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Screens\NavigationScreenView.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Screens\SearchScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Screens\SettingsScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ViewBindings.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Graphics\book_open_page_black.ico" />
-    <Resource Include="Graphics\book_open_page_black_48dp.png" />
-    <Resource Include="Graphics\book_open_page_grey600_48dp.png" />
-    <Resource Include="Graphics\book_open_page_white.ico" />
-    <Resource Include="Graphics\book_open_page_white_48dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

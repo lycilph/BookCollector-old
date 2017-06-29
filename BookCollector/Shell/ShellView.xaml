@@ -7,7 +7,7 @@
                 xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
                 xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                 xmlns:shell="clr-namespace:BookCollector.Shell"
-                xmlns:converters="clr-namespace:BookCollector.Framework.Converters"
+                xmlns:converters="clr-namespace:BookCollector.Views.Converters"
                 mc:Ignorable="d"
                 Title="{Binding DisplayName}"
                 Height="600"
@@ -82,12 +82,12 @@
                 <!-- Menu toggle button -->
                 <ToggleButton Grid.Row="0"
                               HorizontalAlignment="Right"
-                              Margin="16"
+                              Margin="{StaticResource ActionButtonMargin}"
                               Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
                               IsChecked="{Binding IsMenuOpen}"/>
 
                 <TextBlock Grid.Row="1"
-                           Margin="32,0"
+                           Margin="{StaticResource LargeControlMarginVertical}"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                            Text="{Binding MenuContent.DisplayName}"/>
 
@@ -100,7 +100,7 @@
         <DockPanel>
             <!-- Top part - Title and extras -->
             <md:ColorZone DockPanel.Dock="Top"
-                          Padding="16"
+                          Padding="{StaticResource ShellTitlebarPadding}"
                           Mode="PrimaryMid"
                           md:ShadowAssist.ShadowDepth="Depth4"
                           Visibility="{Binding IsFullscreen, Converter={StaticResource InvertedVisibilityConverter}}">
@@ -113,12 +113,11 @@
 
                     <!-- Extra content -->
                     <ContentControl DockPanel.Dock="Right"
-                                    Margin="0,0,32,0"
                                     Content="{Binding HeaderContent}"/>
 
                     <!-- Screen Title -->
                     <TextBlock VerticalAlignment="Center" 
-                               Margin="32,0"
+                               Margin="{StaticResource LargeControlMarginVertical}"
                                Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                Text="{Binding MainContent.DisplayName}"/>
                 </DockPanel>
