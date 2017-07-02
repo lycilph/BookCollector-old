@@ -73,7 +73,7 @@ namespace BookCollector.Domain
         {
             log.Info("Shell loaded, navigating to start screen");
 
-            navigation_service.NavigateTo(Constants.ImportScreenDisplayName);
+            navigation_service.NavigateTo(Constants.BooksScreenDisplayName);
         }
 
         private void ShellClosing()

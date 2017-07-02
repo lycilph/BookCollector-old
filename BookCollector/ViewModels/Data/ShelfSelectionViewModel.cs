@@ -16,6 +16,10 @@ namespace BookCollector.ViewModels.Data
             set { this.RaiseAndSetIfChanged(ref _Book, value); }
         }
 
+        public string Name { get { return Shelf.Name; } }
+
+        public bool IsLocked { get { return Shelf.IsLocked; } }
+
         private bool _IsChecked = false;
         public bool IsChecked
         {

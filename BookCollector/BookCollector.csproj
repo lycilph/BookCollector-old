@@ -131,6 +131,8 @@
     <Compile Include="Domain\IImporter.cs" />
     <Compile Include="Domain\Goodreads\TrimmingCsvReader.cs" />
     <Compile Include="Domain\IApplicationController.cs" />
+    <Compile Include="Framework\Dialog\DialogService.cs" />
+    <Compile Include="Framework\Dialog\IDialogService.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
     <Compile Include="Framework\Logging\ILog.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="Shell\WindowCommand.cs" />
     <Compile Include="ViewModels\Data\ImportBookViewModel.cs" />
     <Compile Include="ViewModels\Data\ImportShelfViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\ShelfDialogViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
     <Compile Include="ViewModels\Data\ShelfSelectionViewModel.cs" />
@@ -186,18 +189,40 @@
     <Compile Include="Models\CollectionModel.cs" />
     <Compile Include="Domain\Constants.cs" />
     <Compile Include="Models\ICollectionModel.cs" />
+    <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
     <Compile Include="Views\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Views\Converters\BindingProxy.cs" />
     <Compile Include="Views\Converters\NullToEnabledConverter.cs" />
     <Compile Include="Views\Converters\ShellMarginConverter.cs" />
+    <Compile Include="Views\Data\BookDetailsView.xaml.cs">
+      <DependentUpon>BookDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Data\BookListView.xaml.cs">
+      <DependentUpon>BookListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Data\ImportBookView.xaml.cs">
       <DependentUpon>ImportBookView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Data\ImportShelfView.xaml.cs">
       <DependentUpon>ImportShelfView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Data\ShelfListView.xaml.cs">
+      <DependentUpon>ShelfListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Data\ShelfSelectionView.xaml.cs">
+      <DependentUpon>ShelfSelectionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ShelfDialogView.xaml.cs">
+      <DependentUpon>ShelfDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\BooksScreenView.xaml.cs">
+      <DependentUpon>BooksScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Screens\ImportScreenView.xaml.cs">
       <DependentUpon>ImportScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\NavigationScreenView.xaml.cs">
+      <DependentUpon>NavigationScreenView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +252,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModels\Dialogs\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Graphics\book_open_page_black.ico" />
     <Resource Include="Graphics\book_open_page_black_48dp.png" />
@@ -246,6 +269,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Data\BookDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Data\BookListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Data\ImportBookView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -254,9 +285,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Data\ShelfListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Data\ShelfSelectionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\ShelfDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Screens\BooksScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Screens\ImportScreenView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Screens\NavigationScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ViewBindings.xaml">
       <SubType>Designer</SubType>

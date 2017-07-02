@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BookCollector.Framework.Extensions;
 using ReactiveUI;
 
 namespace BookCollector.Data
@@ -48,9 +49,13 @@ namespace BookCollector.Data
                 Shelves.Add(shelf);
         }
 
-        public void Removed(Shelf shelf)
+        public void Remove(Shelf shelf)
         {
-            throw new System.NotImplementedException();
+            if (!Shelves.Contains(shelf))
+                return;
+
+            shelf.Books.Apply(b => b.Remove(shelf));
+            Shelves.Remove(shelf);
         }
     }
 }

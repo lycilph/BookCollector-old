@@ -8,6 +8,7 @@
     <Thickness x:Key="ActionButtonMargin">16</Thickness>
     <Thickness x:Key="LargeControlMarginVertical">32,0</Thickness>
     <Thickness x:Key="ControlLeftMargin">8,0,0,0</Thickness>
+    <Thickness x:Key="ControlBottomMargin">0,0,0,8</Thickness>
 
     <!-- Gridsplitter -->
     <Thickness x:Key="VerticalSplitterMargin">10,0</Thickness>
@@ -15,8 +16,12 @@
 
     <!-- Buttons -->
     <sys:Double x:Key="MinButtonWidth">80</sys:Double>
+    <sys:Double x:Key="DialogButtonHeight">35</sys:Double>
 
     <!-- List items -->
     <Thickness x:Key="ListItemPadding">8</Thickness>
     <Thickness x:Key="ListItemBorderThickness">0,0,0,1</Thickness>
+
+    <!-- Overlays - flyouts and menus -->
+    <sys:Double x:Key="OverlayMinWidth">212</sys:Double>
 </ResourceDictionary>

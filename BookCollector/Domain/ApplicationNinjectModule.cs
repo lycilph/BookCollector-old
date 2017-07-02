@@ -1,4 +1,5 @@
 ﻿using BookCollector.Domain.Goodreads;
+using BookCollector.Framework.Dialog;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
@@ -22,7 +23,7 @@ namespace BookCollector.Domain
             // Framework
             Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
             Bind<ISnackbarMessageQueue>().To<SnackbarMessageQueue>().InSingletonScope();
-            //Bind<IDialogService>().To<DialogService>().InSingletonScope();
+            Bind<IDialogService>().To<DialogService>().InSingletonScope();
             //Bind<IDataService>().To<DataService>().InSingletonScope();
             //Bind<IThemeService>().To<ThemeService>().InSingletonScope();
             //Bind<ISearchEngine>().To<SearchEngine>().InSingletonScope();
@@ -49,7 +50,7 @@ namespace BookCollector.Domain
             Bind<IScreen>().To<BooksScreenViewModel>().InSingletonScope();
             //Bind<IScreen>().To<SettingsScreenViewModel>().InSingletonScope();
             Bind<IScreen>().To<ImportScreenViewModel>().InSingletonScope();
-            //Bind<IScreen>().To<NavigationScreenViewModel>().InSingletonScope();
+            Bind<IScreen>().To<NavigationScreenViewModel>().InSingletonScope();
             //Bind<IScreen>().To<SearchScreenViewModel>().InSingletonScope();
         }
     }
