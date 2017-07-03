@@ -25,8 +25,8 @@ namespace BookCollector.Domain
             Bind<IEventAggregator>().To<EventAggregator>().InSingletonScope();
             Bind<ISnackbarMessageQueue>().To<SnackbarMessageQueue>().InSingletonScope();
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
-            //Bind<IDataService>().To<DataService>().InSingletonScope();
-            //Bind<IThemeService>().To<ThemeService>().InSingletonScope();
+            Bind<IDataService>().To<DataService>().InSingletonScope();
+            Bind<IThemeService>().To<ThemeService>().InSingletonScope();
             Bind<ISearchEngine>().To<SearchEngine>().InSingletonScope();
 
             // Services
@@ -40,6 +40,7 @@ namespace BookCollector.Domain
             // Models
             Bind<IApplicationModel>().To<ApplicationModel>().InSingletonScope();
             Bind<ICollectionModel>().To<CollectionModel>().InSingletonScope();
+            Bind<ISettingsModel>().To<SettingsModel>().InSingletonScope();
 
             // Shell
             Bind<IShellViewModel>().To<ShellViewModel>().InSingletonScope();

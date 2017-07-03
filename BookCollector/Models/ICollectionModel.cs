@@ -5,10 +5,7 @@ namespace BookCollector.Models
 {
     public interface ICollectionModel
     {
-        Collection CurrentCollection { get; set; }
-
-        void Load();
-        void Save();
+        Collection CurrentCollection { get; }
 
         Collection CreateDefaultCollection();
         List<SimilarityInformation> CalculateBookSimilarities(List<Book> c1, List<Book> c2);

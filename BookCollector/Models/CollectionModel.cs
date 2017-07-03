@@ -19,20 +19,12 @@ namespace BookCollector.Models
         public Collection CurrentCollection
         {
             get { return _CurrentCollection; }
-            set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
+            private set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
         public CollectionModel(IEventAggregator event_aggregator)
         {
             this.event_aggregator = event_aggregator;
-        }
-
-        public void Load()
-        {
-        }
-
-        public void Save()
-        {
         }
 
         public Collection CreateDefaultCollection()

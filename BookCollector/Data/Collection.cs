@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BookCollector.Framework.Extensions;
+using BookCollector.Framework.MVVM;
 using ReactiveUI;
 
 namespace BookCollector.Data
 {
-    public class Collection : ReactiveObject
+    public class Collection : DirtyTrackingBase
     {
         private Description _Description = new Description();
         public Description Description
