@@ -5,6 +5,7 @@ using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Models;
 using BookCollector.Services;
+using BookCollector.Services.Search;
 using BookCollector.Shell;
 using BookCollector.ViewModels.Screens;
 using MaterialDesignThemes.Wpf;
@@ -26,7 +27,7 @@ namespace BookCollector.Domain
             Bind<IDialogService>().To<DialogService>().InSingletonScope();
             //Bind<IDataService>().To<DataService>().InSingletonScope();
             //Bind<IThemeService>().To<ThemeService>().InSingletonScope();
-            //Bind<ISearchEngine>().To<SearchEngine>().InSingletonScope();
+            Bind<ISearchEngine>().To<SearchEngine>().InSingletonScope();
 
             // Services
             Bind<INavigationService>().To<NavigationService>().InSingletonScope();
@@ -51,7 +52,7 @@ namespace BookCollector.Domain
             //Bind<IScreen>().To<SettingsScreenViewModel>().InSingletonScope();
             Bind<IScreen>().To<ImportScreenViewModel>().InSingletonScope();
             Bind<IScreen>().To<NavigationScreenViewModel>().InSingletonScope();
-            //Bind<IScreen>().To<SearchScreenViewModel>().InSingletonScope();
+            Bind<IScreen>().To<SearchScreenViewModel>().InSingletonScope();
         }
     }
 }

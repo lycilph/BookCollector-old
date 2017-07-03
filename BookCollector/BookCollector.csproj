@@ -148,6 +148,13 @@
     <Compile Include="Framework\MVVM\ItemViewModel.cs" />
     <Compile Include="Framework\MVVM\ScreenBase.cs" />
     <Compile Include="Framework\MVVM\ScreenConfiguration.cs" />
+    <Compile Include="Services\Search\Document.cs" />
+    <Compile Include="Services\Search\ISearchEngine.cs" />
+    <Compile Include="Services\Search\PorterStemmer.cs" />
+    <Compile Include="Services\Search\SearchEngine.cs" />
+    <Compile Include="Services\Search\SearchExtensions.cs" />
+    <Compile Include="Services\Search\SearchResult.cs" />
+    <Compile Include="Services\Search\StopWordHandler.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
     <Compile Include="Models\IApplicationModel.cs" />
     <Compile Include="Models\SettingsModel.cs" />
@@ -190,6 +197,7 @@
     <Compile Include="Domain\Constants.cs" />
     <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\SearchScreenViewModel.cs" />
     <Compile Include="Views\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Views\Converters\BindingProxy.cs" />
     <Compile Include="Views\Converters\NullToEnabledConverter.cs" />
@@ -224,6 +232,9 @@
     <Compile Include="Views\Screens\NavigationScreenView.xaml.cs">
       <DependentUpon>NavigationScreenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Screens\SearchScreenView.xaml.cs">
+      <DependentUpon>SearchScreenView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -252,7 +263,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="stopwords_en.txt" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Graphics\book_open_page_black.ico" />
     <Resource Include="Graphics\book_open_page_black_48dp.png" />
@@ -308,6 +321,10 @@
     <Page Include="Views\Screens\NavigationScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\SearchScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\ViewBindings.xaml">
       <SubType>Designer</SubType>

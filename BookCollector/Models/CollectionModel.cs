@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BookCollector.Data;
 using BookCollector.Domain;
-using BookCollector.Framework;
 using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
+using BookCollector.Framework.Messaging;
 using ReactiveUI;
 
 namespace BookCollector.Models
@@ -13,12 +13,18 @@ namespace BookCollector.Models
     public class CollectionModel : ReactiveObject, ICollectionModel
     {
         private ILog log = LogManager.GetCurrentClassLogger();
+        private IEventAggregator event_aggregator;
 
         private Collection _CurrentCollection;
         public Collection CurrentCollection
         {
             get { return _CurrentCollection; }
             set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
+        }
+
+        public CollectionModel(IEventAggregator event_aggregator)
+        {
+            this.event_aggregator = event_aggregator;
         }
 
         public void Load()
@@ -100,6 +106,9 @@ namespace BookCollector.Models
 
             // Add books to default shelf
             books.Apply(b => CurrentCollection.DefaultShelf.Add(b));
+
+            // Fire collection changed message which: reindex' search engine, updates collection command
+            event_aggregator.Publish(ApplicationMessage.CollectionChanged());
         }
     }
 }

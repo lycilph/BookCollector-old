@@ -4,8 +4,9 @@
     {
         public enum MessageKind
         {
-            NavigateTo
-            //CollectionChanged, SearchTextChanged
+            NavigateTo,
+            CollectionChanged, 
+            SearchTextChanged
         };
 
         public MessageKind Kind { get; private set; }
@@ -23,14 +24,14 @@
             return new ApplicationMessage(MessageKind.NavigateTo, screen);
         }
 
-        //public static ApplicationMessage CollectionChanged()
-        //{
-        //    return new ApplicationMessage(MessageKind.CollectionChanged);
-        //}
+        public static ApplicationMessage CollectionChanged()
+        {
+            return new ApplicationMessage(MessageKind.CollectionChanged);
+        }
 
-        //public static ApplicationMessage SearchTextChanged(string text)
-        //{
-        //    return new ApplicationMessage(MessageKind.SearchTextChanged, text);
-        //}
+        public static ApplicationMessage SearchTextChanged(string text)
+        {
+            return new ApplicationMessage(MessageKind.SearchTextChanged, text);
+        }
     }
 }

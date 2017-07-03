@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Data;
@@ -7,8 +9,11 @@ using BookCollector.Data;
 using BookCollector.Domain;
 using BookCollector.Framework.Dialog;
 using BookCollector.Framework.Extensions;
+using BookCollector.Framework.Logging;
+using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Models;
+using BookCollector.Services.Search;
 using BookCollector.ViewModels.Data;
 using BookCollector.ViewModels.Dialogs;
 using MahApps.Metro.Controls.Dialogs;
@@ -16,10 +21,13 @@ using ReactiveUI;
 
 namespace BookCollector.ViewModels.Screens
 {
-    public class BooksScreenViewModel : ScreenBase
+    public class BooksScreenViewModel : ScreenBase, IHandle<ApplicationMessage>
     {
+        private ILog log = LogManager.GetCurrentClassLogger();
         private ICollectionModel collection_model;
         private IDialogService dialog_service;
+        private ISearchEngine search_engine;
+        private List<SearchResult> search_results;
 
         private ICollectionView _Books;
         public ICollectionView Books
@@ -91,11 +99,14 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _DeleteCommand, value); }
         }
 
-        public BooksScreenViewModel(ICollectionModel collection_model, IDialogService dialog_service)
+        public BooksScreenViewModel(ICollectionModel collection_model, IDialogService dialog_service, IEventAggregator event_aggregator, ISearchEngine search_engine)
         {
             DisplayName = Constants.BooksScreenDisplayName;
             this.collection_model = collection_model;
             this.dialog_service = dialog_service;
+            this.search_engine = search_engine;
+
+            event_aggregator.Subscribe(this);
 
             SortProperties = new ReactiveList<string> { "Title", "Authors" };
             SelectedSortProperty = SortProperties.First();
@@ -142,6 +153,21 @@ namespace BookCollector.ViewModels.Screens
             }
         }
 
+        public void Handle(ApplicationMessage message)
+        {
+            if (message.Kind == ApplicationMessage.MessageKind.SearchTextChanged)
+            {
+                log.Info($"Search text changed - {message.Text}");
+                var sw = Stopwatch.StartNew();
+                search_results = search_engine.Search(message.Text);
+                sw.Stop();
+                log.Info($"Search took {sw.ElapsedMilliseconds} ms and gave {(search_results == null ? 0 : search_results.Count)} results");
+
+                Books?.Refresh();
+                Books?.MoveCurrentToFirst();
+            }
+        }
+
         private void UpdateSorting()
         {
             if (Books == null)
@@ -163,10 +189,10 @@ namespace BookCollector.ViewModels.Screens
             if (book == null || SelectedShelf == null)
                 return false;
 
-            //if (search_results != null)
-            //    return search_results.Any(s => s.Book.Title == book.Title) && book.Shelves.Any(s => s.Name == SelectedShelf.Name);
-            //else
-            return book.IsOnShelf(SelectedShelf.Obj);
+            if (search_results != null)
+                return search_results.Any(s => s.Book.Title == book.Title) && book.IsOnShelf(SelectedShelf.Obj);
+            else
+                return book.IsOnShelf(SelectedShelf.Obj);
         }
 
         private async void EditShelfAsync()

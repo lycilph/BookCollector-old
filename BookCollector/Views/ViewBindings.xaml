@@ -18,6 +18,10 @@
     <DataTemplate DataType="{x:Type screen_view_models:NavigationScreenViewModel}">
         <screen_views:NavigationScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type screen_view_models:SearchScreenViewModel}">
+        <screen_views:SearchScreenView/>
+    </DataTemplate>
     
     <!-- Dialogs -->
     <DataTemplate DataType="{x:Type dialog_view_models:ShelfDialogViewModel}">

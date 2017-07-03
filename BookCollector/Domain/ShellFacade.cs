@@ -28,6 +28,9 @@ namespace BookCollector.Domain
             shell_view_model.RightShellCommands.Add(collection_command);
 
             // Add flyouts
+
+            // Show the shell window
+            shell_view.Show();
         }
 
         public void SetCollectionCommandVisibility(bool is_visible)
@@ -38,11 +41,6 @@ namespace BookCollector.Domain
         public void SetFullscreenState(bool is_fullscreen)
         {
             shell_view_model.IsFullscreen = is_fullscreen;
-        }
-
-        public void ShowShell()
-        {
-            shell_view.Show();
         }
 
         public void ShowMainContent(IScreen content)

@@ -1,7 +1,9 @@
-﻿using BookCollector.Framework.Logging;
+﻿using System.Linq;
+using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Models;
 using BookCollector.Services;
+using BookCollector.Services.Search;
 using BookCollector.Shell;
 
 namespace BookCollector.Domain
@@ -13,13 +15,15 @@ namespace BookCollector.Domain
         private IApplicationModel application_model;
         private IShellFacade shell;
         private INavigationService navigation_service;
+        private ISearchEngine search_engine;
 
-        public ApplicationController(IEventAggregator event_aggregator, IApplicationModel application_model, IShellFacade shell, INavigationService navigation_service)
+        public ApplicationController(IEventAggregator event_aggregator, IApplicationModel application_model, IShellFacade shell, INavigationService navigation_service, ISearchEngine search_engine)
         {
             this.event_aggregator = event_aggregator;
             this.application_model = application_model;
             this.shell = shell;
             this.navigation_service = navigation_service;
+            this.search_engine = search_engine;
 
             event_aggregator.Subscribe(this);
         }
@@ -33,7 +37,6 @@ namespace BookCollector.Domain
 
             // Initialize and launch shell
             shell.Initialize();
-            shell.ShowShell();
         }
 
         public void Handle(ShellMessages message)
@@ -63,6 +66,9 @@ namespace BookCollector.Domain
                 case ApplicationMessage.MessageKind.NavigateTo:
                     navigation_service.NavigateTo(message.Text);
                     break;
+                case ApplicationMessage.MessageKind.CollectionChanged:
+                    UpdateSearchIndex();
+                    break;
                 default:
                     log.Warn($"No action for message: {message.Kind}");
                     break;
@@ -73,7 +79,7 @@ namespace BookCollector.Domain
         {
             log.Info("Shell loaded, navigating to start screen");
 
-            navigation_service.NavigateTo(Constants.BooksScreenDisplayName);
+            navigation_service.NavigateTo(Constants.ImportScreenDisplayName);
         }
 
         private void ShellClosing()
@@ -81,6 +87,15 @@ namespace BookCollector.Domain
             log.Info("Shell closing, saving state");
 
             application_model.Save();
+        }
+
+        private void UpdateSearchIndex()
+        {
+            log.Info("Updating search index");
+
+            // Reindex search engine
+            if (application_model.CollectionModel.CurrentCollection != null)
+                search_engine.Index(application_model.CollectionModel.CurrentCollection.DefaultShelf.Books.ToList());
         }
     }
 }

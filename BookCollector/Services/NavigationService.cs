@@ -33,11 +33,11 @@ namespace BookCollector.Services
             var main_content = screens[configuration.MainContent];
             shell.ShowMainContent(main_content);
 
-            if (screens.TryGetValue(configuration.HeaderContent, out IScreen header_content))
-                shell.ShowHeaderContent(header_content);
+            screens.TryGetValue(configuration.HeaderContent, out IScreen header_content);
+            shell.ShowHeaderContent(header_content);
 
-            if (screens.TryGetValue(configuration.MenuContent, out IScreen menu_content))
-                shell.ShowMenuContent(menu_content);
+            screens.TryGetValue(configuration.MenuContent, out IScreen menu_content);
+            shell.ShowMenuContent(menu_content);
         }
     }
 }
