@@ -2,6 +2,7 @@
 using BookCollector.Framework.Messaging;
 using BookCollector.Framework.MVVM;
 using BookCollector.Shell;
+using MaterialDesignThemes.Wpf;
 
 namespace BookCollector.Domain
 {
@@ -11,7 +12,7 @@ namespace BookCollector.Domain
         private IEventAggregator event_aggregator;
         private IShellViewModel shell_view_model;
         private IShellView shell_view;
-        private IWindowCommand collection_command;
+        private IWindowCommand collection_command, settings_command;
 
         public ShellFacade(IEventAggregator event_aggregator, IShellViewModel shell_view_model, IShellView shell_view)
         {
@@ -27,10 +28,17 @@ namespace BookCollector.Domain
             collection_command = new WindowCommand("Import", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
             shell_view_model.RightShellCommands.Add(collection_command);
 
-            // Add flyouts
+            var settings_icon = new PackIcon() { Kind = PackIconKind.Settings };
+            settings_command = new WindowCommand(settings_icon, () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.SettingsScreenDisplayName)));
+            shell_view_model.LeftShellCommands.Add(settings_command);
 
             // Show the shell window
             shell_view.Show();
+        }
+
+        public void AddFlyout(IFlyout flyout)
+        {
+            shell_view_model.ShellFlyouts.Add(flyout);
         }
 
         public void SetCollectionCommandVisibility(bool is_visible)

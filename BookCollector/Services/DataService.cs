@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using BookCollector.Data;
 using BookCollector.Framework.Extensions;
@@ -35,7 +36,6 @@ namespace BookCollector.Services
             }
         }
 
-        /*
         public bool CollectionExists(string path)
         {
             return File.Exists(path);
@@ -67,6 +67,7 @@ namespace BookCollector.Services
             }
         }
 
+        /*
         public void DeleteCollection(string path)
         {
             if (CollectionExists(path))

@@ -142,6 +142,7 @@
     <Compile Include="Framework\Dialog\IDialogService.cs" />
     <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Framework\Extensions\JsonExtensions.cs" />
+    <Compile Include="Framework\Extensions\StringExtensions.cs" />
     <Compile Include="Framework\Logging\DebugLog.cs" />
     <Compile Include="Framework\Logging\ILog.cs" />
     <Compile Include="Framework\Logging\LogManager.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Models\ICollectionModel.cs" />
     <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\SearchScreenViewModel.cs" />
+    <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
     <Compile Include="Views\Converters\BackgroundColorConverter.cs" />
     <Compile Include="Views\Converters\BindingProxy.cs" />
     <Compile Include="Views\Converters\NullToEnabledConverter.cs" />
@@ -247,6 +249,9 @@
     </Compile>
     <Compile Include="Views\Screens\SearchScreenView.xaml.cs">
       <DependentUpon>SearchScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
+      <DependentUpon>SettingsScreenView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -336,6 +341,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Screens\SearchScreenView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Screens\SettingsScreenView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

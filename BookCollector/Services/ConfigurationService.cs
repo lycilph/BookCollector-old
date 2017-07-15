@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BookCollector.Domain;
 using BookCollector.Framework.MVVM;
 
@@ -14,7 +15,8 @@ namespace BookCollector.Services
             {
                 {Constants.ImportScreenDisplayName, new ScreenConfiguration(Constants.ImportScreenDisplayName, false, true) },
                 {Constants.BooksScreenDisplayName, new ScreenConfiguration(Constants.BooksScreenDisplayName, Constants.SearchScreenDisplayName, Constants.NavigationScreenDisplayName, false, true) },
-                {Constants.CollectionsScreenDisplayName, new ScreenConfiguration(Constants.CollectionsScreenDisplayName, false, false ) }
+                {Constants.CollectionsScreenDisplayName, new ScreenConfiguration(Constants.CollectionsScreenDisplayName, false, false ) },
+                {Constants.SettingsScreenDisplayName, new ScreenConfiguration(Constants.SettingsScreenDisplayName, true) }
             };
         }
 
@@ -23,6 +25,11 @@ namespace BookCollector.Services
             if (!screen_configurations.TryGetValue(screen_name, out ScreenConfiguration configuration))
                 throw new System.ArgumentException("screen_name");
             return configuration;
+        }
+
+        public List<ScreenConfiguration> GetFlyouts()
+        {
+            return screen_configurations.Values.Where(c => c.IsFlyout).ToList();
         }
     }
 }

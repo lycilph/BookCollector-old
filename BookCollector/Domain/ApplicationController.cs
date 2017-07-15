@@ -35,6 +35,9 @@ namespace BookCollector.Domain
             // Load application model
             application_model.Load();
 
+            // Initialize the navigation service
+            navigation_service.Initialize();
+
             // Initialize and launch shell
             shell.Initialize();
         }
@@ -68,6 +71,8 @@ namespace BookCollector.Domain
                     break;
                 case ApplicationMessage.MessageKind.CollectionChanged:
                     UpdateSearchIndex();
+                    // Update collection command text
+                    // Save last collection filename (Settings.LastCollectionFilename = CurrentCollection.Description.Filename;)
                     break;
                 default:
                     log.Warn($"No action for message: {message.Kind}");

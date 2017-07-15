@@ -8,9 +8,9 @@ namespace BookCollector.Services
         void SaveSettings(Settings settings);
         bool SettingsExists();
 
-        //bool CollectionExists(string path);
-        //Collection LoadCollection(string path);
-        //void SaveCollection(Collection collection);
+        bool CollectionExists(string path);
+        Collection LoadCollection(string path);
+        void SaveCollection(Collection collection);
         //void DeleteCollection(string path);
 
         //List<Description> GetAllCollectionDescriptions();

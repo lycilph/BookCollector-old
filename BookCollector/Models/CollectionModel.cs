@@ -6,6 +6,7 @@ using BookCollector.Domain;
 using BookCollector.Framework.Extensions;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
+using BookCollector.Services;
 using ReactiveUI;
 
 namespace BookCollector.Models
@@ -14,6 +15,7 @@ namespace BookCollector.Models
     {
         private ILog log = LogManager.GetCurrentClassLogger();
         private IEventAggregator event_aggregator;
+        private IDataService data_service;
 
         private Collection _CurrentCollection;
         public Collection CurrentCollection
@@ -22,9 +24,31 @@ namespace BookCollector.Models
             private set { this.RaiseAndSetIfChanged(ref _CurrentCollection, value); }
         }
 
-        public CollectionModel(IEventAggregator event_aggregator)
+        public CollectionModel(IEventAggregator event_aggregator, IDataService data_service)
         {
             this.event_aggregator = event_aggregator;
+            this.data_service = data_service;
+        }
+
+        public void LoadCurrentCollection(string path)
+        {
+            log.Info($"Loading current collection {path}");
+
+            if (!data_service.CollectionExists(path))
+            {
+                log.Warn($"No collection found for {path}");
+                return;
+            }
+
+            CurrentCollection = data_service.LoadCollection(path);
+
+            // Fire collection changed message which: reindex' search engine, updates collection command and saves collection filename
+            event_aggregator.Publish(ApplicationMessage.CollectionChanged());
+        }
+
+        public void SaveCurrentCollection()
+        {
+            //data_service.SaveCollection(CurrentCollection);
         }
 
         public Collection CreateDefaultCollection()
@@ -99,7 +123,7 @@ namespace BookCollector.Models
             // Add books to default shelf
             books.Apply(b => CurrentCollection.DefaultShelf.Add(b));
 
-            // Fire collection changed message which: reindex' search engine, updates collection command
+            // Fire collection changed message which: reindex' search engine, updates collection command and saves collection filename
             event_aggregator.Publish(ApplicationMessage.CollectionChanged());
         }
     }

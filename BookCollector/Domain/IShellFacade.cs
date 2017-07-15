@@ -1,10 +1,12 @@
 ﻿using BookCollector.Framework.MVVM;
+using BookCollector.Shell;
 
 namespace BookCollector.Domain
 {
     public interface IShellFacade
     {
         void Initialize();
+        void AddFlyout(IFlyout flyout);
         void SetCollectionCommandVisibility(bool is_visible);
         void SetFullscreenState(bool is_fullscreen);
         void ShowMainContent(IScreen content);
