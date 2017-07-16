@@ -1,4 +1,6 @@
-﻿using BookCollector.Framework.Logging;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
+using BookCollector.Framework.Logging;
 using BookCollector.Services;
 
 namespace BookCollector.Models

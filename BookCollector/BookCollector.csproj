@@ -190,8 +190,10 @@
     </Compile>
     <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="Shell\WindowCommand.cs" />
+    <Compile Include="ViewModels\Data\DescriptionViewModel.cs" />
     <Compile Include="ViewModels\Data\ImportBookViewModel.cs" />
     <Compile Include="ViewModels\Data\ImportShelfViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\ShelfDialogViewModel.cs" />
     <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
     <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
@@ -223,6 +225,12 @@
     <Compile Include="Views\Data\BookListView.xaml.cs">
       <DependentUpon>BookListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Data\DescriptionDetailsView.xaml.cs">
+      <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Data\DescriptionListView.xaml.cs">
+      <DependentUpon>DescriptionListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Data\ImportBookView.xaml.cs">
       <DependentUpon>ImportBookView.xaml</DependentUpon>
     </Compile>
@@ -235,11 +243,17 @@
     <Compile Include="Views\Data\ShelfSelectionView.xaml.cs">
       <DependentUpon>ShelfSelectionView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
+      <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\ShelfDialogView.xaml.cs">
       <DependentUpon>ShelfDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Screens\BooksScreenView.xaml.cs">
       <DependentUpon>BooksScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Screens\CollectionsScreenView.xaml.cs">
+      <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Screens\ImportScreenView.xaml.cs">
       <DependentUpon>ImportScreenView.xaml</DependentUpon>
@@ -308,6 +322,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Data\DescriptionDetailsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Data\DescriptionListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Data\ImportBookView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -324,11 +346,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Dialogs\DescriptionDialogView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Dialogs\ShelfDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Screens\BooksScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Screens\CollectionsScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

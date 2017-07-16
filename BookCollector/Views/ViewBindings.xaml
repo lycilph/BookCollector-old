@@ -7,6 +7,10 @@
                     xmlns:dialog_views="clr-namespace:BookCollector.Views.Dialogs"
                     xmlns:data_views="clr-namespace:BookCollector.Views.Data">
     <!-- Screens -->
+    <DataTemplate DataType="{x:Type screen_view_models:CollectionsScreenViewModel}">
+        <screen_views:CollectionsScreenView/>
+    </DataTemplate>
+    
     <DataTemplate DataType="{x:Type screen_view_models:BooksScreenViewModel}">
         <screen_views:BooksScreenView/>
     </DataTemplate>
@@ -32,11 +36,23 @@
         <dialog_views:ShelfDialogView/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type dialog_view_models:DescriptionDialogViewModel}">
+        <dialog_views:DescriptionDialogView/>
+    </DataTemplate>
+
     <!-- Data -->
     <DataTemplate DataType="{x:Type data_view_models:ImportBookViewModel}">
         <data_views:ImportBookView/>
     </DataTemplate>
 
+    <DataTemplate x:Key="DescriptionListView">
+        <data_views:DescriptionListView/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DescriptionDetailsView">
+        <data_views:DescriptionDetailsView/>
+    </DataTemplate>
+    
     <DataTemplate x:Key="BookListView">
         <data_views:BookListView/>
     </DataTemplate>

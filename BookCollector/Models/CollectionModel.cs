@@ -48,7 +48,44 @@ namespace BookCollector.Models
 
         public void SaveCurrentCollection()
         {
-            //data_service.SaveCollection(CurrentCollection);
+            if (CurrentCollection != null)
+                data_service.SaveCollection(CurrentCollection);
+        }
+
+        public void SaveCollection(Collection collection)
+        {
+            log.Info($"Deleting collection {collection.Description.Filename ?? "[Empty filename]"}");
+            data_service.SaveCollection(collection);
+        }
+
+        public void UpdateCollection(Description description)
+        {
+            log.Info($"Updating collection {description.Filename}");
+
+            // Load, update and save the collection
+            var collection = data_service.LoadCollection(description.Filename);
+            collection.Description = description;
+            data_service.SaveCollection(collection);
+
+            // If this was the current collection, reload this
+            if (CurrentCollection != null && CurrentCollection.Description.Filename == description.Filename)
+                LoadCurrentCollection(description.Filename);
+        }
+
+        public void DeleteCollection(Description description)
+        {
+            log.Info($"Deleting collection {description.Filename}");
+
+            // Delete the file
+            data_service.DeleteCollection(description.Filename);
+
+            // If this was the current collect, handle it
+            if (CurrentCollection != null && CurrentCollection.Description.Filename == description.Filename)
+            {
+                CurrentCollection = null;
+                // Fire collection changed message which: reindex' search engine, updates collection command and saves collection filename
+                event_aggregator.Publish(ApplicationMessage.CollectionChanged());
+            }
         }
 
         public Collection CreateDefaultCollection()
@@ -57,6 +94,13 @@ namespace BookCollector.Models
             var default_shelf = new Shelf(Constants.DefaultShelfName, Constants.DefaultShelfDescription, true);
             var collection = new Collection(collection_description, default_shelf);
             return collection;
+        }
+
+        public List<Description> GetAllCollectionDescriptions()
+        {
+            log.Info("Loading all collection descriptions");
+
+            return data_service.GetAllCollectionDescriptions();
         }
 
         public List<SimilarityInformation> CalculateBookSimilarities(List<Book> c1, List<Book> c2)

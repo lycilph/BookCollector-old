@@ -15,6 +15,9 @@ namespace BookCollector.Domain
         public const string AddShelfDialogTitle = "Add Shelf";
         public const string EditShelfDialogTitle = "Edit Shelf";
 
+        public const string AddCollectionDialogTitle = "Add Collection";
+        public const string EditCollectionDialogTitle = "Edit Collection";
+
         public const string DefaultCollectionName = "Collection";
         public const string DefaultCollectionDescription = "Description";
 

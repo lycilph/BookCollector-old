@@ -1,7 +1,9 @@
-﻿using ReactiveUI;
+﻿using Newtonsoft.Json;
+using ReactiveUI;
 
 namespace BookCollector.Data
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Shelf : ReactiveObject
     {
         private string _Name = string.Empty;

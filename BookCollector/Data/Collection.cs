@@ -2,10 +2,12 @@
 using System.Linq;
 using BookCollector.Framework.Extensions;
 using BookCollector.Framework.MVVM;
+using Newtonsoft.Json;
 using ReactiveUI;
 
 namespace BookCollector.Data
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Collection : DirtyTrackingBase
     {
         private Description _Description = new Description();
@@ -16,6 +18,7 @@ namespace BookCollector.Data
         }
 
         private Shelf _DefaultShelf;
+        [JsonIgnore]
         public Shelf DefaultShelf
         {
             get { return _DefaultShelf; }
@@ -29,6 +32,7 @@ namespace BookCollector.Data
             set { this.RaiseAndSetIfChanged(ref _Shelves, value); }
         }
 
+        [JsonIgnore]
         public List<Book> Books { get { return DefaultShelf.Books.ToList(); } }
 
         public Collection() { }

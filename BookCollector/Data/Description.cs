@@ -4,6 +4,7 @@ using ReactiveUI;
 
 namespace BookCollector.Data
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Description : ReactiveObject
     {
         private string _Name = string.Empty;

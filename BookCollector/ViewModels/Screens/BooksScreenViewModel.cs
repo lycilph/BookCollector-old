@@ -17,6 +17,7 @@ using BookCollector.Services.Search;
 using BookCollector.ViewModels.Data;
 using BookCollector.ViewModels.Dialogs;
 using MahApps.Metro.Controls.Dialogs;
+using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 
 namespace BookCollector.ViewModels.Screens
@@ -26,7 +27,9 @@ namespace BookCollector.ViewModels.Screens
         private ILog log = LogManager.GetCurrentClassLogger();
         private ICollectionModel collection_model;
         private IDialogService dialog_service;
+        private IEventAggregator event_aggregator;
         private ISearchEngine search_engine;
+        private ISnackbarMessageQueue message_queue;
         private List<SearchResult> search_results;
 
         private ICollectionView _Books;
@@ -99,12 +102,14 @@ namespace BookCollector.ViewModels.Screens
             set { this.RaiseAndSetIfChanged(ref _DeleteCommand, value); }
         }
 
-        public BooksScreenViewModel(ICollectionModel collection_model, IDialogService dialog_service, IEventAggregator event_aggregator, ISearchEngine search_engine)
+        public BooksScreenViewModel(ICollectionModel collection_model, IDialogService dialog_service, IEventAggregator event_aggregator, ISearchEngine search_engine, ISnackbarMessageQueue message_queue)
         {
             DisplayName = Constants.BooksScreenDisplayName;
             this.collection_model = collection_model;
             this.dialog_service = dialog_service;
+            this.event_aggregator = event_aggregator;
             this.search_engine = search_engine;
+            this.message_queue = message_queue;
 
             event_aggregator.Subscribe(this);
 
@@ -151,6 +156,17 @@ namespace BookCollector.ViewModels.Screens
                 var selected_book = (Books.CurrentItem as BookViewModel).Obj;
                 ShelfSelections = collection_model.CurrentCollection.Shelves.Select(s => new ShelfSelectionViewModel(selected_book, s)).ToReactiveList();
             }
+
+
+            if (!collection_model.CurrentCollection.Books.Any())
+                message_queue.Enqueue("No Books?", "Import Here", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+
+            collection_model.SaveCurrentCollection();
         }
 
         public void Handle(ApplicationMessage message)

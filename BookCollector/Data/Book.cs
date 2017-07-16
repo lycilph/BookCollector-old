@@ -1,7 +1,9 @@
-﻿using ReactiveUI;
+﻿using Newtonsoft.Json;
+using ReactiveUI;
 
 namespace BookCollector.Data
 {
+    [JsonObject(MemberSerialization.OptOut)]
     public class Book : ReactiveObject
     {
         private string _Title = string.Empty;
@@ -33,6 +35,7 @@ namespace BookCollector.Data
         }
 
         private ReactiveList<Shelf> _Shelves = new ReactiveList<Shelf>();
+        [JsonIgnore]
         public ReactiveList<Shelf> Shelves
         {
             get { return _Shelves; }

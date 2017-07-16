@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BookCollector.Data;
+using BookCollector.Domain;
 using BookCollector.Framework.Extensions;
 
 namespace BookCollector.Services
@@ -44,6 +47,10 @@ namespace BookCollector.Services
         public Collection LoadCollection(string path)
         {
             var collection = JsonExtensions.ReadFromFile<Collection>(path);
+            // Update default shelf
+            collection.SetDefaultShelf(collection.Shelves.Single(s => s.Name == Constants.DefaultShelfName));
+            // Update books with shelves (since it is NOT serialized due to loops)
+            collection.Shelves.Apply(s => s.Books.Apply(b => b.Add(s)));
             collection.Description.Filename = path;
             collection.Description.BooksCount = collection.Books.Count;
             collection.Description.ShelfCount = collection.Shelves.Count;
@@ -67,7 +74,6 @@ namespace BookCollector.Services
             }
         }
 
-        /*
         public void DeleteCollection(string path)
         {
             if (CollectionExists(path))
@@ -84,7 +90,6 @@ namespace BookCollector.Services
             }
             return descriptions;
         }
-        */
 
         private string GetDataDirectory()
         {

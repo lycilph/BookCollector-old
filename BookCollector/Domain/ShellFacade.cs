@@ -25,7 +25,7 @@ namespace BookCollector.Domain
         {
             log.Info("Initializing shell facade");
 
-            collection_command = new WindowCommand("Import", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
+            collection_command = new WindowCommand("Collection", () => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.CollectionsScreenDisplayName)));
             shell_view_model.RightShellCommands.Add(collection_command);
 
             var settings_icon = new PackIcon() { Kind = PackIconKind.Settings };
