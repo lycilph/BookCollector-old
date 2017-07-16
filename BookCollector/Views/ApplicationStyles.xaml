@@ -8,6 +8,7 @@
     <Thickness x:Key="ActionButtonMargin">16</Thickness>
     <Thickness x:Key="LargeControlMarginVertical">32,0</Thickness>
     <Thickness x:Key="ControlLeftMargin">8,0,0,0</Thickness>
+    <Thickness x:Key="ControlRightMargin">0,0,8,0</Thickness>
     <Thickness x:Key="ControlBottomMargin">0,0,0,8</Thickness>
 
     <!-- Gridsplitter -->

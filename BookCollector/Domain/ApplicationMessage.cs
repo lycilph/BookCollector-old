@@ -6,7 +6,8 @@
         {
             NavigateTo,
             CollectionChanged, 
-            SearchTextChanged
+            SearchTextChanged,
+            SearchOnWeb
         };
 
         public MessageKind Kind { get; private set; }
@@ -32,6 +33,11 @@
         public static ApplicationMessage SearchTextChanged(string text)
         {
             return new ApplicationMessage(MessageKind.SearchTextChanged, text);
+        }
+
+        public static ApplicationMessage SearchOnWeb(string text)
+        {
+            return new ApplicationMessage(MessageKind.SearchOnWeb, text);
         }
     }
 }

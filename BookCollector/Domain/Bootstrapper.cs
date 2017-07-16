@@ -1,4 +1,7 @@
-﻿using BookCollector.Framework.Logging;
+﻿using System.IO;
+using System.Reflection;
+using BookCollector.Framework.Logging;
+using CefSharp;
 using Ninject;
 
 namespace BookCollector.Domain
@@ -11,6 +14,7 @@ namespace BookCollector.Domain
         public void Startup()
         {
             log.Info("Startup");
+            SetupCEF();
             SetupObjectMapping();
             SetupDependencyInjection();
             InitializeApplicationController();
@@ -19,6 +23,26 @@ namespace BookCollector.Domain
         public void Exit()
         {
             log.Info("Exit");
+            ShutdownCEF();
+        }
+
+        public void SetupCEF()
+        {
+            var path = Assembly.GetExecutingAssembly().Location;
+            var dir = Path.GetDirectoryName(path);
+
+            var settings = new CefSettings()
+            {
+                //By default CefSharp will use an in-memory cache, you need to specify a Cache Folder to persist data
+                CachePath = Path.Combine(dir, "CefSharp"),
+            };
+            //Perform dependency check to make sure all relevant resources are in our output directory.
+            Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
+        }
+
+        public void ShutdownCEF()
+        {
+            Cef.Shutdown();
         }
 
         private void SetupObjectMapping()

@@ -32,5 +32,15 @@
                      IsReadOnly="True"
                      VerticalAlignment="Center"/>
         </DockPanel>
+
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,16"
+                    HorizontalAlignment="Right">
+            <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    ToolTip="Search for book on Goodreads"
+                    Command="{Binding SearchOnWebCommand}">
+                <md:PackIcon Kind="Book" Height="16" Width="16" />
+            </Button>
+        </StackPanel>
     </StackPanel>
 </UserControl>

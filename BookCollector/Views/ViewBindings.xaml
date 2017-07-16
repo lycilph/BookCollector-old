@@ -30,6 +30,10 @@
     <DataTemplate DataType="{x:Type screen_view_models:SettingsScreenViewModel}">
         <screen_views:SettingsScreenView/>
     </DataTemplate>
+
+    <DataTemplate DataType="{x:Type screen_view_models:WebScreenViewModel}">
+        <screen_views:WebScreenView/>
+    </DataTemplate>
     
     <!-- Dialogs -->
     <DataTemplate DataType="{x:Type dialog_view_models:ShelfDialogViewModel}">

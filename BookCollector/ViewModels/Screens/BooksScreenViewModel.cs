@@ -137,7 +137,7 @@ namespace BookCollector.ViewModels.Screens
         {
             base.Activate();
 
-            var vms = collection_model.CurrentCollection.Books.Select(b => new BookViewModel(b));
+            var vms = collection_model.CurrentCollection.Books.Select(b => new BookViewModel(b, event_aggregator));
             Books = CollectionViewSource.GetDefaultView(vms);
             Books.Filter = Filter;
             Books.CurrentChanged += (sender, args) => 

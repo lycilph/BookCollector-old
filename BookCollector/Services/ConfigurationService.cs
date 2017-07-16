@@ -13,10 +13,11 @@ namespace BookCollector.Services
         {
             screen_configurations = new Dictionary<string, ScreenConfiguration>()
             {
-                {Constants.ImportScreenDisplayName, new ScreenConfiguration(Constants.ImportScreenDisplayName, false, true) },
-                {Constants.BooksScreenDisplayName, new ScreenConfiguration(Constants.BooksScreenDisplayName, Constants.SearchScreenDisplayName, Constants.NavigationScreenDisplayName, false, true) },
-                {Constants.CollectionsScreenDisplayName, new ScreenConfiguration(Constants.CollectionsScreenDisplayName, false, false ) },
-                {Constants.SettingsScreenDisplayName, new ScreenConfiguration(Constants.SettingsScreenDisplayName, true) }
+                { Constants.ImportScreenDisplayName, new ScreenConfiguration(Constants.ImportScreenDisplayName, false, true) },
+                { Constants.BooksScreenDisplayName, new ScreenConfiguration(Constants.BooksScreenDisplayName, Constants.SearchScreenDisplayName, Constants.NavigationScreenDisplayName, false, true) },
+                { Constants.CollectionsScreenDisplayName, new ScreenConfiguration(Constants.CollectionsScreenDisplayName, false, false ) },
+                { Constants.SettingsScreenDisplayName, new ScreenConfiguration(Constants.SettingsScreenDisplayName, true) },
+                { Constants.WebScreenDisplayName, new ScreenConfiguration(Constants.WebScreenDisplayName, true, false) }
             };
         }
 

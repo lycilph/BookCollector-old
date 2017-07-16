@@ -35,10 +35,8 @@ namespace BookCollector.ViewModels.Screens
             DisplayName = Constants.NavigationScreenDisplayName;
 
             ImportCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.ImportScreenDisplayName)));
-
-            var disable = Observable.Return(false);
-            GoodreadsCommand = ReactiveCommand.Create(() => { }, disable);
-            GooglePlayCommand = ReactiveCommand.Create(() => { }, disable);
+            GoodreadsCommand = ReactiveCommand.Create(() => event_aggregator.Publish(ApplicationMessage.NavigateTo(Constants.WebScreenDisplayName)));
+            GooglePlayCommand = ReactiveCommand.Create(() => { }, Observable.Return(false));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BookCollector.Framework.Logging;
 using BookCollector.Framework.Messaging;
 using BookCollector.Models;
@@ -74,6 +75,9 @@ namespace BookCollector.Domain
                     UpdateCollectionCommandText();
                     UpdateLastCollectionFilename();
                     break;
+                case ApplicationMessage.MessageKind.SearchOnWeb:
+                    SearchOnWeb(message.Text);
+                    break;
                 default:
                     log.Warn($"No action for message: {message.Kind}");
                     break;
@@ -124,6 +128,13 @@ namespace BookCollector.Domain
             var settings = application_model.SettingsModel.Settings;
 
             settings.LastCollectionFilename = (collection == null ? string.Empty : collection.Description.Filename);
+        }
+
+        private void SearchOnWeb(string text)
+        {
+            log.Info($"Search for {text} on web");
+
+            navigation_service.NavigateTo(Constants.WebScreenDisplayName);
         }
     }
 }
