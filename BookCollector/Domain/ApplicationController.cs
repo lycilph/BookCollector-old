@@ -71,8 +71,8 @@ namespace BookCollector.Domain
                     break;
                 case ApplicationMessage.MessageKind.CollectionChanged:
                     UpdateSearchIndex();
-                    // Update collection command text
-                    // Save last collection filename (Settings.LastCollectionFilename = CurrentCollection.Description.Filename;)
+                    UpdateCollectionCommandText();
+                    UpdateLastCollectionFilename();
                     break;
                 default:
                     log.Warn($"No action for message: {message.Kind}");
@@ -84,7 +84,10 @@ namespace BookCollector.Domain
         {
             log.Info("Shell loaded, navigating to start screen");
 
-            navigation_service.NavigateTo(Constants.CollectionsScreenDisplayName);
+            if (application_model.CollectionModel.CurrentCollection == null)
+                navigation_service.NavigateTo(Constants.CollectionsScreenDisplayName);
+            else
+                navigation_service.NavigateTo(Constants.BooksScreenDisplayName);
         }
 
         private void ShellClosing()
@@ -101,6 +104,26 @@ namespace BookCollector.Domain
             // Reindex search engine
             if (application_model.CollectionModel.CurrentCollection != null)
                 search_engine.Index(application_model.CollectionModel.CurrentCollection.DefaultShelf.Books.ToList());
+        }
+
+        public void UpdateCollectionCommandText()
+        {
+            log.Info("Updating collection command text");
+
+            var collection = application_model.CollectionModel.CurrentCollection;
+            var text = (collection == null ? "[NA]" : collection.Description.Name);
+
+            shell.SetCollectionCommandText(text);
+        }
+
+        private void UpdateLastCollectionFilename()
+        {
+            log.Info("Updating last collection filename");
+
+            var collection = application_model.CollectionModel.CurrentCollection;
+            var settings = application_model.SettingsModel.Settings;
+
+            settings.LastCollectionFilename = (collection == null ? string.Empty : collection.Description.Filename);
         }
     }
 }

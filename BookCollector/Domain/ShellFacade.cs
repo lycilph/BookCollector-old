@@ -46,6 +46,12 @@ namespace BookCollector.Domain
             collection_command.IsVisible = is_visible;
         }
 
+        public void SetCollectionCommandText(string text)
+        {
+            if (collection_command != null)
+                collection_command.DisplayName = text;
+        }
+
         public void SetFullscreenState(bool is_fullscreen)
         {
             shell_view_model.IsFullscreen = is_fullscreen;
