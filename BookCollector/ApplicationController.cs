@@ -3,6 +3,7 @@ using BookCollector.Screens.Books;
 using BookCollector.Screens.Collections;
 using BookCollector.Screens.Import;
 using BookCollector.Screens.Settings;
+using BookCollector.Screens.Web;
 using BookCollector.Services;
 using MaterialDesignThemes.Wpf;
 using NLog;
@@ -51,6 +52,9 @@ namespace BookCollector
                 case ApplicationMessage.ShowCollectionsScreen:
                     NavigateToCollectionsScreen();
                     break;
+                case ApplicationMessage.ShowWebScreen:
+                    NavigateToWebScreen();
+                    break;
                 default:
                     logger.Warn($"No handler for the message {message}");
                     break;
@@ -77,6 +81,11 @@ namespace BookCollector
         private void NavigateToSettingsScreen()
         {
             navigation_service.NavigateTo(typeof(ISettingsScreen));
+        }
+
+        private void NavigateToWebScreen()
+        {
+            navigation_service.NavigateTo(typeof(IWebScreen));
         }
     }
 }

@@ -6,6 +6,7 @@
         ShowBooksScreen,
         ShowCollectionsScreen,
         ShowImportScreen,
-        ShowSettingsScreen
+        ShowSettingsScreen,
+        ShowWebScreen
     }
 }
