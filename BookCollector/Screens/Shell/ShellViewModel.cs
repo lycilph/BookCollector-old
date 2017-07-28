@@ -83,12 +83,11 @@ namespace BookCollector.Screens.Shell
             MessageBus.Current.SendMessage(ApplicationMessage.ShellLoaded);
         }
 
-        public void Show(IScreen screen, ShellScreenPosition position, bool is_fullscreen = false)
+        public void Show(IScreen screen, ShellScreenPosition position)
         {
             switch (position)
             {
                 case ShellScreenPosition.MainContent:
-                    IsFullscreen = is_fullscreen;
                     ShowMainContent(screen);
                     ShowHeaderContent(null);
                     ShowMenuContent(null);

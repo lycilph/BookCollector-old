@@ -75,18 +75,20 @@ namespace BookCollector.Services
             // Handle flyouts
             if (configuration.is_flyout)
             {
-                if (!(configuration.screen is IFlyout flyout))
-                    throw new InvalidOperationException($"Expected {screen_type.Name} to be of type IFlyout");
-                flyout.Toggle();
+                if (configuration.screen is IFlyout flyout)
+                    flyout.Toggle();
+                return;
             }
-            // Handle main, header and menu content
-            else if (configuration.position == ShellScreenPosition.MainContent)
+
+            // Handle shell setup (this is only triggered by main content screens)
+            if (configuration.position == ShellScreenPosition.MainContent)
             {
                 shell.CollectionCommand.IsVisible = configuration.show_collection_command;
-                shell.Show(configuration.screen, configuration.position, configuration.is_fullscreen);
+                shell.IsFullscreen = configuration.is_fullscreen;
             }
-            else
-                shell.Show(configuration.screen, configuration.position);
+            
+            // Show content
+            shell.Show(configuration.screen, configuration.position);
         }
 
         private class ScreenConfiguration

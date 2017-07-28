@@ -6,7 +6,8 @@ namespace BookCollector.Screens.Shell
     {
         IWindowCommand SettingsCommand { get; }
         IWindowCommand CollectionCommand { get; }
+        bool IsFullscreen { get; set; }
 
-        void Show(IScreen screen, ShellScreenPosition position, bool is_fullscreen = false);
+        void Show(IScreen screen, ShellScreenPosition position);
     }
 }
