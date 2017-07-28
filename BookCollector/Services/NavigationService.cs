@@ -38,31 +38,7 @@ namespace BookCollector.Services
             }
         }
 
-        //public void Register(Type screen_type)
-        //{
-        //    var configuration = new ScreenConfiguration();
-        //    Register(screen_type, configuration);
-        //}
-
-        //public void Register(Type screen_type, ShellScreenPosition position)
-        //{
-        //    var configuration = new ScreenConfiguration
-        //    {
-        //        position = position
-        //    };
-        //    Register(screen_type, configuration);
-        //}
-
-        //public void Register(Type screen_type, bool show_collection_command)
-        //{
-        //    var configuration = new ScreenConfiguration
-        //    {
-        //        show_collection_command = show_collection_command
-        //    };
-        //    Register(screen_type, configuration);
-        //}
-
-        public void Register(Type screen_type, ShellScreenPosition position, bool show_collection_command, bool is_fullscreen)
+        public void Register(Type screen_type, ShellScreenPosition position = ShellScreenPosition.MainContent, bool show_collection_command = true, bool is_fullscreen = false)
         {
             var configuration = new ScreenConfiguration
             {
