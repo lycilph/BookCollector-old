@@ -2,14 +2,85 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookCollector.Screens.Settings"
              mc:Ignorable="d" 
-             d:DesignHeight="300" 
+             d:DesignHeight="400" 
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:SettingsScreenViewModel}"
              MinWidth="{StaticResource OverlayMinWidth}">
-    <StackPanel>
-        <TextBlock Text="Settings"/>
+    <StackPanel Margin="{StaticResource LargeScreenMargin}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.ColumnSpan="2"
+                       Text="Options"
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Margin="{StaticResource NormalControlTopMargin}"
+                       Text="Load on start" 
+                       VerticalAlignment="Center"/>
+            <ToggleButton Grid.Row="1"
+                          Grid.Column="1"
+                          Margin="{StaticResource NormalControlTopMargin}"
+                          IsChecked="{Binding LoadCollectionOnStartup}"
+                          Style="{StaticResource MaterialDesignSwitchAccentToggleButton}"/>
+
+            <Separator Grid.Row="2" 
+                       Grid.ColumnSpan="2" 
+                       Margin="{StaticResource SeparatorMargin}" 
+                       Style="{StaticResource MaterialDesignDarkSeparator}"/>
+
+            <TextBlock Grid.Row="3"
+                       Grid.ColumnSpan="2"
+                       Text="Theme"
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
+
+            <TextBlock Grid.Row="4" 
+                       Grid.Column="0" 
+                       Margin="{StaticResource NormalControlTopMargin}"
+                       Text="Primary" 
+                       VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="4"
+                      Grid.Column="2"
+                      Margin="{StaticResource NormalControlTopMargin}"
+                      IsEditable="False" 
+                      md:HintAssist.Hint="Select"
+                      md:HintAssist.HintOpacity=".56"
+                      ItemsSource="{Binding PrimaryColors}"
+                      SelectedItem="{Binding SelectedPrimaryColor}"
+                      DisplayMemberPath="Name"/>
+
+            <TextBlock Grid.Row="5" 
+                       Grid.Column="0" 
+                       Margin="{StaticResource NormalControlTopMargin}"
+                       Text="Accent" 
+                       VerticalAlignment="Center"/>
+            <ComboBox Grid.Row="5"
+                      Grid.Column="2"
+                      Margin="{StaticResource NormalControlTopMargin}"
+                      IsEditable="False" 
+                      md:HintAssist.Hint="Select"
+                      md:HintAssist.HintOpacity=".56"
+                      ItemsSource="{Binding AccentColors}"
+                      SelectedItem="{Binding SelectedAccentColor}"
+                      DisplayMemberPath="Name"/>
+        </Grid>
     </StackPanel>
 </UserControl>

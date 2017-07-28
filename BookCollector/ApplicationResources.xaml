@@ -8,6 +8,7 @@
     <Thickness x:Key="ShellMargin">16</Thickness>
     <Thickness x:Key="LargeScreenMargin">32</Thickness>
     <Thickness x:Key="ActionButtonMargin">16</Thickness>
+    <Thickness x:Key="SeparatorMargin">8,16</Thickness>
 
     <Thickness x:Key="LargeControlHorizontalMargin">32,0</Thickness>
     

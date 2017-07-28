@@ -25,7 +25,6 @@ namespace BookCollector.Configuration
 
             ConfigureNinject();
             ConfigureNavigation();
-            ConfigureController();
         }
 
         private void ConfigureNinject()
@@ -43,14 +42,6 @@ namespace BookCollector.Configuration
             NavigationConfigurationModule.Setup(navigation_service);
         }
 
-        private void ConfigureController()
-        {
-            logger.Trace("Configuring application controller");
-
-            var controller = Kernel.Get<IApplicationController>();
-            controller.Initialize();
-        }
-
         protected override object GetInstance(Type service)
         {
             logger.Trace($"Getting instance for {service.Name} from Ninject Kernel");
@@ -61,6 +52,9 @@ namespace BookCollector.Configuration
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             logger.Trace("Startup");
+
+            var controller = Kernel.Get<IApplicationController>();
+            controller.Initialize();
 
             DisplayRootViewFor<IShellViewModel>();
         }

@@ -14,7 +14,7 @@
                 HorizontalAlignment="Left"
                 Command="{Binding ImportCommand}"
                 Style="{StaticResource MaterialDesignFlatButton}"/>
-        <Separator Margin="{StaticResource NormalControlVerticalMargin}"/>
+        <Separator Margin="{StaticResource SeparatorMargin}"/>
         <Button Content="Goodreads" 
                 Margin="{StaticResource NormalControlTopMargin}"
                 HorizontalAlignment="Left"

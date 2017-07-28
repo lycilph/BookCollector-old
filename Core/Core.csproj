@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="AssemblySource.cs" />
     <Compile Include="BootstrapperBase.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="FlyoutBase.cs" />
     <Compile Include="IFlyout.cs" />

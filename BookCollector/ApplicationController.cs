@@ -18,15 +18,13 @@ namespace BookCollector
 
         private INavigationService navigation_service;
         private ISnackbarMessageQueue message_queue;
-        private ISettingsRepository settings_repository;
+        private ISettingsService settings_service;
 
-        public Settings Settings { get; private set; }
-
-        public ApplicationController(INavigationService navigation_service, ISnackbarMessageQueue message_queue, ISettingsRepository settings_repository)
+        public ApplicationController(INavigationService navigation_service, ISnackbarMessageQueue message_queue, ISettingsService settings_service)
         {
             this.navigation_service = navigation_service;
             this.message_queue = message_queue;
-            this.settings_repository = settings_repository;
+            this.settings_service = settings_service;
         }
 
         public void Initialize()
@@ -36,14 +34,14 @@ namespace BookCollector
             MessageBus.Current.Listen<ApplicationMessage>()
                               .Subscribe(HandleApplicationMessage);
 
-            Settings = settings_repository.LoadOrCreate();
+            settings_service.Initialize();
         }
 
         public void Exit()
         {
             logger.Trace("Exiting");
 
-            settings_repository.Save(Settings);
+            settings_service.Exit();
         }
 
         private void HandleApplicationMessage(ApplicationMessage message)
@@ -53,7 +51,7 @@ namespace BookCollector
             switch (message)
             {
                 case ApplicationMessage.ShellLoaded:
-                    NavigateToBooksScreen();
+                    HandleShellLoaded();
                     break;
                 case ApplicationMessage.ShowBooksScreen:
                     NavigateToBooksScreen();
@@ -76,13 +74,18 @@ namespace BookCollector
             }
         }
 
+        private void HandleShellLoaded()
+        {
+            NavigateToBooksScreen();
+
+            message_queue.Enqueue("Welcome to Book Collector");
+        }
+
         private void NavigateToBooksScreen()
         {
             navigation_service.NavigateTo(typeof(IBooksScreen)); // Main content
             navigation_service.NavigateTo(typeof(ISearchScreen)); // Header content
             navigation_service.NavigateTo(typeof(INavigationScreen)); // Menu content
-
-            message_queue.Enqueue("Welcome");
         }
 
         private void NavigateToCollectionsScreen()

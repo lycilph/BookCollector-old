@@ -193,10 +193,20 @@
     <Compile Include="Services\CollectionRepository.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\ISettingsRepository.cs" />
+    <Compile Include="Services\ISettingsService.cs" />
+    <Compile Include="Services\IThemeService.cs" />
     <Compile Include="Services\NavigationService.cs">
       <DependentUpon>INavigationService.cs</DependentUpon>
     </Compile>
-    <Compile Include="Services\SettingsRepository.cs" />
+    <Compile Include="Services\SettingsRepository.cs">
+      <DependentUpon>ISettingsRepository.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\SettingsService.cs">
+      <DependentUpon>ISettingsService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ThemeService.cs">
+      <DependentUpon>IThemeService.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
