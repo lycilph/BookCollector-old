@@ -1,66 +1,125 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BookCollector.Domain;
-using BookCollector.Framework.Logging;
-using BookCollector.Framework.MVVM;
-using BookCollector.Shell;
+using BookCollector.Screens.Shell;
+using Core;
+using NLog;
 
 namespace BookCollector.Services
 {
-    // This should handle all screen transitions
     public class NavigationService : INavigationService
     {
-        private ILog log = LogManager.GetCurrentClassLogger();
-        private IShellFacade shell;
-        private Dictionary<string, IScreen> screens;
-        private IConfigurationService configuration_service;
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public NavigationService(IShellFacade shell, IScreen[] all_screens, IConfigurationService configuration_service)
+        private IShellViewModel shell;
+        private List<IScreen> screens;
+        private Dictionary<Type, ScreenConfiguration> configurations = new Dictionary<Type, ScreenConfiguration>();
+
+        public NavigationService(IShellViewModel shell, IEnumerable<IScreen> screens)
         {
             this.shell = shell;
-            this.configuration_service = configuration_service;
-            screens = all_screens.ToDictionary(s => s.DisplayName);
+            this.screens = screens.ToList();
+
+            Initialize();
         }
 
-        public void Initialize()
+        private void Initialize()
         {
-            // Add all flyouts here
-            foreach (var configuration in configuration_service.GetFlyouts())
+            logger.Trace("Initialize");
+
+            // Go through screens and register flyouts
+            foreach (var screen in screens)
             {
-                var flyout = screens[configuration.MainContent] as IFlyout;
-                if (flyout == null)
-                    throw new ArgumentException($"{configuration.MainContent} must inherit from FlyoutBase");
-                shell.AddFlyout(flyout);
+                if (screen is IFlyout flyout)
+                {
+                    logger.Trace($"Registering {screen.GetType().Name} as IFlyout");
+                    shell.ShellFlyouts.Add(flyout);
+                }
             }
         }
 
-        public void NavigateTo(string screen_name)
+        //public void Register(Type screen_type)
+        //{
+        //    var configuration = new ScreenConfiguration();
+        //    Register(screen_type, configuration);
+        //}
+
+        //public void Register(Type screen_type, ShellScreenPosition position)
+        //{
+        //    var configuration = new ScreenConfiguration
+        //    {
+        //        position = position
+        //    };
+        //    Register(screen_type, configuration);
+        //}
+
+        //public void Register(Type screen_type, bool show_collection_command)
+        //{
+        //    var configuration = new ScreenConfiguration
+        //    {
+        //        show_collection_command = show_collection_command
+        //    };
+        //    Register(screen_type, configuration);
+        //}
+
+        public void Register(Type screen_type, ShellScreenPosition position, bool show_collection_command, bool is_fullscreen)
         {
-            log.Info($"Navigating to {screen_name}");
-
-            var configuration = configuration_service.Get(screen_name);
-
-            if (configuration.IsFlyout)
+            var configuration = new ScreenConfiguration
             {
-                var flyout = screens[screen_name] as IFlyout;
-                if (flyout == null)
-                    throw new ArgumentException($"{screen_name} must inherit from FlyoutBase");
-                flyout.Toggle();
+                position = position,
+                show_collection_command = show_collection_command,
+                is_fullscreen = is_fullscreen
+            };
+            Register(screen_type, configuration);
+        }
+
+        private void Register(Type screen_type, ScreenConfiguration configuration)
+        {
+            if (configurations.ContainsKey(screen_type))
                 return;
+
+            // Try to find corresponding screen
+            var screen = screens.Single(s => screen_type.IsAssignableFrom(s.GetType()));
+            configuration.screen = screen;
+
+            // Is this a flyout
+            if (screen is IFlyout flyout)
+                configuration.is_flyout = true;
+
+            configurations[screen_type] = configuration;
+        }
+
+        public void NavigateTo(Type screen_type)
+        {
+            logger.Trace($"Navigating to {screen_type.Name}");
+
+            if (!configurations.TryGetValue(screen_type, out ScreenConfiguration configuration))
+                throw new InvalidOperationException($"Could not find ScreenConfiguration for {screen_type.Name}");
+
+            // Handle flyouts
+            if (configuration.is_flyout)
+            {
+                if (!(configuration.screen is IFlyout flyout))
+                    throw new InvalidOperationException($"Expected {screen_type.Name} to be of type IFlyout");
+                flyout.Toggle();
             }
+            // Handle main, header and menu content
+            else if (configuration.position == ShellScreenPosition.MainContent)
+            {
+                shell.CollectionCommand.IsVisible = configuration.show_collection_command;
+                shell.Show(configuration.screen, configuration.position, configuration.is_fullscreen);
+            }
+            else
+                shell.Show(configuration.screen, configuration.position);
+        }
 
-            shell.SetCollectionCommandVisibility(configuration.ShowCollectionCommand);
-            shell.SetFullscreenState(configuration.IsFullscreen);
-
-            var main_content = screens[configuration.MainContent];
-            shell.ShowMainContent(main_content);
-
-            screens.TryGetValue(configuration.HeaderContent, out IScreen header_content);
-            shell.ShowHeaderContent(header_content);
-
-            screens.TryGetValue(configuration.MenuContent, out IScreen menu_content);
-            shell.ShowMenuContent(menu_content);
+        private class ScreenConfiguration
+        {
+            public IScreen screen;
+            public ShellScreenPosition position = ShellScreenPosition.MainContent;
+            public bool show_collection_command = true;
+            public bool is_fullscreen = false;
+            public bool is_flyout = false;
         }
     }
 }

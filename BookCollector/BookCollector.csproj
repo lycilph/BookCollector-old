@@ -1,22 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.props" Condition="Exists('..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.props')" />
-  <Import Project="..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.props" Condition="Exists('..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F581CA3A-B46D-47A2-93D5-254959BCFB34}</ProjectGuid>
+    <ProjectGuid>{FEE5B3EE-3B51-4000-9E9D-8834A2BBA71A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>BookCollector</RootNamespace>
     <AssemblyName>BookCollector</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -27,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,6 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>default</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
@@ -61,9 +60,6 @@
     <ApplicationIcon>Graphics\book_open_page_black.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
-    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -76,14 +72,11 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
-    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.11\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveUI, Version=7.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.7.4.0\lib\Net45\ReactiveUI.dll</HintPath>
@@ -130,151 +123,72 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\Settings.cs" />
-    <Compile Include="Data\SimilarityInformation.cs" />
-    <Compile Include="Domain\ApplicationController.cs" />
-    <Compile Include="Domain\ApplicationMessage.cs" />
-    <Compile Include="Domain\ApplicationNinjectModule.cs" />
-    <Compile Include="Domain\ApplicationObjectMapping.cs" />
-    <Compile Include="Domain\Bootstrapper.cs" />
-    <Compile Include="Domain\Goodreads\GoodreadsBook.cs" />
-    <Compile Include="Domain\Goodreads\GoodreadsImporter.cs" />
-    <Compile Include="Domain\IImporter.cs" />
-    <Compile Include="Domain\Goodreads\TrimmingCsvReader.cs" />
-    <Compile Include="Domain\IApplicationController.cs" />
-    <Compile Include="Framework\Dialog\DialogService.cs" />
-    <Compile Include="Framework\Dialog\IDialogService.cs" />
-    <Compile Include="Framework\Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Framework\Extensions\JsonExtensions.cs" />
-    <Compile Include="Framework\Extensions\StringExtensions.cs" />
-    <Compile Include="Framework\Logging\DebugLog.cs" />
-    <Compile Include="Framework\Logging\ILog.cs" />
-    <Compile Include="Framework\Logging\LogManager.cs" />
-    <Compile Include="Framework\Logging\NullLog.cs" />
-    <Compile Include="Framework\Mapping\Mapper.cs" />
-    <Compile Include="Framework\Mapping\MapperInstance.cs" />
-    <Compile Include="Framework\Messaging\EventAggregator.cs" />
-    <Compile Include="Framework\Messaging\IEventAggregator.cs" />
-    <Compile Include="Framework\Messaging\IHandle.cs" />
-    <Compile Include="Framework\Messaging\MessageHandler.cs" />
-    <Compile Include="Framework\MVVM\DirtyTrackingBase.cs" />
-    <Compile Include="Framework\MVVM\IScreen.cs" />
-    <Compile Include="Framework\MVVM\ItemViewModel.cs" />
-    <Compile Include="Framework\MVVM\ScreenBase.cs" />
-    <Compile Include="Framework\MVVM\ScreenConfiguration.cs" />
-    <Compile Include="Models\ISettingsModel.cs" />
-    <Compile Include="Services\IDataService.cs" />
-    <Compile Include="Services\IThemeService.cs" />
-    <Compile Include="Services\Search\Document.cs" />
-    <Compile Include="Services\Search\ISearchEngine.cs" />
-    <Compile Include="Services\Search\PorterStemmer.cs" />
-    <Compile Include="Services\Search\SearchEngine.cs" />
-    <Compile Include="Services\Search\SearchExtensions.cs" />
-    <Compile Include="Services\Search\SearchResult.cs" />
-    <Compile Include="Services\Search\StopWordHandler.cs" />
-    <Compile Include="Models\ApplicationModel.cs" />
-    <Compile Include="Models\IApplicationModel.cs" />
-    <Compile Include="Models\SettingsModel.cs" />
-    <Compile Include="Services\ConfigurationService.cs" />
-    <Compile Include="Services\DataService.cs" />
-    <Compile Include="Services\IConfigurationService.cs" />
-    <Compile Include="Services\INavigationService.cs" />
-    <Compile Include="Services\NavigationService.cs" />
-    <Compile Include="Services\ThemeService.cs" />
-    <Compile Include="Shell\FlyoutBase.cs" />
-    <Compile Include="Shell\IFlyout.cs" />
-    <Compile Include="Domain\IShellFacade.cs" />
-    <Compile Include="Shell\IShellView.cs" />
-    <Compile Include="Shell\IShellViewModel.cs" />
-    <Compile Include="Shell\IWindowCommand.cs" />
-    <Compile Include="Domain\ShellFacade.cs" />
-    <Compile Include="Shell\ShellMessages.cs" />
-    <Compile Include="Shell\ShellView.xaml.cs">
-      <DependentUpon>ShellView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Shell\ShellViewModel.cs" />
-    <Compile Include="Shell\WindowCommand.cs" />
-    <Compile Include="ViewModels\Data\DescriptionViewModel.cs" />
-    <Compile Include="ViewModels\Data\ImportBookViewModel.cs" />
-    <Compile Include="ViewModels\Data\ImportShelfViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\DescriptionDialogViewModel.cs" />
-    <Compile Include="ViewModels\Dialogs\ShelfDialogViewModel.cs" />
-    <Compile Include="ViewModels\Screens\CollectionsScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\ImportScreenViewModel.cs" />
-    <Compile Include="ViewModels\Data\ShelfSelectionViewModel.cs" />
-    <Compile Include="ViewModels\Data\BookViewModel.cs" />
-    <Compile Include="ViewModels\Screens\BooksScreenViewModel.cs" />
-    <Compile Include="ViewModels\Data\ShelfViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ApplicationController.cs">
+      <DependentUpon>IApplicationController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ApplicationMessage.cs" />
+    <Compile Include="Configuration\ApplicationNinjectModule.cs" />
+    <Compile Include="Configuration\Bootstrapper.cs" />
+    <Compile Include="Configuration\NavigationConfigurationModule.cs" />
+    <Compile Include="Converters\MarginConverter.cs" />
+    <Compile Include="Converters\NullToEnabledConverter.cs" />
+    <Compile Include="Converters\ViewLocationConverter.cs" />
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\Collection.cs" />
     <Compile Include="Data\Description.cs" />
     <Compile Include="Data\Shelf.cs" />
-    <Compile Include="Models\CollectionModel.cs" />
-    <Compile Include="Domain\Constants.cs" />
-    <Compile Include="Models\ICollectionModel.cs" />
-    <Compile Include="ViewModels\Screens\NavigationScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\SearchScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\SettingsScreenViewModel.cs" />
-    <Compile Include="ViewModels\Screens\WebScreenViewModel.cs" />
-    <Compile Include="Views\Converters\BackgroundColorConverter.cs" />
-    <Compile Include="Views\Converters\BindingProxy.cs" />
-    <Compile Include="Views\Converters\NullToEnabledConverter.cs" />
-    <Compile Include="Views\Converters\ShellMarginConverter.cs" />
-    <Compile Include="Views\Data\BookDetailsView.xaml.cs">
-      <DependentUpon>BookDetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\BookListView.xaml.cs">
-      <DependentUpon>BookListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\DescriptionDetailsView.xaml.cs">
-      <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\DescriptionListView.xaml.cs">
-      <DependentUpon>DescriptionListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\ImportBookView.xaml.cs">
-      <DependentUpon>ImportBookView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\ImportShelfView.xaml.cs">
-      <DependentUpon>ImportShelfView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\ShelfListView.xaml.cs">
-      <DependentUpon>ShelfListView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Data\ShelfSelectionView.xaml.cs">
-      <DependentUpon>ShelfSelectionView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Dialogs\DescriptionDialogView.xaml.cs">
-      <DependentUpon>DescriptionDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Dialogs\ShelfDialogView.xaml.cs">
-      <DependentUpon>ShelfDialogView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\BooksScreenView.xaml.cs">
+    <Compile Include="IApplicationController.cs" />
+    <Compile Include="Screens\Books\BooksScreenView.xaml.cs">
       <DependentUpon>BooksScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Screens\CollectionsScreenView.xaml.cs">
-      <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\ImportScreenView.xaml.cs">
-      <DependentUpon>ImportScreenView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Screens\NavigationScreenView.xaml.cs">
+    <Compile Include="Screens\Books\BooksScreenViewModel.cs" />
+    <Compile Include="Screens\Books\IBooksScreen.cs" />
+    <Compile Include="Screens\Books\INavigationScreen.cs" />
+    <Compile Include="Screens\Books\ISearchScreen.cs" />
+    <Compile Include="Screens\Books\NavigationScreenView.xaml.cs">
       <DependentUpon>NavigationScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Screens\SearchScreenView.xaml.cs">
+    <Compile Include="Screens\Books\NavigationScreenViewModel.cs" />
+    <Compile Include="Screens\Books\SearchScreenView.xaml.cs">
       <DependentUpon>SearchScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Screens\SettingsScreenView.xaml.cs">
+    <Compile Include="Screens\Books\SearchScreenViewModel.cs" />
+    <Compile Include="Screens\Collections\CollectionsScreenView.xaml.cs">
+      <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs" />
+    <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
+    <Compile Include="Screens\Import\IImportScreen.cs" />
+    <Compile Include="Screens\Import\ImportScreenView.xaml.cs">
+      <DependentUpon>ImportScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ImportScreenViewModel.cs" />
+    <Compile Include="Screens\Settings\ISettingsScreen.cs" />
+    <Compile Include="Screens\Settings\SettingsScreenView.xaml.cs">
       <DependentUpon>SettingsScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Screens\WebScreenView.xaml.cs">
-      <DependentUpon>WebScreenView.xaml</DependentUpon>
+    <Compile Include="Screens\Settings\SettingsScreenViewModel.cs" />
+    <Compile Include="Screens\Shell\IShellViewModel.cs" />
+    <Compile Include="Screens\Shell\ShellScreenPosition.cs" />
+    <Compile Include="Screens\Shell\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Screens\Shell\ShellViewModel.cs">
+      <DependentUpon>IShellViewModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Web\IWebScreen.cs" />
+    <Compile Include="Screens\Web\WebScreenViewModel.cs" />
+    <Compile Include="Services\CollectionRepository.cs" />
+    <Compile Include="Services\INavigationService.cs" />
+    <Compile Include="Services\NavigationService.cs">
+      <DependentUpon>INavigationService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\SettingsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -294,6 +208,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Graphics\book_open_page_black.ico" />
+    <Resource Include="Graphics\book_open_page_black_48dp.png" />
+    <Resource Include="Graphics\book_open_page_grey600_48dp.png" />
+    <Resource Include="Graphics\book_open_page_white.ico" />
+    <Resource Include="Graphics\book_open_page_white_48dp.png" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -301,114 +226,50 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="stopwords_en.txt" />
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{fb821860-6a86-4c9d-aaa7-1b35cffdece9}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Graphics\book_open_page_black.ico" />
-    <Resource Include="Graphics\book_open_page_black_48dp.png" />
-    <Resource Include="Graphics\book_open_page_grey600_48dp.png" />
-    <Resource Include="Graphics\book_open_page_white.ico" />
-    <Resource Include="Graphics\book_open_page_white_48dp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Shell\ShellView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ApplicationStyles.xaml">
+    <Page Include="ApplicationResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Data\BookDetailsView.xaml">
+    <Page Include="Screens\Books\BooksScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Data\BookListView.xaml">
+    <Page Include="Screens\Books\NavigationScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Data\DescriptionDetailsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Data\DescriptionListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Data\ImportBookView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Data\ImportShelfView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Data\ShelfListView.xaml">
+    <Page Include="Screens\Books\SearchScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Data\ShelfSelectionView.xaml">
+    <Page Include="Screens\Collections\CollectionsScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Dialogs\DescriptionDialogView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Dialogs\ShelfDialogView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Screens\BooksScreenView.xaml">
+    <Page Include="Screens\Import\ImportScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Screens\CollectionsScreenView.xaml">
+    <Page Include="Screens\Settings\SettingsScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Screens\ImportScreenView.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Screens\Shell\ShellView.xaml">
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Screens\NavigationScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Screens\SearchScreenView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Screens\SettingsScreenView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\Screens\WebScreenView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\ViewBindings.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets" Condition="Exists('..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x64.3.2987.1601\build\cef.redist.x64.targets'))" />
-    <Error Condition="!Exists('..\packages\cef.redist.x86.3.2987.1601\build\cef.redist.x86.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\cef.redist.x86.3.2987.1601\build\cef.redist.x86.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.props'))" />
-    <Error Condition="!Exists('..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.targets'))" />
-  </Target>
-  <Import Project="..\packages\cef.redist.x86.3.2987.1601\build\cef.redist.x86.targets" Condition="Exists('..\packages\cef.redist.x86.3.2987.1601\build\cef.redist.x86.targets')" />
-  <Import Project="..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.targets" Condition="Exists('..\packages\CefSharp.Common.57.0.0\build\CefSharp.Common.targets')" />
-  <Import Project="..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.targets" Condition="Exists('..\packages\CefSharp.Wpf.57.0.0\build\CefSharp.Wpf.targets')" />
 </Project>
