@@ -1,4 +1,5 @@
 ﻿using System;
+using BookCollector.Data;
 using BookCollector.Screens.Books;
 using BookCollector.Screens.Collections;
 using BookCollector.Screens.Import;
@@ -17,17 +18,32 @@ namespace BookCollector
 
         private INavigationService navigation_service;
         private ISnackbarMessageQueue message_queue;
+        private ISettingsRepository settings_repository;
 
-        public ApplicationController(INavigationService navigation_service, ISnackbarMessageQueue message_queue)
+        public Settings Settings { get; private set; }
+
+        public ApplicationController(INavigationService navigation_service, ISnackbarMessageQueue message_queue, ISettingsRepository settings_repository)
         {
             this.navigation_service = navigation_service;
             this.message_queue = message_queue;
+            this.settings_repository = settings_repository;
         }
 
         public void Initialize()
         {
+            logger.Trace("Initializing");
+
             MessageBus.Current.Listen<ApplicationMessage>()
                               .Subscribe(HandleApplicationMessage);
+
+            Settings = settings_repository.LoadOrCreate();
+        }
+
+        public void Exit()
+        {
+            logger.Trace("Exiting");
+
+            settings_repository.Save(Settings);
         }
 
         private void HandleApplicationMessage(ApplicationMessage message)
@@ -38,7 +54,6 @@ namespace BookCollector
             {
                 case ApplicationMessage.ShellLoaded:
                     NavigateToBooksScreen();
-                    message_queue.Enqueue("Welcome");
                     break;
                 case ApplicationMessage.ShowBooksScreen:
                     NavigateToBooksScreen();
@@ -66,6 +81,8 @@ namespace BookCollector
             navigation_service.NavigateTo(typeof(IBooksScreen)); // Main content
             navigation_service.NavigateTo(typeof(ISearchScreen)); // Header content
             navigation_service.NavigateTo(typeof(INavigationScreen)); // Menu content
+
+            message_queue.Enqueue("Welcome");
         }
 
         private void NavigateToCollectionsScreen()

@@ -26,6 +26,11 @@ namespace Core
             set { this.RaiseAndSetIfChanged(ref _Position, value); }
         }
 
+        public FlyoutBase(Position position)
+        {
+            Position = position;
+        }
+
         public void Toggle()
         {
             IsOpen = !IsOpen;

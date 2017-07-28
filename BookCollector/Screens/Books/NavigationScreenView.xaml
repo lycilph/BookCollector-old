@@ -7,9 +7,23 @@
              mc:Ignorable="d" 
              d:DesignHeight="300"
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:NavigationScreenViewModel}">
-    <StackPanel>
-        <TextBlock Text="Navigation"/>
-        <Button Content="Web" Command="{Binding ShowWebCommand}"/>
+             d:DataContext="{d:DesignInstance local:NavigationScreenViewModel}"
+             MinWidth="{StaticResource OverlayMinWidth}">
+    <StackPanel Margin="{StaticResource LargeScreenMargin}">
+        <Button Content="Import" 
+                HorizontalAlignment="Left"
+                Command="{Binding ImportCommand}"
+                Style="{StaticResource MaterialDesignFlatButton}"/>
+        <Separator Margin="{StaticResource NormalControlVerticalMargin}"/>
+        <Button Content="Goodreads" 
+                Margin="{StaticResource NormalControlTopMargin}"
+                HorizontalAlignment="Left"
+                Command="{Binding GoodreadsCommand}"
+                Style="{StaticResource MaterialDesignFlatButton}"/>
+        <Button Content="Google Play"
+                Margin="{StaticResource NormalControlTopMargin}"
+                HorizontalAlignment="Left"
+                Command="{Binding GooglePlayCommand}"
+                Style="{StaticResource MaterialDesignFlatButton}"/>
     </StackPanel>
 </UserControl>

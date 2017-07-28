@@ -61,6 +61,12 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.3.0.823, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.3.0.823\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.1\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.11\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -104,6 +110,7 @@
   <ItemGroup>
     <Compile Include="AssemblySource.cs" />
     <Compile Include="BootstrapperBase.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="FlyoutBase.cs" />
     <Compile Include="IFlyout.cs" />
     <Compile Include="IScreen.cs" />
@@ -113,14 +120,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenBase.cs" />
     <Compile Include="ShellBase.cs" />
+    <Compile Include="Utility\DirtyTrackingBase.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="WindowCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

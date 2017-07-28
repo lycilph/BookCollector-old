@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300"
-             d:DataContext="{d:DesignInstance local:SettingsScreenViewModel}">
+             d:DataContext="{d:DesignInstance local:SettingsScreenViewModel}"
+             MinWidth="{StaticResource OverlayMinWidth}">
     <StackPanel>
         <TextBlock Text="Settings"/>
     </StackPanel>

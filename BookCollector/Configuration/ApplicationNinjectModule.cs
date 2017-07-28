@@ -21,8 +21,9 @@ namespace BookCollector.Configuration
             logger.Trace("Loading dependencies for application");
 
             Bind<IApplicationController>().To<ApplicationController>().InSingletonScope();
-            Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             Bind<ISnackbarMessageQueue>().To<SnackbarMessageQueue>().InSingletonScope();
+            Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+            Bind<ISettingsRepository>().To<SettingsRepository>().InSingletonScope();
 
             Bind<IShellViewModel>().To<ShellViewModel>().InSingletonScope();
 

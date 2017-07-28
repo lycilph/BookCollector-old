@@ -23,7 +23,7 @@
                 RightWindowCommandsOverlayBehavior="Never"
                 d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <ma:MetroWindow.Resources>
-        <converters:MarginConverter x:Key="MarginConverter" TrueValueMargin="0" FalseValueMargin="16"/>
+        <converters:MarginConverter x:Key="MarginConverter" TrueValueMargin="0" FalseValueMargin="{StaticResource ShellMargin}"/>
     </ma:MetroWindow.Resources>
     
     <ma:MetroWindow.LeftWindowCommands>
@@ -63,7 +63,7 @@
                     <Setter Property="IsPinned" Value="{Binding IsPinned}"/>
                     <Setter Property="Position" Value="{Binding Position}" />
                     <Setter Property="md:FlyoutAssist.HeaderColorMode" Value="Accent" />
-                    <Setter Property="Content" Value="{Binding ., Converter={StaticResource ViewLocator}}"/>
+                    <Setter Property="Content" Value="{Binding Path=., Converter={StaticResource ViewLocator}}"/>
                 </Style>
             </ma:FlyoutsControl.ItemContainerStyle>
         </ma:FlyoutsControl>
@@ -87,7 +87,7 @@
                               IsChecked="{Binding IsMenuOpen}"/>
 
                 <TextBlock Grid.Row="1"
-                           Margin="{StaticResource LargeControlMarginVertical}"
+                           Margin="{StaticResource LargeControlHorizontalMargin}"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                            Text="{Binding MenuContent.DisplayName}"/>
 
@@ -117,7 +117,7 @@
 
                     <!-- Screen Title -->
                     <TextBlock VerticalAlignment="Center" 
-                               Margin="{StaticResource LargeControlMarginVertical}"
+                               Margin="{StaticResource LargeControlHorizontalMargin}"
                                Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                Text="{Binding MainContent.DisplayName}"/>
                 </DockPanel>

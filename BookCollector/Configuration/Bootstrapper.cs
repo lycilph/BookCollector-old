@@ -64,5 +64,13 @@ namespace BookCollector.Configuration
 
             DisplayRootViewFor<IShellViewModel>();
         }
+
+        protected override void OnExit(object sender, ExitEventArgs e)
+        {
+            logger.Trace("Exit");
+
+            var controller = Kernel.Get<IApplicationController>();
+            controller.Exit();
+        }
     }
 }

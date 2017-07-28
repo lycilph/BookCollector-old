@@ -1,9 +1,24 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!-- Padding -->
     <Thickness x:Key="ShellTitlebarPadding">16</Thickness>
     
     <!-- Margin -->
+    <Thickness x:Key="ShellMargin">16</Thickness>
+    <Thickness x:Key="LargeScreenMargin">32</Thickness>
     <Thickness x:Key="ActionButtonMargin">16</Thickness>
-    <Thickness x:Key="LargeControlMarginVertical">32,0</Thickness>
+
+    <Thickness x:Key="LargeControlHorizontalMargin">32,0</Thickness>
+    
+    <Thickness x:Key="NormalControlVerticalMargin">0,8</Thickness>
+    
+    <Thickness x:Key="NormalControlLeftMargin">8,0,0,0</Thickness>
+    <Thickness x:Key="NormalControlRightMargin">0,0,8,0</Thickness>
+    <Thickness x:Key="NormalControlTopMargin">0,8,0,0</Thickness>
+    <Thickness x:Key="NormalControlBottomMargin">0,0,0,8</Thickness>
+
+    <!-- Widths -->
+    <sys:Double x:Key="OverlayMinWidth">212</sys:Double>
+    <sys:Double x:Key="SearchTextMinWidth">200</sys:Double>
 </ResourceDictionary>
