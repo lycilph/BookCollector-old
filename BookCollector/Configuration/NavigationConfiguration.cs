@@ -8,7 +8,7 @@ using BookCollector.Services;
 
 namespace BookCollector.Configuration
 {
-    public class NavigationConfigurationModule
+    public class NavigationConfiguration
     {
         public static void Setup(INavigationService navigation_service)
         {

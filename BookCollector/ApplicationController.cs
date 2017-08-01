@@ -19,12 +19,14 @@ namespace BookCollector
         private INavigationService navigation_service;
         private ISnackbarMessageQueue message_queue;
         private ISettingsService settings_service;
+        private ICollectionsService collections_service;
 
-        public ApplicationController(INavigationService navigation_service, ISnackbarMessageQueue message_queue, ISettingsService settings_service)
+        public ApplicationController(INavigationService navigation_service, ISnackbarMessageQueue message_queue, ISettingsService settings_service, ICollectionsService collections_service)
         {
             this.navigation_service = navigation_service;
             this.message_queue = message_queue;
             this.settings_service = settings_service;
+            this.collections_service = collections_service;
         }
 
         public void Initialize()
@@ -35,6 +37,7 @@ namespace BookCollector
                               .Subscribe(HandleApplicationMessage);
 
             settings_service.Initialize();
+            collections_service.Initialize();
         }
 
         public void Exit()
@@ -76,9 +79,10 @@ namespace BookCollector
 
         private void HandleShellLoaded()
         {
-            NavigateToBooksScreen();
+            //NavigateToBooksScreen();
 
-            message_queue.Enqueue("Welcome to Book Collector");
+            //message_queue.Enqueue("Welcome to Book Collector");
+            NavigateToImportScreen(); // DEV
         }
 
         private void NavigateToBooksScreen()

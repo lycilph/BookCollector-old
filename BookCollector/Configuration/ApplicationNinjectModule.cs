@@ -26,6 +26,8 @@ namespace BookCollector.Configuration
             Bind<ISettingsRepository>().To<SettingsRepository>().InSingletonScope();
 
             Bind<INavigationService>().To<NavigationService>().InSingletonScope();
+            Bind<ICollectionsService>().To<CollectionsService>().InSingletonScope();
+            Bind<IImportService>().To<ImportService>().InSingletonScope();
             Bind<ISettingsService>().To<SettingsService>().InSingletonScope();
             Bind<IThemeService>().To<ThemeService>().InSingletonScope();
 

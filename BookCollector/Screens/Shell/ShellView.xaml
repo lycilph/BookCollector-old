@@ -87,7 +87,7 @@
                               IsChecked="{Binding IsMenuOpen}"/>
 
                 <TextBlock Grid.Row="1"
-                           Margin="{StaticResource LargeControlHorizontalMargin}"
+                           Margin="{StaticResource HugeControlHorizontalMargin}"
                            Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                            Text="{Binding MenuContent.DisplayName}"/>
 
@@ -117,7 +117,7 @@
 
                     <!-- Screen Title -->
                     <TextBlock VerticalAlignment="Center" 
-                               Margin="{StaticResource LargeControlHorizontalMargin}"
+                               Margin="{StaticResource HugeControlHorizontalMargin}"
                                Style="{StaticResource MaterialDesignHeadlineTextBlock}"
                                Text="{Binding MainContent.DisplayName}"/>
                 </DockPanel>

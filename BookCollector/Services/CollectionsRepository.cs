@@ -1,6 +1,6 @@
 ﻿namespace BookCollector.Services
 {
-    public class CollectionRepository
+    public class CollectionsRepository
     {
     }
 }

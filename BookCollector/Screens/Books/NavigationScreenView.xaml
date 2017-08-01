@@ -9,12 +9,13 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:NavigationScreenViewModel}"
              MinWidth="{StaticResource OverlayMinWidth}">
-    <StackPanel Margin="{StaticResource LargeScreenMargin}">
+    <StackPanel Margin="{StaticResource ScreenMargin}">
         <Button Content="Import" 
                 HorizontalAlignment="Left"
                 Command="{Binding ImportCommand}"
                 Style="{StaticResource MaterialDesignFlatButton}"/>
-        <Separator Margin="{StaticResource SeparatorMargin}"/>
+        <Separator Margin="{StaticResource SeparatorMargin}"
+                   Style="{StaticResource MaterialDesignDarkSeparator}"/>
         <Button Content="Goodreads" 
                 Margin="{StaticResource NormalControlTopMargin}"
                 HorizontalAlignment="Left"

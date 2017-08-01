@@ -60,6 +60,9 @@
     <ApplicationIcon>Graphics\book_open_page_black.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
+      <HintPath>..\packages\CsvHelper.2.16.3.0\lib\net45\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net45\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -136,13 +139,18 @@
     <Compile Include="ApplicationMessage.cs" />
     <Compile Include="Configuration\ApplicationNinjectModule.cs" />
     <Compile Include="Configuration\Bootstrapper.cs" />
-    <Compile Include="Configuration\NavigationConfigurationModule.cs" />
+    <Compile Include="Configuration\NavigationConfiguration.cs" />
+    <Compile Include="Configuration\ObjectMappingConfiguration.cs" />
+    <Compile Include="Converters\BackgroundColorConverter.cs" />
     <Compile Include="Converters\MarginConverter.cs" />
     <Compile Include="Converters\NullToEnabledConverter.cs" />
+    <Compile Include="Converters\ShortFilenameConverter.cs" />
     <Compile Include="Converters\ViewLocationConverter.cs" />
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\Collection.cs" />
     <Compile Include="Data\Description.cs" />
+    <Compile Include="Data\Import\ImportedBook.cs" />
+    <Compile Include="Data\Import\SimilarityInformation.cs" />
     <Compile Include="Data\Settings.cs" />
     <Compile Include="Data\Shelf.cs" />
     <Compile Include="IApplicationController.cs" />
@@ -167,15 +175,25 @@
     <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs" />
     <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
     <Compile Include="Screens\Import\IImportScreen.cs" />
+    <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
+      <DependentUpon>ImportedBookView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ImportedBookViewModel.cs">
+      <DependentUpon>ImportedBookView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Import\ImportScreenView.xaml.cs">
       <DependentUpon>ImportScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Import\ImportScreenViewModel.cs" />
+    <Compile Include="Screens\Import\ImportScreenViewModel.cs">
+      <DependentUpon>ImportScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Settings\ISettingsScreen.cs" />
     <Compile Include="Screens\Settings\SettingsScreenView.xaml.cs">
       <DependentUpon>SettingsScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Settings\SettingsScreenViewModel.cs" />
+    <Compile Include="Screens\Settings\SettingsScreenViewModel.cs">
+      <DependentUpon>SettingsScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Shell\IShellViewModel.cs" />
     <Compile Include="Screens\Shell\ShellScreenPosition.cs" />
     <Compile Include="Screens\Shell\ShellView.xaml.cs">
@@ -190,7 +208,15 @@
       <DependentUpon>WebScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Web\WebScreenViewModel.cs" />
-    <Compile Include="Services\CollectionRepository.cs" />
+    <Compile Include="Services\CollectionsRepository.cs" />
+    <Compile Include="Services\CollectionsService.cs">
+      <DependentUpon>ICollectionsService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Services\ICollectionsService.cs" />
+    <Compile Include="Services\IImportService.cs" />
+    <Compile Include="Services\ImportService.cs">
+      <DependentUpon>IImportService.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\ISettingsRepository.cs" />
     <Compile Include="Services\ISettingsService.cs" />
@@ -207,6 +233,9 @@
     <Compile Include="Services\ThemeService.cs">
       <DependentUpon>IThemeService.cs</DependentUpon>
     </Compile>
+    <Compile Include="ThirdParty\Goodreads\GoodreadsBook.cs" />
+    <Compile Include="ThirdParty\Goodreads\GoodreadsImporter.cs" />
+    <Compile Include="ThirdParty\Goodreads\TrimmingCsvReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -272,6 +301,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Collections\CollectionsScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\ImportedBookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -3,23 +3,36 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!-- Padding -->
     <Thickness x:Key="ShellTitlebarPadding">16</Thickness>
+    <Thickness x:Key="ItemPadding">8</Thickness>
     
+    <!-- Border -->
+    <Thickness x:Key="NormalBorderBottom">0,0,0,1</Thickness>
+
     <!-- Margin -->
     <Thickness x:Key="ShellMargin">16</Thickness>
-    <Thickness x:Key="LargeScreenMargin">32</Thickness>
+    <Thickness x:Key="ScreenMargin">32</Thickness>
     <Thickness x:Key="ActionButtonMargin">16</Thickness>
     <Thickness x:Key="SeparatorMargin">8,16</Thickness>
 
-    <Thickness x:Key="LargeControlHorizontalMargin">32,0</Thickness>
+    <Thickness x:Key="HugeControlHorizontalMargin">32,0</Thickness>
     
-    <Thickness x:Key="NormalControlVerticalMargin">0,8</Thickness>
-    
+    <Thickness x:Key="LargeControlHorizontalMargin">16,0</Thickness>
+
     <Thickness x:Key="NormalControlLeftMargin">8,0,0,0</Thickness>
     <Thickness x:Key="NormalControlRightMargin">0,0,8,0</Thickness>
     <Thickness x:Key="NormalControlTopMargin">0,8,0,0</Thickness>
     <Thickness x:Key="NormalControlBottomMargin">0,0,0,8</Thickness>
+    <Thickness x:Key="NormalControlVerticalMargin">0,8</Thickness>
+    <Thickness x:Key="NormalControlHorizontalMargin">8,0</Thickness>
 
-    <!-- Widths -->
+    <!-- Sizes -->
+    <sys:Double x:Key="Normal">8</sys:Double>
+    <sys:Double x:Key="Large">16</sys:Double>
+    <sys:Double x:Key="Huge">32</sys:Double>
+    
     <sys:Double x:Key="OverlayMinWidth">212</sys:Double>
     <sys:Double x:Key="SearchTextMinWidth">200</sys:Double>
+    <sys:Double x:Key="MinButtonWidth">80</sys:Double>
+    <sys:Double x:Key="FixedTextWidth">40</sys:Double>
+    <sys:Double x:Key="VerticalSplitterWidth">4</sys:Double>
 </ResourceDictionary>

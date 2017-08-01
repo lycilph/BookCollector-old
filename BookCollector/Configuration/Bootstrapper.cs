@@ -25,6 +25,7 @@ namespace BookCollector.Configuration
 
             ConfigureNinject();
             ConfigureNavigation();
+            ConfigureObjectMapping();
         }
 
         private void ConfigureNinject()
@@ -39,7 +40,14 @@ namespace BookCollector.Configuration
             logger.Trace("Configuring navigation");
 
             var navigation_service = Kernel.Get<INavigationService>();
-            NavigationConfigurationModule.Setup(navigation_service);
+            NavigationConfiguration.Setup(navigation_service);
+        }
+        
+        private void ConfigureObjectMapping()
+        {
+            logger.Trace("Configuring object mapping");
+
+            ObjectMappingConfiguration.Setup();
         }
 
         protected override object GetInstance(Type service)

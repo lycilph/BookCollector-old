@@ -10,7 +10,7 @@
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:SettingsScreenViewModel}"
              MinWidth="{StaticResource OverlayMinWidth}">
-    <StackPanel Margin="{StaticResource LargeScreenMargin}">
+    <StackPanel Margin="{StaticResource ScreenMargin}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

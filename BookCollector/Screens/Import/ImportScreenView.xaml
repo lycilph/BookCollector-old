@@ -2,14 +2,161 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookCollector.Screens.Import"
+             xmlns:converter="clr-namespace:BookCollector.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
-             d:DesignWidth="300"
+             d:DesignWidth="600"
              d:DataContext="{d:DesignInstance local:ImportScreenViewModel}">
-    <StackPanel>
-        <TextBlock Text="Import"/>
-        <Button Content="Books" Command="{Binding ShowBooksCommand}"/>
-    </StackPanel>
+    <UserControl.Resources>
+        <converter:ShortFilenameConverter x:Key="FilenameConverter"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" MinWidth="200"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*" MinWidth="200"/>
+        </Grid.ColumnDefinitions>
+
+         <!-- Filename selection row --> 
+        <DockPanel Margin="{StaticResource NormalControlBottomMargin}">
+            <Button DockPanel.Dock="Right"
+                    Content="..."
+                    ToolTip="Pick a file to import"
+                    Command="{Binding PickFileCommand}"
+                    Margin="{StaticResource NormalControlLeftMargin}"
+                    VerticalAlignment="Center"/>
+            <TextBox Grid.Row="1"
+                     Text="{Binding Filename, Converter={StaticResource FilenameConverter}}"
+                     ToolTip="{Binding Filename}"
+                     IsReadOnly="True"
+                     VerticalAlignment="Center"
+                     md:HintAssist.Hint="Select file to import"/>
+        </DockPanel>
+
+        <!-- List of books -->
+        <ItemsControl Grid.Row="1"
+                        Grid.Column="0"
+                        ItemsSource="{Binding Books}"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        ScrollViewer.CanContentScroll="True">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding Path=., Converter={StaticResource ViewLocator}}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.Template>
+                <ControlTemplate>
+                    <Border BorderThickness="{TemplateBinding Border.BorderThickness}"
+                            Padding="{TemplateBinding Control.Padding}"
+                            BorderBrush="{TemplateBinding Border.BorderBrush}"
+                            Background="{TemplateBinding Panel.Background}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer Padding="{TemplateBinding Control.Padding}"
+                                        Focusable="False">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </ItemsControl.Template>
+        </ItemsControl>
+
+        <GridSplitter Grid.Row="1"
+                      Grid.Column="1"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Stretch"
+                      Margin="{StaticResource NormalControlHorizontalMargin}"
+                      Width="{StaticResource VerticalSplitterWidth}"
+                      Style="{StaticResource MaterialDesignGridSplitter}"/>
+
+        <!-- Details column --> 
+        <StackPanel Grid.Row="1"
+                    Grid.Column="2">
+            <TextBlock Text="Books"
+                       Margin="{StaticResource LargeControlHorizontalMargin}"
+                       Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
+            <!-- Selection controls --> 
+            <Button Content="Select all" 
+                    Margin="{StaticResource NormalControlTopMargin}"
+                    Command="{Binding SelectAllCommand}"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
+            <Button Content="Deselect all" 
+                    Command="{Binding DeselectAllCommand}"
+                    HorizontalAlignment="Left"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
+            <DockPanel>
+                <Button DockPanel.Dock="Left"
+                        Content="Select"
+                        VerticalAlignment="Center"
+                        Command="{Binding SelectBySimilarityCommand}"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource MaterialDesignFlatButton}"/>
+                <TextBlock DockPanel.Dock="Right"
+                           VerticalAlignment="Center"
+                           Width="{StaticResource FixedTextWidth}"
+                           Text="{Binding MaximumSimilarity}"
+                           IsEnabled="{Binding HaveImportedBooks}"/>
+                <Slider VerticalAlignment="Center"
+                        Margin="{StaticResource NormalControlHorizontalMargin}"
+                        Minimum="0"
+                        Maximum="100"
+                        Value="{Binding MaximumSimilarity}"
+                        TickFrequency="25"
+                        IsSnapToTickEnabled="True"
+                        IsEnabled="{Binding HaveImportedBooks}"/>
+            </DockPanel>
+
+            <TextBlock Text="{Binding SelectedBooksText}">
+                <TextBlock.Margin>
+                    <Thickness Left="{StaticResource Large}"
+                               Top="{StaticResource Large}"
+                               Right="{StaticResource Large}"/>
+                </TextBlock.Margin>
+            </TextBlock>
+
+            <Separator Margin="{StaticResource SeparatorMargin}" 
+                       Style="{StaticResource MaterialDesignDarkSeparator}"/>
+
+            <!-- Shelves -->
+            <DockPanel Margin="{StaticResource LargeControlHorizontalMargin}">
+                <TextBlock DockPanel.Dock="Top" 
+                           Text="Shelves" 
+                           Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
+                <ItemsControl Margin="{StaticResource NormalControlTopMargin}"
+                              ItemsSource="{Binding Shelves}"/>
+            </DockPanel>
+        </StackPanel>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2"
+                    Margin="{StaticResource NormalControlTopMargin}"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left">
+            <Button Content="Import"
+                    Command="{Binding ImportCommand}"
+                    MinWidth="{StaticResource MinButtonWidth}"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Margin="{StaticResource NormalControlLeftMargin}"
+                    MinWidth="{StaticResource MinButtonWidth}"
+                    Style="{StaticResource MaterialDesignFlatButton}"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

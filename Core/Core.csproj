@@ -116,11 +116,15 @@
     <Compile Include="IFlyout.cs" />
     <Compile Include="IScreen.cs" />
     <Compile Include="IShell.cs" />
+    <Compile Include="ItemViewModel.cs" />
     <Compile Include="IViewAware.cs" />
     <Compile Include="IWindowCommand.cs" />
+    <Compile Include="Mapping\Mapper.cs" />
+    <Compile Include="Mapping\MapperInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScreenBase.cs" />
     <Compile Include="ShellBase.cs" />
+    <Compile Include="Utility\BindingProxy.cs" />
     <Compile Include="Utility\DirtyTrackingBase.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="WindowCommand.cs" />
