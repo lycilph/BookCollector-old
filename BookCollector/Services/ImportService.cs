@@ -5,11 +5,14 @@ using BookCollector.Data;
 using BookCollector.Data.Import;
 using Core.Extensions;
 using Core.Mapping;
+using Core.Utility;
 
 namespace BookCollector.Services
 {
     public class ImportService : IImportService
     {
+        private const int shelf_mapping_threshold = 3;
+
         private ICollectionsService collections_service;
 
         public ImportService(ICollectionsService collections_service)
@@ -17,18 +20,43 @@ namespace BookCollector.Services
             this.collections_service = collections_service;
         }
 
-        public void Import(List<ImportedBook> books_to_import)
+        public void Import(List<ImportedBook> books_to_import, Dictionary<string, Shelf> shelf_mapping)
         {
-            // Map to "normal" book class
-            var books = books_to_import.Select(b => Mapper.Map<Book>(b)).ToList();
+            // Make a Book to ImportedBook mapping
+            var book_mapping = books_to_import.ToDictionary(b => Mapper.Map<Book>(b));
+            var books = book_mapping.Keys.ToList();
 
             // Add a history entry
-            books.Apply(b => b.History.Add($"Imported on the {DateTime.Now.ToShortDateString()}"));
+            var time_stamp = DateTime.Now.ToShortDateString();
+            books.Apply(b => b.History.Add($"Imported on the {time_stamp}"));
 
             // Add to default shelf
             collections_service.Current.DefaultShelf.Add(books);
 
-            // Add to shelves
+            // Add books to mapped shelves
+            foreach (var book in books)
+            {
+                foreach (var import_shelf in book_mapping[book].Shelves)
+                {
+                    // Map shelf in ImportedBooks (which is a string) to a shelf in the current collection
+                    var shelf = shelf_mapping[import_shelf];
+
+                    if (!shelf.IsDefault)
+                        shelf.Add(book);
+                }
+            }
+        }
+
+        public Shelf Map(string imported_shelf)
+        {
+            var collection = collections_service.Current;
+            var edit_distances = collection.Shelves.Select(s => new { Shelf = s, EditDistance = StringMetrics.EditDistance(imported_shelf, s.Name) })
+                                                   .OrderBy(p => p.EditDistance);
+            var closest = edit_distances.First();
+            if (closest.EditDistance < shelf_mapping_threshold)
+                return closest.Shelf;
+            else
+                return collection.DefaultShelf;
         }
 
         public void GetSimilarity(ImportedBook imported_book)

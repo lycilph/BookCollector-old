@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace BookCollector.Data.Import
 {
+    [DebuggerDisplay("Title = {Title}")]
     public class ImportedBook
     {
         public string Title { get; set; }

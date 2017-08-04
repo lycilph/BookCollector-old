@@ -24,6 +24,7 @@ namespace BookCollector.Configuration
             Bind<ISnackbarMessageQueue>().To<SnackbarMessageQueue>().InSingletonScope();
 
             Bind<ISettingsRepository>().To<SettingsRepository>().InSingletonScope();
+            Bind<ICollectionsRepository>().To<CollectionsRepository>().InSingletonScope();
 
             Bind<INavigationService>().To<NavigationService>().InSingletonScope();
             Bind<ICollectionsService>().To<CollectionsService>().InSingletonScope();

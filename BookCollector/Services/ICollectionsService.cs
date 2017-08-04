@@ -7,5 +7,6 @@ namespace BookCollector.Services
         Collection Current { get; set; }
 
         void Initialize();
+        void Exit();
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reflection;
+using BookCollector.Data;
 using BookCollector.Services;
 using BookCollector.ThirdParty.Goodreads;
 using Core;
@@ -17,6 +18,7 @@ namespace BookCollector.Screens.Import
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private ICollectionsService collections_service;
         private IImportService import_service;
 
         private string _Filename = string.Empty;
@@ -45,6 +47,13 @@ namespace BookCollector.Screens.Import
         {
             get { return _Books; }
             set { this.RaiseAndSetIfChanged(ref _Books, value); }
+        }
+
+        private ReactiveList<ShelfMappingViewModel> _ShelfMappings;
+        public ReactiveList<ShelfMappingViewModel> ShelfMappings
+        {
+            get { return _ShelfMappings; }
+            set { this.RaiseAndSetIfChanged(ref _ShelfMappings, value); }
         }
 
         public ObservableAsPropertyHelper<bool> _HaveImportedBooks;
@@ -78,6 +87,13 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _SelectBySimilarityCommand, value); }
         }
 
+        private ReactiveCommand _CreateImportedShelves;
+        public ReactiveCommand CreateImportedShelves
+        {
+            get { return _CreateImportedShelves; }
+            set { this.RaiseAndSetIfChanged(ref _CreateImportedShelves, value); }
+        }
+
         private ReactiveCommand _ImportCommand;
         public ReactiveCommand ImportCommand
         {
@@ -92,9 +108,10 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _CancelCommand, value); }
         }
 
-        public ImportScreenViewModel(IImportService import_service)
+        public ImportScreenViewModel(ICollectionsService collections_service, IImportService import_service)
         {
             DisplayName = "Import";
+            this.collections_service = collections_service;
             this.import_service = import_service;
 
             Initialize();
@@ -110,6 +127,8 @@ namespace BookCollector.Screens.Import
             SelectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = true), have_imported_books);
             DeselectAllCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = false), have_imported_books);
             SelectBySimilarityCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = b.SimilarityScore <= MaximumSimilarity), have_imported_books);
+
+            CreateImportedShelves = ReactiveCommand.Create(CreateShelves, have_imported_books);
 
             var any_selected_books = this.WhenAny(x => x.Books, x => x.Value.Any(b => b.Selected));
             var books_selection_changed = this.WhenAnyObservable(x => x.Books.ItemChanged)
@@ -135,6 +154,7 @@ namespace BookCollector.Screens.Import
 
             Filename = string.Empty;
             Books = new ReactiveList<ImportedBookViewModel> { ChangeTrackingEnabled = true };
+            ShelfMappings = new ReactiveList<ShelfMappingViewModel>();
         }
 
         private void PickFile()
@@ -156,17 +176,46 @@ namespace BookCollector.Screens.Import
 
         private void Process()
         {
+            // Parse the file
             var sw = Stopwatch.StartNew();
-            Books = GoodreadsImporter.Import(Filename)
-                                     .Select(b => new ImportedBookViewModel(b))
-                                     .ToReactiveList(true);
+            var imported_books = GoodreadsImporter.Import(Filename).ToList();
             sw.Stop();
-            logger.Debug($"Importing {Books.Count} books took {sw.ElapsedMilliseconds} ms");
+            logger.Debug($"Importing {imported_books.Count} books took {sw.ElapsedMilliseconds} ms");
 
+            // Calculate the similarity for each book to the ones in the current collection
             sw.Restart();
-            Books.Apply(b => import_service.GetSimilarity(b.Obj));
+            imported_books.Apply(import_service.GetSimilarity);
             sw.Stop();
             logger.Debug($"Calculating similarity scores took {sw.ElapsedMilliseconds} ms");
+
+            Books = imported_books.Select(b => new ImportedBookViewModel(b))
+                                  .ToReactiveList(true);
+
+            ShelfMappings = imported_books.SelectMany(b => b.Shelves)
+                                          .Distinct()
+                                          .Select(s => new ShelfMappingViewModel(s, collections_service.Current.Shelves))
+                                          .ToReactiveList();
+
+            // Try to map to existing shelves
+            sw.Restart();
+            ShelfMappings.Apply(s => s.SetCurrent(import_service.Map(s.ImportedShelf)));
+            sw.Stop();
+            logger.Debug($"Mapping shelves took {sw.ElapsedMilliseconds} ms");
+        }
+
+        private void CreateShelves()
+        {
+            var collection = collections_service.Current;
+            foreach (var shelf_mapping in ShelfMappings)
+            {
+                // Only create a shelf if it is not mapped to the default shelf in the collection
+                if (shelf_mapping.SelectedShelf.IsDefault)
+                {
+                    logger.Debug($"Creating shelf for {shelf_mapping.ImportedShelf}");
+                    var shelf = collection.AddShelf(shelf_mapping.ImportedShelf);
+                    shelf_mapping.SetCurrent(shelf);
+                }
+            }
         }
 
         private void Import()
@@ -174,7 +223,8 @@ namespace BookCollector.Screens.Import
             var books_to_import = Books.Where(b => b.Selected)
                                        .Select(b => b.Obj)
                                        .ToList();
-            import_service.Import(books_to_import);
+            var shelf_mapping = ShelfMappings.ToDictionary(s => s.ImportedShelf, s => s.SelectedShelf);
+            import_service.Import(books_to_import, shelf_mapping);
             MessageBus.Current.SendMessage(ApplicationMessage.ShowBooksScreen);
         }
     }

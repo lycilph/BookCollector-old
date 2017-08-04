@@ -112,6 +112,7 @@
     <Compile Include="BootstrapperBase.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FlyoutBase.cs" />
     <Compile Include="IFlyout.cs" />
     <Compile Include="IScreen.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="ShellBase.cs" />
     <Compile Include="Utility\BindingProxy.cs" />
     <Compile Include="Utility\DirtyTrackingBase.cs" />
+    <Compile Include="Utility\StringMetrics.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="WindowCommand.cs" />
   </ItemGroup>

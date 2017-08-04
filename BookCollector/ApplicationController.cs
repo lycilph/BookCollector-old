@@ -44,6 +44,7 @@ namespace BookCollector
         {
             logger.Trace("Exiting");
 
+            collections_service.Exit();
             settings_service.Exit();
         }
 

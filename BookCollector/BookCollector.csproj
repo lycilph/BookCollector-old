@@ -187,6 +187,12 @@
     <Compile Include="Screens\Import\ImportScreenViewModel.cs">
       <DependentUpon>ImportScreenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Import\ShelfMappingView.xaml.cs">
+      <DependentUpon>ShelfMappingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\ShelfMappingViewModel.cs">
+      <DependentUpon>ShelfMappingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Settings\ISettingsScreen.cs" />
     <Compile Include="Screens\Settings\SettingsScreenView.xaml.cs">
       <DependentUpon>SettingsScreenView.xaml</DependentUpon>
@@ -208,10 +214,13 @@
       <DependentUpon>WebScreenView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Web\WebScreenViewModel.cs" />
-    <Compile Include="Services\CollectionsRepository.cs" />
+    <Compile Include="Services\CollectionsRepository.cs">
+      <DependentUpon>ICollectionsRepository.cs</DependentUpon>
+    </Compile>
     <Compile Include="Services\CollectionsService.cs">
       <DependentUpon>ICollectionsService.cs</DependentUpon>
     </Compile>
+    <Compile Include="Services\ICollectionsRepository.cs" />
     <Compile Include="Services\ICollectionsService.cs" />
     <Compile Include="Services\IImportService.cs" />
     <Compile Include="Services\ImportService.cs">
@@ -309,6 +318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Import\ImportScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\ShelfMappingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
