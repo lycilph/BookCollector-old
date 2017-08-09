@@ -174,6 +174,12 @@
     </Compile>
     <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs" />
     <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
+    <Compile Include="Screens\Import\EditShelfDialogView.xaml.cs">
+      <DependentUpon>EditShelfDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\EditShelfDialogViewModel.cs">
+      <DependentUpon>EditShelfDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Import\IImportScreen.cs" />
     <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
       <DependentUpon>ImportedBookView.xaml</DependentUpon>
@@ -310,6 +316,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Collections\CollectionsScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\EditShelfDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

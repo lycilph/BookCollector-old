@@ -31,6 +31,7 @@ namespace BookCollector.Configuration
             Bind<IImportService>().To<ImportService>().InSingletonScope();
             Bind<ISettingsService>().To<SettingsService>().InSingletonScope();
             Bind<IThemeService>().To<ThemeService>().InSingletonScope();
+            Bind<IDialogService>().To<DialogService>().InSingletonScope();
 
             Bind<IShellViewModel>().To<ShellViewModel>().InSingletonScope();
 

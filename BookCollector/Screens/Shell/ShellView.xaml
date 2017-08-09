@@ -8,6 +8,7 @@
                 xmlns:core="clr-namespace:Core;assembly=Core"
                 xmlns:shell="clr-namespace:BookCollector.Screens.Shell"
                 xmlns:converters="clr-namespace:BookCollector.Converters"
+                xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                 mc:Ignorable="d"
                 Title="Book Collector" 
                 Icon="../../Graphics/book_open_page_white.ico"
@@ -21,6 +22,7 @@
                 SaveWindowPosition="True"
                 WindowButtonCommandsOverlayBehavior="Never"
                 RightWindowCommandsOverlayBehavior="Never"
+                dialog:DialogParticipation.Register="{Binding}"
                 d:DataContext="{d:DesignInstance shell:ShellViewModel}">
     <ma:MetroWindow.Resources>
         <converters:MarginConverter x:Key="MarginConverter" TrueValueMargin="0" FalseValueMargin="{StaticResource ShellMargin}"/>

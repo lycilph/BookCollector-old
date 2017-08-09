@@ -35,4 +35,6 @@
     <sys:Double x:Key="MinButtonWidth">80</sys:Double>
     <sys:Double x:Key="FixedTextWidth">40</sys:Double>
     <sys:Double x:Key="VerticalSplitterWidth">4</sys:Double>
+
+    <sys:Double x:Key="DialogButtonHeight">35</sys:Double>
 </ResourceDictionary>

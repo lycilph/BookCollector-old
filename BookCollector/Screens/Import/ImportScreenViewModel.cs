@@ -8,6 +8,7 @@ using BookCollector.Services;
 using BookCollector.ThirdParty.Goodreads;
 using Core;
 using Core.Extensions;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using NLog;
 using ReactiveUI;
@@ -20,6 +21,7 @@ namespace BookCollector.Screens.Import
 
         private ICollectionsService collections_service;
         private IImportService import_service;
+        private IDialogService dialog_service;
 
         private string _Filename = string.Empty;
         public string Filename
@@ -94,6 +96,27 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _CreateImportedShelves, value); }
         }
 
+        private ReactiveCommand _EditShelfCommand;
+        public ReactiveCommand EditShelfCommand
+        {
+            get { return _EditShelfCommand; }
+            set { this.RaiseAndSetIfChanged(ref _EditShelfCommand, value); }
+        }
+
+        private ReactiveCommand _AddShelfCommand;
+        public ReactiveCommand AddShelfCommand
+        {
+            get { return _AddShelfCommand; }
+            set { this.RaiseAndSetIfChanged(ref _AddShelfCommand, value); }
+        }
+
+        private ReactiveCommand _DeleteShelfCommand;
+        public ReactiveCommand DeleteShelfCommand
+        {
+            get { return _DeleteShelfCommand; }
+            set { this.RaiseAndSetIfChanged(ref _DeleteShelfCommand, value); }
+        }
+
         private ReactiveCommand _ImportCommand;
         public ReactiveCommand ImportCommand
         {
@@ -108,18 +131,19 @@ namespace BookCollector.Screens.Import
             set { this.RaiseAndSetIfChanged(ref _CancelCommand, value); }
         }
 
-        public ImportScreenViewModel(ICollectionsService collections_service, IImportService import_service)
+        public ImportScreenViewModel(ICollectionsService collections_service, IImportService import_service, IDialogService dialog_service)
         {
             DisplayName = "Import";
             this.collections_service = collections_service;
             this.import_service = import_service;
+            this.dialog_service = dialog_service;
 
             Initialize();
         }
 
         private void Initialize()
         {
-            PickFileCommand = ReactiveCommand.Create(PickFile);
+            PickFileCommand = ReactiveCommand.Create(PickFileAsync);
 
             var have_imported_books = this.WhenAny(x => x.Books, x => x.Value != null && x.Value.Any());
             _HaveImportedBooks = have_imported_books.ToProperty(this, x => x.HaveImportedBooks);
@@ -129,6 +153,8 @@ namespace BookCollector.Screens.Import
             SelectBySimilarityCommand = ReactiveCommand.Create(() => Books.Apply(b => b.Selected = b.SimilarityScore <= MaximumSimilarity), have_imported_books);
 
             CreateImportedShelves = ReactiveCommand.Create(CreateShelves, have_imported_books);
+            AddShelfCommand = ReactiveCommand.Create(AddShelf);
+            DeleteShelfCommand = ReactiveCommand.Create(DeleteShelf);
 
             var any_selected_books = this.WhenAny(x => x.Books, x => x.Value.Any(b => b.Selected));
             var books_selection_changed = this.WhenAnyObservable(x => x.Books.ItemChanged)
@@ -157,7 +183,7 @@ namespace BookCollector.Screens.Import
             ShelfMappings = new ReactiveList<ShelfMappingViewModel>();
         }
 
-        private void PickFile()
+        private void PickFileAsync()
         {
             var ofd = new OpenFileDialog
             {
@@ -216,6 +242,24 @@ namespace BookCollector.Screens.Import
                     shelf_mapping.SetCurrent(shelf);
                 }
             }
+        }
+
+        //private void EditShelf()
+        //{
+        //    dialog_service.ShowDialogAsync(new EditShelfDialogViewModel(), (result) => 
+        //    {
+        //        logger.Debug($"Result was: {result}");
+        //    });
+        //}
+        
+        private void AddShelf()
+        {
+
+        }
+
+        private void DeleteShelf()
+        {
+
         }
 
         private void Import()

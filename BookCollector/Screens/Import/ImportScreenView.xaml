@@ -153,25 +153,20 @@
                             <md:PackIcon Kind="Plus" Width="20" Height="20" Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=md:PopupBox}, Path=Foreground}"/>
                         </md:PopupBox.ToggleContent>
                         <StackPanel>
-                            <Button ToolTip="Edit">
-                                <md:PackIcon Kind="Pencil"/>
+                            <Button ToolTip="Create shelves to match the imported ones"
+                                    Command="{Binding CreateImportedShelves}">
+                                <md:PackIcon Kind="Import"/>
                             </Button>
-                            <Button ToolTip="Add">
+                            <Button ToolTip="Add"
+                                    Command="{Binding AddShelfCommand}">
                                 <md:PackIcon Kind="PlusCircle"/>
                             </Button>
-                            <Button ToolTip="Delete">
+                            <Button ToolTip="Delete"
+                                    Command="{Binding DeleteShelfCommand}">
                                 <md:PackIcon Kind="MinusCircle"/>
                             </Button>
                         </StackPanel>
                     </md:PopupBox>
-                    <Button DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignFloatingActionAccentButton}"
-                            Command="{Binding CreateImportedShelves}"
-                            Width="34"
-                            Height="34"
-                            ToolTip="Create shelves to match the imported ones">
-                        <md:PackIcon Kind="Import" Width="20" Height="20" Foreground="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Button}, Path=Foreground}"/>
-                    </Button>
                 </DockPanel>
                 <ItemsControl Margin="{StaticResource NormalControlTopMargin}"
                               ItemsSource="{Binding ShelfMappings}">

@@ -110,10 +110,14 @@
   <ItemGroup>
     <Compile Include="AssemblySource.cs" />
     <Compile Include="BootstrapperBase.cs" />
+    <Compile Include="DialogScreenBase.cs" />
+    <Compile Include="DialogService.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FlyoutBase.cs" />
+    <Compile Include="IDialogScreen.cs" />
+    <Compile Include="IDialogService.cs" />
     <Compile Include="IFlyout.cs" />
     <Compile Include="IScreen.cs" />
     <Compile Include="IShell.cs" />
