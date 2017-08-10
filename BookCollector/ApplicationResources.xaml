@@ -22,6 +22,7 @@
     <Thickness x:Key="NormalControlRightMargin">0,0,8,0</Thickness>
     <Thickness x:Key="NormalControlTopMargin">0,8,0,0</Thickness>
     <Thickness x:Key="NormalControlBottomMargin">0,0,0,8</Thickness>
+    <Thickness x:Key="NormalControlTopLeftMargin">8,8,0,0</Thickness>
     <Thickness x:Key="NormalControlVerticalMargin">0,8</Thickness>
     <Thickness x:Key="NormalControlHorizontalMargin">8,0</Thickness>
 

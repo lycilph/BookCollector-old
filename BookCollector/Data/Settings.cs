@@ -34,5 +34,12 @@ namespace BookCollector.Data
             get { return _AccentColor; }
             set { this.RaiseAndSetIfChanged(ref _AccentColor, value); }
         }
+
+        private int _ShelfMappingThreshold;
+        public int ShelfMappingThreshold
+        {
+            get { return _ShelfMappingThreshold; }
+            set { this.RaiseAndSetIfChanged(ref _ShelfMappingThreshold, value); }
+        }
     }
 }

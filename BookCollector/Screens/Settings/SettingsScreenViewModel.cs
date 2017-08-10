@@ -71,6 +71,20 @@ namespace BookCollector.Screens.Settings
             }
         }
 
+        public int ShelfMappingThreshold
+        {
+            get { return settings_service.Settings.ShelfMappingThreshold; }
+            set
+            {
+                if (value != settings_service.Settings.ShelfMappingThreshold)
+                {
+                    this.RaisePropertyChanging();
+                    settings_service.Settings.ShelfMappingThreshold = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+
         public SettingsScreenViewModel(ISettingsService settings_service, IThemeService theme_service) : base(Position.Right)
         {
             DisplayName = "Settings";

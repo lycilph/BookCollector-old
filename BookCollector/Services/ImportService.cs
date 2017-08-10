@@ -11,13 +11,15 @@ namespace BookCollector.Services
 {
     public class ImportService : IImportService
     {
-        private const int shelf_mapping_threshold = 3;
+        //private const int shelf_mapping_threshold = 3;
 
         private ICollectionsService collections_service;
+        private ISettingsService settings_service;
 
-        public ImportService(ICollectionsService collections_service)
+        public ImportService(ICollectionsService collections_service, ISettingsService settings_service)
         {
             this.collections_service = collections_service;
+            this.settings_service = settings_service;
         }
 
         public void Import(List<ImportedBook> books_to_import, Dictionary<string, Shelf> shelf_mapping)
@@ -53,6 +55,7 @@ namespace BookCollector.Services
             var edit_distances = collection.Shelves.Select(s => new { Shelf = s, EditDistance = StringMetrics.EditDistance(imported_shelf, s.Name) })
                                                    .OrderBy(p => p.EditDistance);
             var closest = edit_distances.First();
+            var shelf_mapping_threshold = settings_service.Settings.ShelfMappingThreshold;
             if (closest.EditDistance < shelf_mapping_threshold)
                 return closest.Shelf;
             else

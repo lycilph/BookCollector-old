@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookCollector.Screens.Settings"
              mc:Ignorable="d" 
@@ -24,6 +25,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0"
@@ -38,28 +40,44 @@
                        VerticalAlignment="Center"/>
             <ToggleButton Grid.Row="1"
                           Grid.Column="1"
-                          Margin="{StaticResource NormalControlTopMargin}"
+                          Margin="{StaticResource NormalControlTopLeftMargin}"
                           IsChecked="{Binding LoadCollectionOnStartup}"
                           Style="{StaticResource MaterialDesignSwitchAccentToggleButton}"/>
 
-            <Separator Grid.Row="2" 
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Margin="{StaticResource NormalControlTopMargin}"
+                       Text="Shelf Mapping Threshold" 
+                       VerticalAlignment="Center"/>
+            <ma:NumericUpDown Grid.Row="2"
+                              Grid.Column="1"
+                              x:Name="ThresholdUpDown"
+                              BorderThickness="0"
+                              Background="Transparent"
+                              HorizontalContentAlignment="Left"
+                              Margin="{StaticResource NormalControlTopLeftMargin}"
+                              ToolTip="Lower values mean that shelf names must be more similar to be mapped"
+                              Value="{Binding ShelfMappingThreshold}"
+                              Minimum="0"/>
+
+            <Separator Grid.Row="3" 
                        Grid.ColumnSpan="2" 
                        Margin="{StaticResource SeparatorMargin}" 
                        Style="{StaticResource MaterialDesignDarkSeparator}"/>
 
-            <TextBlock Grid.Row="3"
+            <TextBlock Grid.Row="4"
                        Grid.ColumnSpan="2"
                        Text="Theme"
                        Style="{StaticResource MaterialDesignSubheadingTextBlock}"/>
 
-            <TextBlock Grid.Row="4" 
+            <TextBlock Grid.Row="5" 
                        Grid.Column="0" 
                        Margin="{StaticResource NormalControlTopMargin}"
                        Text="Primary" 
                        VerticalAlignment="Center"/>
-            <ComboBox Grid.Row="4"
+            <ComboBox Grid.Row="5"
                       Grid.Column="2"
-                      Margin="{StaticResource NormalControlTopMargin}"
+                      Margin="{StaticResource NormalControlTopLeftMargin}"
                       IsEditable="False" 
                       md:HintAssist.Hint="Select"
                       md:HintAssist.HintOpacity=".56"
@@ -67,14 +85,14 @@
                       SelectedItem="{Binding SelectedPrimaryColor}"
                       DisplayMemberPath="Name"/>
 
-            <TextBlock Grid.Row="5" 
+            <TextBlock Grid.Row="6" 
                        Grid.Column="0" 
                        Margin="{StaticResource NormalControlTopMargin}"
                        Text="Accent" 
                        VerticalAlignment="Center"/>
-            <ComboBox Grid.Row="5"
+            <ComboBox Grid.Row="6"
                       Grid.Column="2"
-                      Margin="{StaticResource NormalControlTopMargin}"
+                      Margin="{StaticResource NormalControlTopLeftMargin}"
                       IsEditable="False" 
                       md:HintAssist.Hint="Select"
                       md:HintAssist.HintOpacity=".56"
