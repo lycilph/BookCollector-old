@@ -154,7 +154,13 @@ namespace BookCollector.Screens.Import
 
             CreateImportedShelves = ReactiveCommand.Create(CreateShelves, have_imported_books);
             AddShelfCommand = ReactiveCommand.Create(AddShelf);
-            DeleteShelfCommand = ReactiveCommand.Create(DeleteShelf);
+
+            // If there is only 1 shelf it is the default one, so disable this command
+            var can_delete_shelfs = this.WhenAnyValue(x => x.collections_service.Current.Shelves)
+                                        .Select(x => x == null ? Observable.Return(0) : x.CountChanged.StartWith(x.Count))
+                                        .Switch() // This switches to the latest observable that has emitted a value
+                                        .Select(x => x > 1);
+            DeleteShelfCommand = ReactiveCommand.Create(DeleteShelf, can_delete_shelfs);
 
             var any_selected_books = this.WhenAny(x => x.Books, x => x.Value.Any(b => b.Selected));
             var books_selection_changed = this.WhenAnyObservable(x => x.Books.ItemChanged)
@@ -243,23 +249,29 @@ namespace BookCollector.Screens.Import
                 }
             }
         }
-
-        //private void EditShelf()
-        //{
-        //    dialog_service.ShowDialogAsync(new EditShelfDialogViewModel(), (result) => 
-        //    {
-        //        logger.Debug($"Result was: {result}");
-        //    });
-        //}
         
         private void AddShelf()
         {
-
+            var shelf = new Shelf("[New Shelf]");
+            var vm = new AddShelfDialogViewModel(shelf);
+            dialog_service.ShowDialogAsync(vm, (result) => 
+            {
+                if (result == MessageDialogResult.Affirmative)
+                    collections_service.Current.AddShelf(shelf);
+            });
         }
 
         private void DeleteShelf()
         {
-
+            var vm = new DeleteShelfDialogViewModel(collections_service.Current.Shelves);
+            dialog_service.ShowDialogAsync(vm, (result) =>
+            {
+                if (result == MessageDialogResult.Affirmative)
+                {
+                    ShelfMappings.Apply(s => s.Remove(vm.SelectedShelf));
+                    collections_service.Current.RemoveShelf(vm.SelectedShelf);
+                }
+            });
         }
 
         private void Import()

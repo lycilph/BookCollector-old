@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Data;
 using BookCollector.Data;
@@ -9,6 +10,8 @@ namespace BookCollector.Screens.Import
 {
     public class ShelfMappingViewModel : ReactiveObject
     {
+        private ReactiveList<Shelf> existing_shelves;
+
         public string ImportedShelf { get; set; }
         public ICollectionView ExistingShelves { get; set; }
         public Shelf SelectedShelf { get { return (Shelf)ExistingShelves.CurrentItem; } }
@@ -41,6 +44,8 @@ namespace BookCollector.Screens.Import
         public ShelfMappingViewModel(string imported_shelf, ReactiveList<Shelf> existing_shelves)
         {
             ImportedShelf = imported_shelf;
+            this.existing_shelves = existing_shelves;
+
             ExistingShelves = new CollectionViewSource { Source = existing_shelves }.View;
             ExistingShelves.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
             ExistingShelves.MoveCurrentToFirst();
@@ -58,6 +63,15 @@ namespace BookCollector.Screens.Import
         public void SetCurrent(Shelf shelf)
         {
             ExistingShelves.MoveCurrentTo(shelf);
+        }
+
+        public void Remove(Shelf shelf)
+        {
+            if (shelf == SelectedShelf)
+            {
+                var default_shelf = existing_shelves.Single(s => s.IsDefault);
+                ExistingShelves.MoveCurrentTo(default_shelf);
+            }
         }
     }
 }

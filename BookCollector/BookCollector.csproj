@@ -174,11 +174,17 @@
     </Compile>
     <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs" />
     <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
-    <Compile Include="Screens\Import\EditShelfDialogView.xaml.cs">
-      <DependentUpon>EditShelfDialogView.xaml</DependentUpon>
+    <Compile Include="Screens\Import\AddShelfDialogView.xaml.cs">
+      <DependentUpon>AddShelfDialogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Import\EditShelfDialogViewModel.cs">
-      <DependentUpon>EditShelfDialogView.xaml</DependentUpon>
+    <Compile Include="Screens\Import\AddShelfDialogViewModel.cs">
+      <DependentUpon>AddShelfDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\DeleteShelfDialogView.xaml.cs">
+      <DependentUpon>DeleteShelfDialogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Import\DeleteShelfDialogViewModel.cs">
+      <DependentUpon>DeleteShelfDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Import\IImportScreen.cs" />
     <Compile Include="Screens\Import\ImportedBookView.xaml.cs">
@@ -319,7 +325,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Screens\Import\EditShelfDialogView.xaml">
+    <Page Include="Screens\Import\AddShelfDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Import\DeleteShelfDialogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

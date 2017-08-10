@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -15,7 +16,17 @@ namespace Core
 
         public async void ShowDialogAsync(IDialogScreen vm, Action<MessageDialogResult> handler = null, MetroDialogSettings settings = null)
         {
-            var dialog = new CustomDialog { Title = vm.DisplayName };
+            if (settings == null)
+                settings = new MetroDialogSettings();
+
+            // Override default styles (see https://github.com/ButchersBoy/MaterialDesignInXamlToolkit/wiki/MahApps.Metro-integration)
+            settings.SuppressDefaultResources = true;
+            settings.CustomResourceDictionary = new ResourceDictionary()
+            {
+                Source = new Uri("pack://application:,,,/MaterialDesignThemes.MahApps;component/Themes/MaterialDesignTheme.MahApps.Dialogs.xaml")
+            };
+
+            var dialog = new CustomDialog(settings) { Title = vm.DisplayName };
             dialog.Content = ViewManager.CreateAndBindViewForModel(vm);
 
             await ShowCustomDialogAsync(dialog, settings);

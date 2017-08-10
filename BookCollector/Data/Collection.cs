@@ -42,5 +42,17 @@ namespace BookCollector.Data
             Shelves.Add(shelf);
             return shelf;
         }
+
+        public Shelf AddShelf(Shelf shelf)
+        {
+            Shelves.Add(shelf);
+            return shelf;
+        }
+
+        public void RemoveShelf(Shelf shelf)
+        {
+            shelf.RemoveAllBooks();
+            Shelves.Remove(shelf);
+        }
     }
 }

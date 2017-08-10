@@ -41,5 +41,11 @@ namespace BookCollector.Data
             // Add a link from the book to this shelf
             book.Shelves.Add(this);
         }
+
+        public void RemoveAllBooks()
+        {
+            Books.Apply(b => b.Shelves.Remove(this));
+            Books.Clear();
+        }
     }
 }

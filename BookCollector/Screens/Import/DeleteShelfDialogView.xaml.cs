@@ -1,8 +1,8 @@
 ﻿namespace BookCollector.Screens.Import
 {
-    public partial class EditShelfDialogView
+    public partial class DeleteShelfDialogView
     {
-        public EditShelfDialogView()
+        public DeleteShelfDialogView()
         {
             InitializeComponent();
         }
