@@ -157,22 +157,30 @@
     <Compile Include="Screens\Books\BooksScreenView.xaml.cs">
       <DependentUpon>BooksScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Books\BooksScreenViewModel.cs" />
+    <Compile Include="Screens\Books\BooksScreenViewModel.cs">
+      <DependentUpon>BooksScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Books\IBooksScreen.cs" />
     <Compile Include="Screens\Books\INavigationScreen.cs" />
     <Compile Include="Screens\Books\ISearchScreen.cs" />
     <Compile Include="Screens\Books\NavigationScreenView.xaml.cs">
       <DependentUpon>NavigationScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Books\NavigationScreenViewModel.cs" />
+    <Compile Include="Screens\Books\NavigationScreenViewModel.cs">
+      <DependentUpon>NavigationScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Books\SearchScreenView.xaml.cs">
       <DependentUpon>SearchScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Books\SearchScreenViewModel.cs" />
+    <Compile Include="Screens\Books\SearchScreenViewModel.cs">
+      <DependentUpon>SearchScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Collections\CollectionsScreenView.xaml.cs">
       <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs" />
+    <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs">
+      <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
     <Compile Include="Screens\Import\AddShelfDialogView.xaml.cs">
       <DependentUpon>AddShelfDialogView.xaml</DependentUpon>
@@ -225,7 +233,9 @@
     <Compile Include="Screens\Web\WebScreenView.xaml.cs">
       <DependentUpon>WebScreenView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Screens\Web\WebScreenViewModel.cs" />
+    <Compile Include="Screens\Web\WebScreenViewModel.cs">
+      <DependentUpon>WebScreenView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\CollectionsRepository.cs">
       <DependentUpon>ICollectionsRepository.cs</DependentUpon>
     </Compile>
