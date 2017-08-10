@@ -2,14 +2,12 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Reflection;
 using BookCollector.Data;
 using BookCollector.Services;
 using BookCollector.ThirdParty.Goodreads;
 using Core;
 using Core.Extensions;
 using MahApps.Metro.Controls.Dialogs;
-using Microsoft.Win32;
 using NLog;
 using ReactiveUI;
 
@@ -191,17 +189,10 @@ namespace BookCollector.Screens.Import
 
         private void PickFileAsync()
         {
-            var ofd = new OpenFileDialog
+            var file_result = dialog_service.ShowFileDialog("Please select file to import", ".csv", "Goodreads CSV files |*.csv");
+            if (file_result.Result == MessageDialogResult.Affirmative)
             {
-                Title = "Please select file to import",
-                InitialDirectory = Assembly.GetExecutingAssembly().Location,
-                DefaultExt = ".csv",
-                Filter = "Goodreads CSV files |*.csv"
-            };
-            var result = ofd.ShowDialog();
-            if (result == true)
-            {
-                Filename = ofd.FileName;
+                Filename = file_result.Filename;
                 Process();
             }
         }

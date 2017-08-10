@@ -53,7 +53,7 @@ namespace BookCollector.Screens.Import
             var current_changed = Observable.FromEventPattern(x => ExistingShelves.CurrentChanged += x,
                                                               x => ExistingShelves.CurrentChanged -= x);
 
-            var can_edit = current_changed.Select(_ => !SelectedShelf.IsDefault);
+            var can_edit = current_changed.Select(_ => SelectedShelf != null && !SelectedShelf.IsDefault);
             EditCommand = ReactiveCommand.Create(() => IsEditing = !IsEditing, can_edit);
 
             // This is needed to fire the Changed event for the ShelfName

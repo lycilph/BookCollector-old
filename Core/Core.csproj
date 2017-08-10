@@ -115,6 +115,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\JsonExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FileDialogResult.cs" />
     <Compile Include="FlyoutBase.cs" />
     <Compile Include="IDialogScreen.cs" />
     <Compile Include="IDialogService.cs" />

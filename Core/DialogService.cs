@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 
 namespace Core
 {
@@ -12,6 +14,20 @@ namespace Core
         {
             var metro_window = GetMetroWindow();
             return metro_window.Invoke(() => metro_window.ShowMessageAsync(title, message, style, settings));
+        }
+
+        public FileDialogResult ShowFileDialog(string title, string ext, string filter)
+        {
+            var ofd = new OpenFileDialog
+            {
+                Title = title,
+                InitialDirectory = Assembly.GetExecutingAssembly().Location,
+                DefaultExt = ext,
+                Filter = filter
+            };
+
+            var result = (ofd.ShowDialog() == true ? MessageDialogResult.Affirmative : MessageDialogResult.Negative);
+            return new FileDialogResult(result, ofd.FileName);
         }
 
         public async void ShowDialogAsync(IDialogScreen vm, Action<MessageDialogResult> handler = null, MetroDialogSettings settings = null)
