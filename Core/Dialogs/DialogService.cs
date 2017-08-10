@@ -2,11 +2,12 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using Core.Application;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 
-namespace Core
+namespace Core.Dialogs
 {
     public class DialogService : IDialogService
     {

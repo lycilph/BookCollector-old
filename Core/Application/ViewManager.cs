@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
+using Core.Shell;
 
-namespace Core
+namespace Core.Application
 {
     public static class ViewManager
     {

@@ -2,7 +2,7 @@
 using System.Windows;
 using BookCollector.Screens.Shell;
 using BookCollector.Services;
-using Core;
+using Core.Application;
 using Ninject;
 using NLog;
 

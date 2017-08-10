@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace Core.Shell
 {
     public interface IScreen
     {

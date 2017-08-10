@@ -1,4 +1,4 @@
-﻿using Core;
+﻿using Core.Shell;
 
 namespace BookCollector.Screens.Shell
 {

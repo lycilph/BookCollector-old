@@ -2,7 +2,7 @@
 using MahApps.Metro.Controls.Dialogs;
 using ReactiveUI;
 
-namespace Core
+namespace Core.Dialogs
 {
     public class DialogScreenBase : ReactiveObject, IDialogScreen
     {

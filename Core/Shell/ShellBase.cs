@@ -3,7 +3,7 @@ using MaterialDesignThemes.Wpf;
 using NLog;
 using ReactiveUI;
 
-namespace Core
+namespace Core.Shell
 {
     public class ShellBase : ScreenBase, IShell, IViewAware
     {

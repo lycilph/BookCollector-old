@@ -1,7 +1,7 @@
 ﻿using System;
 using ReactiveUI;
 
-namespace Core
+namespace Core.Shell
 {
     public class WindowCommand : ReactiveObject, IWindowCommand
     {

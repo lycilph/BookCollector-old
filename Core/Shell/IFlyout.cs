@@ -1,6 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 
-namespace Core
+namespace Core.Shell
 {
     public interface IFlyout
     {

@@ -1,5 +1,5 @@
 ﻿using System.Reactive.Linq;
-using Core;
+using Core.Shell;
 using ReactiveUI;
 
 namespace BookCollector.Screens.Books

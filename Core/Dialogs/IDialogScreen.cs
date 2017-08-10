@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace Core
+namespace Core.Dialogs
 {
     public interface IDialogScreen
     {

@@ -1,9 +1,9 @@
 ﻿using System;
-using Core;
+using Core.Shell;
 using MaterialDesignThemes.Wpf;
 using NLog;
 using ReactiveUI;
-using IScreen = Core.IScreen;
+using IScreen = Core.Shell.IScreen;
 
 namespace BookCollector.Screens.Shell
 {

@@ -1,4 +1,4 @@
-﻿using Core;
+﻿using Core.Shell;
 using ReactiveUI;
 
 namespace BookCollector.Screens.Books

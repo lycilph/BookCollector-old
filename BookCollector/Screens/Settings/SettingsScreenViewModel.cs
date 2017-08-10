@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls;
-using Core;
 using ReactiveUI;
 using MaterialDesignColors;
 using System;
@@ -7,6 +6,7 @@ using BookCollector.Services;
 using Core.Extensions;
 using System.Linq;
 using System.Reactive.Linq;
+using Core.Shell;
 
 namespace BookCollector.Screens.Settings
 {

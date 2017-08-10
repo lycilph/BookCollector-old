@@ -1,7 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using ReactiveUI;
 
-namespace Core
+namespace Core.Shell
 {
     public class FlyoutBase : ScreenBase, IFlyout
     {

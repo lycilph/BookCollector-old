@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Core
+namespace Core.Utility
 {
     public class ItemViewModel<T> : ReactiveObject
     {

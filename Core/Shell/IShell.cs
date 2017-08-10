@@ -1,7 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 
-namespace Core
+namespace Core.Shell
 {
     public interface IShell
     {

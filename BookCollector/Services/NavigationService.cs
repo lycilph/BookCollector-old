@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BookCollector.Screens.Shell;
-using Core;
+using Core.Shell;
 using NLog;
 
 namespace BookCollector.Services

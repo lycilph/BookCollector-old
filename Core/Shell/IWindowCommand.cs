@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Core
+namespace Core.Shell
 {
     public interface IWindowCommand
     {

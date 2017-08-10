@@ -1,5 +1,6 @@
 ﻿using BookCollector.Data;
 using Core;
+using Core.Dialogs;
 using MahApps.Metro.Controls.Dialogs;
 using ReactiveUI;
 

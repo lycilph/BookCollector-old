@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Threading;
 using NLog;
 
-namespace Core
+namespace Core.Application
 {
     public class BootstrapperBase
     {
@@ -24,9 +24,9 @@ namespace Core
         {
             logger.Trace("Hooking up application events");
 
-            Application.Current.Startup += OnStartup;
-            Application.Current.DispatcherUnhandledException += OnUnhandledException;
-            Application.Current.Exit += OnExit;
+            System.Windows.Application.Current.Startup += OnStartup;
+            System.Windows.Application.Current.DispatcherUnhandledException += OnUnhandledException;
+            System.Windows.Application.Current.Exit += OnExit;
         }
 
         private void InitializeAssemblySource()

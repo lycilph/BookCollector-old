@@ -40,6 +40,7 @@
                        VerticalAlignment="Center"/>
             <ToggleButton Grid.Row="1"
                           Grid.Column="1"
+                          HorizontalAlignment="Right"
                           Margin="{StaticResource NormalControlTopLeftMargin}"
                           IsChecked="{Binding LoadCollectionOnStartup}"
                           Style="{StaticResource MaterialDesignSwitchAccentToggleButton}"/>
