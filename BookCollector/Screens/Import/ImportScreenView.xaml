@@ -157,11 +157,11 @@
                                     Command="{Binding CreateImportedShelves}">
                                 <md:PackIcon Kind="Import"/>
                             </Button>
-                            <Button ToolTip="Add"
+                            <Button ToolTip="Add a new shelf"
                                     Command="{Binding AddShelfCommand}">
                                 <md:PackIcon Kind="PlusCircle"/>
                             </Button>
-                            <Button ToolTip="Delete"
+                            <Button ToolTip="Delete an existing shelf"
                                     Command="{Binding DeleteShelfCommand}">
                                 <md:PackIcon Kind="MinusCircle"/>
                             </Button>

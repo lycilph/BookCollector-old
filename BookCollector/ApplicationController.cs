@@ -83,7 +83,7 @@ namespace BookCollector
             //NavigateToBooksScreen();
 
             //message_queue.Enqueue("Welcome to Book Collector");
-            NavigateToImportScreen(); // DEV
+            NavigateToCollectionsScreen(); // DEV
         }
 
         private void NavigateToBooksScreen()

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using BookCollector.Data;
 using Core.Extensions;
@@ -41,6 +43,11 @@ namespace BookCollector.Services
         public bool Exists(string path)
         {
             return File.Exists(path);
+        }
+
+        public List<string> GetCollectionsList()
+        {
+            return Directory.EnumerateFiles(GetDataDirectory(), "*" + collection_extension).ToList();
         }
 
         private string GetDataDirectory()

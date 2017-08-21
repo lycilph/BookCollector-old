@@ -1,5 +1,4 @@
 ﻿using BookCollector.Data.Import;
-using Core;
 using Core.Utility;
 using ReactiveUI;
 

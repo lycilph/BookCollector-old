@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 
 namespace BookCollector.Services
 {
@@ -36,6 +37,14 @@ namespace BookCollector.Services
         public void Exit()
         {
             Save();
+        }
+
+        public IEnumerable<Description> GetCollectionDescriptions()
+        {
+            foreach (var filename in collections_repository.GetCollectionsList())
+            {
+                yield return collections_repository.Load(filename).Description;
+            }
         }
 
         private void Save()

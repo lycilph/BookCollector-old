@@ -181,6 +181,7 @@
     <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs">
       <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\Collections\DescriptionViewModel.cs" />
     <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
     <Compile Include="Screens\Import\AddShelfDialogView.xaml.cs">
       <DependentUpon>AddShelfDialogView.xaml</DependentUpon>

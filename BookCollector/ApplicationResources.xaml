@@ -15,7 +15,6 @@
     <Thickness x:Key="SeparatorMargin">8,16</Thickness>
 
     <Thickness x:Key="HugeControlHorizontalMargin">32,0</Thickness>
-    
     <Thickness x:Key="LargeControlHorizontalMargin">16,0</Thickness>
 
     <Thickness x:Key="NormalControlLeftMargin">8,0,0,0</Thickness>
@@ -30,6 +29,7 @@
     <sys:Double x:Key="Normal">8</sys:Double>
     <sys:Double x:Key="Large">16</sys:Double>
     <sys:Double x:Key="Huge">32</sys:Double>
+    <sys:Double x:Key="Giant">128</sys:Double>
     
     <sys:Double x:Key="OverlayMinWidth">212</sys:Double>
     <sys:Double x:Key="SearchTextMinWidth">200</sys:Double>

@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 
 namespace BookCollector.Services
 {
@@ -7,5 +8,6 @@ namespace BookCollector.Services
         Collection Load(string filename);
         void Save(Collection collection);
         bool Exists(string path);
+        List<string> GetCollectionsList();
     }
 }

@@ -29,6 +29,7 @@ namespace BookCollector.Data
         }
 
         private string _Filename = string.Empty;
+        [JsonIgnore]
         public string Filename
         {
             get { return _Filename; }

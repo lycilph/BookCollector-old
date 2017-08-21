@@ -1,4 +1,5 @@
-﻿using BookCollector.Data;
+﻿using System.Collections.Generic;
+using BookCollector.Data;
 
 namespace BookCollector.Services
 {
@@ -8,5 +9,6 @@ namespace BookCollector.Services
 
         void Initialize();
         void Exit();
+        IEnumerable<Description> GetCollectionDescriptions();
     }
 }
