@@ -146,7 +146,6 @@
     <Compile Include="Converters\NullToEnabledConverter.cs" />
     <Compile Include="Converters\SelectedToContextConverter.cs" />
     <Compile Include="Converters\ShortFilenameConverter.cs" />
-    <Compile Include="Converters\ViewLocationConverter.cs" />
     <Compile Include="Data\Book.cs" />
     <Compile Include="Data\Collection.cs" />
     <Compile Include="Data\Description.cs" />

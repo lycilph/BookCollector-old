@@ -65,7 +65,11 @@
                     <Setter Property="IsPinned" Value="{Binding IsPinned}"/>
                     <Setter Property="Position" Value="{Binding Position}" />
                     <Setter Property="md:FlyoutAssist.HeaderColorMode" Value="Accent" />
-                    <Setter Property="Content" Value="{Binding Path=., Converter={StaticResource ViewLocator}}"/>
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <ContentControl core:View.Bind="{Binding}"/>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </ma:FlyoutsControl.ItemContainerStyle>
         </ma:FlyoutsControl>
@@ -95,7 +99,7 @@
 
                 <!-- Menu content -->
                 <ContentControl Grid.Row="2"
-                                Content="{Binding MenuContent, Converter={StaticResource ViewLocator}}"/>
+                                core:View.Bind="{Binding MenuContent}"/>
             </Grid>
         </md:DrawerHost.LeftDrawerContent>
         
@@ -115,7 +119,7 @@
 
                     <!-- Header content -->
                     <ContentControl DockPanel.Dock="Right"
-                                    Content="{Binding HeaderContent, Converter={StaticResource ViewLocator}}"/>
+                                    core:View.Bind="{Binding HeaderContent}"/>
 
                     <!-- Screen Title -->
                     <TextBlock VerticalAlignment="Center" 
@@ -128,7 +132,7 @@
             <!-- Main content -->
             <Grid>
                 <ContentControl Margin="{Binding IsFullscreen, Converter={StaticResource MarginConverter}}"
-                            Content="{Binding MainContent, Converter={StaticResource ViewLocator}}"/>
+                                core:View.Bind="{Binding MainContent}"/>
                 <md:Snackbar MessageQueue="{Binding MessageQueue}"/>
             </Grid>
         </DockPanel>

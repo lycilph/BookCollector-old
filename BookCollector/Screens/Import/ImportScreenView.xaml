@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BookCollector.Screens.Import"
              xmlns:converter="clr-namespace:BookCollector.Converters"
+             xmlns:core="CoreAssembly"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="600"
@@ -56,7 +57,7 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ContentControl Content="{Binding Path=., Converter={StaticResource ViewLocator}}"/>
+                    <ContentControl core:View.Bind="True"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.Template>
@@ -172,7 +173,7 @@
                               ItemsSource="{Binding ShelfMappings}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ContentControl Content="{Binding Path=., Converter={StaticResource ViewLocator}}"/>
+                            <ContentControl core:View.Bind="True"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

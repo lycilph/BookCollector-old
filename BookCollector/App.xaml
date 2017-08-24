@@ -51,7 +51,6 @@
             <!-- Converters -->
             <md:BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
             <md:BooleanToVisibilityConverter x:Key="InvertedVisibilityConverter" TrueValue="Collapsed" FalseValue="Visible"/>
-            <converter:ViewLocationConverter x:Key="ViewLocator"/>
             <converter:NullToEnabledConverter x:Key="NullToEnabledConverter"/>
         </ResourceDictionary>
     </Application.Resources>

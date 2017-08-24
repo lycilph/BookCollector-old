@@ -48,14 +48,14 @@ namespace Core.Application
             Bind(d as ContentControl, e.NewValue, context);
         }
 
-        private static void Bind(ContentControl content, object value, string context)
+        private static void Bind(ContentControl control, object value, string context)
         {
-            if (content == null)
+            if (control == null)
                 return;
-
+            
             object vm;
             if (Boolean.TryParse(value as string, out var use_datacontext) && use_datacontext)
-                vm = content.DataContext;
+                vm = control.DataContext;
             else
                 vm = value;
 
@@ -63,7 +63,7 @@ namespace Core.Application
                 return;
 
             var view = ViewManager.CreateAndBindViewForModel(vm, context);
-            content.Content = view ?? throw new ArgumentException($"Could not find view for {vm.GetType().Name}");
+            control.Content = view ?? throw new ArgumentException($"Could not find view for {vm.GetType().Name}");
         }
     }
 }
