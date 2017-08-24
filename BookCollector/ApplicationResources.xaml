@@ -3,12 +3,12 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!-- Padding -->
     <Thickness x:Key="ShellTitlebarPadding">16</Thickness>
-    <Thickness x:Key="ItemPadding">8</Thickness>
-    
+    <Thickness x:Key="NormalItemPadding">8</Thickness>
+
     <!-- Border -->
     <Thickness x:Key="NormalBorderBottom">0,0,0,1</Thickness>
 
-    <!-- Margin -->
+    <!-- Margin & padding -->
     <Thickness x:Key="ShellMargin">16</Thickness>
     <Thickness x:Key="ScreenMargin">32</Thickness>
     <Thickness x:Key="ActionButtonMargin">16</Thickness>

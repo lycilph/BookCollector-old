@@ -4,11 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:BookCollector.Converters"
              xmlns:local="clr-namespace:BookCollector.Screens.Collections"
+             xmlns:core="CoreAssembly"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
              d:DesignWidth="300"
              d:DataContext="{d:DesignInstance local:CollectionsScreenViewModel}">
+    <UserControl.Resources>
+        <converters:SelectedToContextConverter x:Key="ContextConvert" SelectedContext="Details"/>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -34,27 +40,23 @@
 
         <ListBox Grid.Row="1"
                  Grid.Column="1"
-                 ItemsSource="{Binding Descriptions}"/>
-
-        <!--<ListBox Grid.Row="0"
-                 Grid.Column="1"
-                 Margin="0,50,0,0"
-                 ItemsSource="{Binding CollectionDescriptions}"
-                 SelectedItem="{Binding SelectedCollectionDescription}">
+                 ItemsSource="{Binding Descriptions}"
+                 SelectedItem="{Binding SelectedDescription}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ContentControl core:View.Bind="True"
+                                    core:View.Context="{Binding IsSelected, Converter={StaticResource ContextConvert}}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                    <Setter Property="ContentTemplate" Value="{StaticResource DescriptionListView}"/>
                     <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignDivider}"/>
-                    <Setter Property="BorderThickness" Value="{StaticResource ListItemBorderThickness}"/>
-                    <Setter Property="Padding" Value="{StaticResource ListItemPadding}"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="ContentTemplate" Value="{StaticResource DescriptionDetailsView}"/>
-                        </Trigger>
-                    </Style.Triggers>
+                    <Setter Property="BorderThickness" Value="{StaticResource NormalBorderBottom}"/>
+                    <Setter Property="Padding" Value="{StaticResource NormalItemPadding}"/>
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
                 </Style>
             </ListBox.ItemContainerStyle>
-        </ListBox>-->
+        </ListBox>
 
         <StackPanel Grid.Row="2"
                     Grid.Column="1"

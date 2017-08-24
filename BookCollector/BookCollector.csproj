@@ -144,6 +144,7 @@
     <Compile Include="Converters\BackgroundColorConverter.cs" />
     <Compile Include="Converters\MarginConverter.cs" />
     <Compile Include="Converters\NullToEnabledConverter.cs" />
+    <Compile Include="Converters\SelectedToContextConverter.cs" />
     <Compile Include="Converters\ShortFilenameConverter.cs" />
     <Compile Include="Converters\ViewLocationConverter.cs" />
     <Compile Include="Data\Book.cs" />
@@ -180,6 +181,12 @@
     </Compile>
     <Compile Include="Screens\Collections\CollectionsScreenViewModel.cs">
       <DependentUpon>CollectionsScreenView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\DescriptionDetailsView.xaml.cs">
+      <DependentUpon>DescriptionDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\Collections\DescriptionView.xaml.cs">
+      <DependentUpon>DescriptionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\Collections\DescriptionViewModel.cs" />
     <Compile Include="Screens\Collections\ICollectionsScreen.cs" />
@@ -333,6 +340,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Screens\Collections\CollectionsScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Collections\DescriptionDetailsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Screens\Collections\DescriptionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

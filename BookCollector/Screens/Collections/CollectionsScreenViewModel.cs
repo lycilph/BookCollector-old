@@ -20,6 +20,13 @@ namespace BookCollector.Screens.Collections
             set { this.RaiseAndSetIfChanged(ref _Descriptions, value); }
         }
 
+        private DescriptionViewModel _SelectedDescription;
+        public DescriptionViewModel SelectedDescription
+        {
+            get { return _SelectedDescription; }
+            set { this.RaiseAndSetIfChanged(ref _SelectedDescription, value); }
+        }
+
         public CollectionsScreenViewModel(ICollectionsService collections_service)
         {
             DisplayName = "Collections";
@@ -34,6 +41,8 @@ namespace BookCollector.Screens.Collections
             Descriptions = collections_service.GetCollectionDescriptions()
                                               .Select(c => new DescriptionViewModel(c))
                                               .ToReactiveList();
+
+            SelectedDescription = Descriptions.FirstOrDefault();
         }
     }
 }

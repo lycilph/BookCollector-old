@@ -15,7 +15,7 @@
         <converter:BackgroundColorConverter x:Key="SelectedConverter"/>
     </UserControl.Resources>
 
-    <Border Padding="{StaticResource ItemPadding}"
+    <Border Padding="{StaticResource NormalItemPadding}"
             Background="{Binding Selected, Converter={StaticResource SelectedConverter}, ConverterParameter={StaticResource proxy}}"
             BorderBrush="{StaticResource MaterialDesignDivider}" 
             BorderThickness="{StaticResource NormalBorderBottom}">

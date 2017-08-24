@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="Application\AssemblySource.cs" />
     <Compile Include="Application\BootstrapperBase.cs" />
+    <Compile Include="Application\View.cs" />
     <Compile Include="Dialogs\DialogScreenBase.cs" />
     <Compile Include="Dialogs\DialogService.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
