@@ -16,7 +16,7 @@
                 <Thickness Left="{StaticResource Huge}"/>
             </TextBlock.Margin>
         </TextBlock>
-        <!--<TextBlock Text="{Binding Details}">
+        <TextBlock Text="{Binding Details}">
             <TextBlock.Margin>
                 <Thickness Left="{StaticResource Huge}"/>
             </TextBlock.Margin>
@@ -27,6 +27,6 @@
             </TextBlock.Margin>
             <Run Text="Last Modified: "/>
             <Run Text="{Binding LastModifiedDate, Mode=OneWay}"/>
-        </TextBlock>-->
+        </TextBlock>
     </StackPanel>
 </UserControl>

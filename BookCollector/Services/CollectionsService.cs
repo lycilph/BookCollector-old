@@ -39,11 +39,11 @@ namespace BookCollector.Services
             Save();
         }
 
-        public IEnumerable<Description> GetCollectionDescriptions()
+        public IEnumerable<Collection> GetAllCollections()
         {
             foreach (var filename in collections_repository.GetCollectionsList())
             {
-                yield return collections_repository.Load(filename).Description;
+                yield return collections_repository.Load(filename);
             }
         }
 

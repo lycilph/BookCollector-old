@@ -9,6 +9,6 @@ namespace BookCollector.Services
 
         void Initialize();
         void Exit();
-        IEnumerable<Description> GetCollectionDescriptions();
+        IEnumerable<Collection> GetAllCollections();
     }
 }

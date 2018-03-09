@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BookCollector.Services;
 using Core.Extensions;
 using Core.Shell;
@@ -27,10 +28,30 @@ namespace BookCollector.Screens.Collections
             set { this.RaiseAndSetIfChanged(ref _SelectedDescription, value); }
         }
 
+        private ReactiveCommand _ContinueCommand;
+        public ReactiveCommand ContinueCommand
+        {
+            get { return _ContinueCommand; }
+            set { this.RaiseAndSetIfChanged(ref _ContinueCommand, value); }
+        }
+
+        private ReactiveCommand _CancelCommand;
+        public ReactiveCommand CancelCommand
+        {
+            get { return _CancelCommand; }
+            set { this.RaiseAndSetIfChanged(ref _CancelCommand, value); }
+        }
+
         public CollectionsScreenViewModel(ICollectionsService collections_service)
         {
             DisplayName = "Collections";
             this.collections_service = collections_service;
+
+            Initialize();
+        }
+
+        private void Initialize()
+        {
         }
 
         public override void Activate()
@@ -38,7 +59,7 @@ namespace BookCollector.Screens.Collections
             base.Activate();
 
             // Load collection descriptions here
-            Descriptions = collections_service.GetCollectionDescriptions()
+            Descriptions = collections_service.GetAllCollections()
                                               .Select(c => new DescriptionViewModel(c))
                                               .ToReactiveList();
 
